@@ -1,0 +1,50 @@
+@namespace Syncfusion.Blazor.Buttons
+@inherits SfInputBase<TChecked>
+@typeparam TChecked
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+@{
+    Dictionary<string, object> attributes = new Dictionary<string, object>();
+    if (@htmlAttr != null && @htmlAttr.ContainsKey("title"))
+    {
+        attributes = GetAttributes(htmlAttr["title"]);
+    }
+}
+<div class="@checkboxClass" role="@CHECKBOX" aria-checked="@ariaChecked" aria-disabled="@Disabled.ToString().ToLower()" @attributes="@attributes">
+    <label for="@idValue">
+        <input @ref="input" id="@idValue" class="@ROOT" type="@CHECKBOX" name="@Name" value="@Value" disabled="@Disabled" checked="@Checked" indeterminate="@Indeterminate" @onclick="@OnClickHandler" @onfocus="@OnFocusHandler" @onfocusout="@OnFocusOutHandler" @onkeyup="@OnKeyupHandler" @attributes="@htmlAttr" />
+        @if (LabelPosition == LabelPosition.Before)
+        {
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <span class="@LABEL">@Label</span>
+            }
+            else
+            {
+                <span class="@LABEL">@ChildContent</span>
+            }
+            <span class="@frameClass"></span>
+            @if (SyncfusionService.options.EnableRippleEffect)
+            {
+                <span class="@rippleClass" @ref="rippleElement" data-ripple=true style=@POINTEREVENTS></span>
+            }
+        }
+        else
+        {
+            <span class="@frameClass"></span>
+            @if (!string.IsNullOrEmpty(Label))
+            {
+                <span class="@LABEL">@Label</span>
+            }
+            else
+            {
+                <span class="@LABEL">@ChildContent</span>
+            }
+            @if (SyncfusionService.options.EnableRippleEffect)
+            {
+                <span class="@rippleClass" @ref="rippleElement" data-ripple=true style=@POINTEREVENTS></span>
+            }
+        }
+    </label>
+</div>

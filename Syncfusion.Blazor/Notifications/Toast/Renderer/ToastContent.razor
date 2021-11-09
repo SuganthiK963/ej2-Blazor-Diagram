@@ -1,0 +1,77 @@
+@using Syncfusion.Blazor.Buttons;
+@using Microsoft.AspNetCore.Components;
+@using  Microsoft.AspNetCore.Components.Web;
+
+@namespace Syncfusion.Blazor.Notifications.Internal
+@inherits SfBaseComponent;
+
+<CascadingValue Value="@this">
+    <div id="toast_@ShowModel.Index" @ref="toastContentElement" class="@ROOT_CLASS @ShowModel.Model.CssClass @headerIconClass @closeIconClass" style="width: @toastWidth; height: @toastHeight" role="@ALERT" @onclick="@ToastClickAsync">
+        @if (ShowModel.Model.ShowProgressBar && ShowModel.Model.Timeout > 0)
+        {
+            <div class="@TOAST_PROGRESS" @attributes="progressBarAttr"></div>
+        }
+        @if (ShowModel.Model.Templates != null)
+        {
+            @ShowModel.Model.Templates
+        }
+        else
+        {
+            @if (ShowModel.Model.Icon != null)
+            {
+                <div class="@TOAST_ICON @ShowModel.Model.Icon"></div>
+            }
+            @if ((ShowModel.Model.ContentTemplate != null || ShowModel.Model.Content != null) || (ShowModel.Model.TitleTemplate != null || ShowModel.Model.Title != null))
+            {
+                <div class=@TOAST_MESSAGE>
+                    @if ((ShowModel.Model.TitleTemplate != null || ShowModel.Model.Title != null))
+                    {
+                        <div class=@TOAST_TITLE>
+                            @if (!string.IsNullOrEmpty(ShowModel.Model.Title))
+                            {
+                                @((MarkupString)ShowModel.Model.Title);
+                            }
+                            else if (ShowModel.Model.TitleTemplate != null)
+                            {
+                                @ShowModel.Model.TitleTemplate
+                            }
+                        </div>
+                    }
+                    @if ((ShowModel.Model.ContentTemplate != null || ShowModel.Model.Content != null))
+                    {
+                        <div class=@TOAST_CONTENT_CLASS>
+                            @if (!string.IsNullOrEmpty(ShowModel.Model.Content))
+                            {
+                                @((MarkupString)ShowModel.Model.Content);
+                            }
+                            else if (ShowModel.Model.ContentTemplate != null)
+                            {
+                                @ShowModel.Model.ContentTemplate
+                            }
+                            else
+                            {
+                                @ShowModel.Model.ChildContent
+                            }
+                        </div>
+                    }
+                    @if (Parent.ActionButtons != null)
+                    {
+                        <div class=@TOAST_ACTIONS>
+                            @for (int i = 0; i < Parent.ActionButtons.Count; i++)
+                            {
+                                ToastButton buttonModel = (ToastButton)Parent.ActionButtons[i];
+                                <SfButton @attributes="@buttonAttribute" CssClass="@(BTN_DEFAULT_CLS + buttonModel.CssClass)" OnClick="@buttonModel.OnClick" Disabled="@buttonModel.Disabled" IsPrimary="@buttonModel.IsPrimary" IconCss="@buttonModel.IconCss" IconPosition="@buttonModel.IconPosition" IsToggle="@buttonModel.IsToggle" EnableRtl="@buttonModel.EnableRtl">
+                                    @((MarkupString)buttonModel.Content)
+                                </SfButton>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        }
+        @if (ShowModel.Model.ShowCloseButton)
+        {
+            <SfButton CssClass="@TOAST_CLOSE_ICON" OnClick="CloseButtonClick" @attributes="@Parent.CloseIconAttributes"></SfButton>
+        }
+    </div>
+</CascadingValue>

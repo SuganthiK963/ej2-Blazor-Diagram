@@ -1,0 +1,53 @@
+﻿@typeparam TValue;
+@namespace Syncfusion.Blazor.Charts.Sparkline.Internal
+@inherits SfBaseComponent;
+@using Syncfusion.Blazor.Popups
+
+@if (Parent != null && Parent.Tooltip != null && Parent.TooltipSettings != null && Parent.TooltipSettings.Visible && isTooltipRender)
+{
+    <SfTooltip @ref="tooltipReference" OpensOn="Custom" ID="@(Parent.ID + "_Tooltip")" Target="@("#" + Parent.ID + "_TooltipTarget")" ShowTipPointer="true" Position="Position.BottomCenter" TipPointerPosition="TipPointerPosition.Middle" Created="TooltipCreated">
+        <TooltipTemplates>
+            <Content>
+                @if (Parent.TooltipSettings.Template != null)
+                {
+                    @RenderTooltipTemplate()
+                }
+                else
+                {
+                    <span>@text</span>
+                }
+            </Content>
+        </TooltipTemplates>
+        <span id="@(Parent.ID + "_TooltipTarget")" style="@("position:absolute;left:" + (x - 1) + "px;top:" + (y - 1) + "px;height:2px;width:2px;")"></span>
+    </SfTooltip>
+
+    string color = Parent.TooltipSettings.Border != null ? Parent.TooltipSettings.Border.Color : string.Empty;
+    double width = Parent.TooltipSettings.Border != null ? Parent.TooltipSettings.Border.Width : 0;
+    string borderInfo = @width + "px solid " + @color;
+
+    <style>
+        .e-tooltip-wrap .e-tip-content {
+            color: @FontInfo.Color;
+            font-size: @FontInfo.Size;
+            font-family: @FontInfo.FontFamily;
+            font-style: @FontInfo.FontStyle;
+            font-weight: @FontInfo.FontWeight;
+            opacity: @FontInfo.Opacity;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        .e-tooltip-wrap.e-popup {
+            background-color: @fill;
+            border: @borderInfo;
+        }
+
+        .e-tooltip-wrap .e-arrow-tip-inner.e-tip-bottom {
+            color:  @fill;
+        }
+
+        .e-tooltip-wrap .e-arrow-tip-outer.e-tip-bottom {
+            border-top: @borderInfo
+        }
+    </style>
+}

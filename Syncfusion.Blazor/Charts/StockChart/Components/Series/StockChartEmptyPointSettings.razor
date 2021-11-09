@@ -1,0 +1,10 @@
+@using System.ComponentModel;
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+
+@namespace Syncfusion.Blazor.Charts
+@inherits SfBaseComponent;
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

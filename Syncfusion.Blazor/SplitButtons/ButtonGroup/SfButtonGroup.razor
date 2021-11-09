@@ -1,0 +1,8 @@
+﻿@namespace Syncfusion.Blazor.SplitButtons
+@inherits SfBaseComponent
+
+<div class=@("e-btn-group " + @CssClass) @attributes="@HtmlAttributes">
+    <CascadingValue Value="@this">
+        @ChildContent
+    </CascadingValue>
+</div>

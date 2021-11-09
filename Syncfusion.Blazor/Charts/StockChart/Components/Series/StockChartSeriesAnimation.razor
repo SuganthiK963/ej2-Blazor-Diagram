@@ -1,0 +1,8 @@
+@using Microsoft.AspNetCore.Components;
+
+@inherits StockChartCommonAnimation;
+@namespace Syncfusion.Blazor.Charts
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

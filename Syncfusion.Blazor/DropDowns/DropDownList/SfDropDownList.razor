@@ -1,0 +1,83 @@
+@using Syncfusion.Blazor.Internal
+@using Syncfusion.Blazor.Inputs.Internal;
+@using Syncfusion.Blazor.Data;
+@using Syncfusion.Blazor.DropDowns.Internal;
+@using Syncfusion.Blazor.Spinner;
+@typeparam TValue
+@typeparam TItem
+@inherits SfDropDownBase<TItem>
+@namespace Syncfusion.Blazor.DropDowns
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+    <CascadingValue Value="this" Name="Parent">
+        <SfInputBase ID="@this.ID" @ref="InputBaseObj" containerAttr="@ContainerAttr" IsShowSpinnerOnIcon="@(FilterinputObj == null)" Buttons="@this.DropdownIcon" RootClass="@RootClass" ContainerClass="@ContainerClass" CssClass="@this.CssClass" Placeholder="@this.Placeholder" FloatLabelType="@this.FloatLabelType" Value="@(this.DropdownValue)" HtmlAttributes="@this.HtmlAttributes"
+                     IsReadOnlyInput="true" ShowClearButton="@this.ShowClearButton" Type="text" Enabled="@this.Enabled" EnableRtl="@this.EnableRtl" TabIndex="@this.TabIndex" Autocomplete="off" Width="@this.Width" @attributes="@this.InputAttributes" ContainerKeypress="@OnSearch" OnContainerBlur="@((args)=>FocusOutHandler(args, false))" OnContainerFocus="@ContainerFocusHandler"
+                     BindClearBtnEvents="@((args)=>InvokeClearBtnEvent(args, false))" BindClearBtnTouchEvents="@((args)=>InvokeClearBtnEvent(args, true))" ClickStopPropagation="@ClearBtnStopPropagation" PreventIconHandler="@PreventIconHandler" MouseContainerHandler="@DropDownClick" MousePreventContainer="@PreventContainer" IsValueTemplate="@(this.Value !=null && ItemData != null)">
+        </SfInputBase>
+    </CascadingValue>
+    @ChildContent
+    @if (this.ShowPopupList)
+    {
+        <div @ref="@PopupHolderEle" class="e-dropdowns e-popup-holder" id="@(ID)_popupholder" style="top: -9999px; left: -9999px; position: absolute; visibility: hidden; width: 0px; height: 0px; display: none;">
+            <div @ref="@PopupElement" class="@PopupContainer" id="@(ID)_popup">
+                @if (this.AllowFiltering)
+                {
+                    <span class="@FILTER_PARENT">
+                        <SfInputBase @ref="FilterinputObj" RootClass="@FILTER_INPUT" @attributes="@this.FilterAttributes" IsShowSpinnerOnClear="true" Value="@FilterInputValue" PrependButtons="@BackIcon" Placeholder="@this.FilterBarPlaceholder" ShowClearButton="true" Type="text" Autocomplete="off" TouchIconHandler="@(()=>this.HidePopup())" @onpaste="@PasteHandler"
+                                     @onblur="@((args)=>FocusOutHandler(args, true))" @oninput="@FilterInputHandler" @onkeyup="@OnFilterUp" BindClearBtnEvents="@((args)=>InvokeClearBtnEvent(args, true))" BindClearBtnTouchEvents="@((args)=>InvokeClearBtnEvent(args, true))" ClickStopPropagation="@FilterClearBtnStopPropagation">
+                        </SfInputBase>
+                    </span>
+                }
+                @if (this.HeaderTemplate != null)
+                {
+                    <div class="@DDL_HEADER">
+                        @this.HeaderTemplate
+                    </div>
+                }
+                <div class="@((this.ListDataSource != null && this.ListDataSource.Count() > 0) ? PopupContent : NoDataContent )" tabindex="0">
+                    @if (this.ListDataSource != null && this.ListDataSource.Count() > 0)
+                    {
+                        <ul class="e-list-parent e-ul">
+                            @foreach (var item in ListDataSource)
+                            {
+                            <li @attributes="@item.ListAttribute" class="@item.ListClass" @key="@item" role="@(item.IsHeader ? "presentation" : "option")" data-value="@item.Value" @onclick="@((e)=>OnMouseClick(item, e))">
+                                @if (item.IsHeader && this.GroupTemplate != null)
+                                {
+                                    @GroupTemplate(item.GroupItems)
+                                }
+                                else if (this.ItemTemplate != null && !item.IsHeader)
+                                {
+                                    @ItemTemplate(item.CurItemData)
+                                }
+                                else
+                                {
+                                    @if (this.Fields?.IconCss != null)
+                                    {
+                                        <span class="@item.IconCss"></span>
+                                    }
+                                    @item.Text
+                                }
+                            </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <NoRecord TItem="TItem" FailureLocaleKey="@ACTION_FAILURE_LOCALE_KEY" LocaleKey="@NO_RECORD_LOCALE_KEY" FailureLocaleValue="@ACTION_FAILURE_LOCALE_VALUE" LocaleValue="@NO_RECORD_LOCALE_VALUE" IsFaiure="@this.IsActionFaiure"></NoRecord>
+                    }
+                </div>
+                @if (this.EnableVirtualization)
+                {
+                    <SfSpinner Size="17" @ref="@VirtualSpinnerObj"></SfSpinner>
+                }
+                @if (this.FooterTemplate != null)
+                {
+                    <div class="@DDL_FOOTER">
+                        @this.FooterTemplate
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</CascadingValue>

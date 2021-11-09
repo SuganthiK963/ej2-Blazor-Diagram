@@ -1,0 +1,34 @@
+﻿@namespace Syncfusion.Blazor.Lists.Internal
+@typeparam TValue
+@inherits ListCommonBase<TValue>
+
+<CascadingValue Value="@this">
+    @ChildContent
+    @if (!IsPrimitiveTypeInternal)
+    {
+        @*Creating list node based on the non primitive type datasource*@
+        <CreateListFromComplex CheckBoxPosition="@CheckBoxPosition" 
+                               DataSource="@DataSource"
+                               ListBaseOptionModel="@ListBaseOptionModel"
+                               TValue="TValue"
+                               ItemTemplatePropertyName="@(ItemTemplatePropertyName)"
+                               GroupTemplatePropertyName="@(GroupTemplatePropertyName)"
+                               ItemCreating="@(ItemCreating?? itemCreating)"
+                               ItemCreated="@(ItemCreated??itemCreated)"
+                               StartingPosition="@StartingPosition"
+                               EndPosition="@EndPosition"
+                               VirtualScrolling="@VirtualScrolling"
+                               LiElementHeight="@LiElementHeight" />
+    }
+    else
+    {
+        @*Creating list node based on the primitive type datasource*@
+        <CreateListFromPrimitive DataSource="@DataSource"
+                                 ListBaseOptionModel="@ListBaseOptionModel"
+                                 TValue="TValue"
+                                 ItemTemplatePropertyName="@(ItemTemplatePropertyName)"
+                                 GroupTemplatePropertyName="@(GroupTemplatePropertyName)"
+                                 ItemCreating="@(ItemCreating??itemCreating)"
+                                 ItemCreated="@(ItemCreated??itemCreating)" />
+    }
+</CascadingValue>

@@ -1,0 +1,72 @@
+﻿@using Syncfusion.Blazor.CircularGauge;
+@using Microsoft.AspNetCore.Components;
+@using System.Globalization; 
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@{ LegendSetting legendSetting = CircularGauge.AxisRenderer.LegendRenderer.LegendSetting;
+    string clipUrl = legendSetting.IsPagingEnabled ? "clip-path:url(#" + CircularGauge.ID + "_ClipPath" : string.Empty;
+ }
+@if (CircularGauge.AxisRenderer.AxisSetting.LegendVisible)
+{
+    <g id="@(CircularGauge.ID + "_Legend")">
+        @if (legendSetting.IsPagingEnabled)
+        {
+            <clipPath id="@(CircularGauge.ID + "_ClipPath")">
+                <rect id="@(CircularGauge.ID + "_Legend_ClipPath_Rect")" y="@legendSetting.LegendBorderRect.Y.ToString(CultureInfo.InvariantCulture)" 
+                      x="@legendSetting.LegendBorderRect.X.ToString(CultureInfo.InvariantCulture)" height="@legendSetting.ClipPathHeight.ToString(CultureInfo.InvariantCulture)" width="@legendSetting.LegendBorderRect.Width.ToString(CultureInfo.InvariantCulture)" 
+                      opacity="@legendSetting.LegendOpacity.ToString(CultureInfo.InvariantCulture)" fill="@legendSetting.Background" stroke="@legendSetting.BorderStroke"
+                  stroke-width="@legendSetting.BorderStrokeWidth.ToString(CultureInfo.InvariantCulture)">
+                </rect>
+            </clipPath>
+        }
+            <rect y="@legendSetting.LegendBorderRect.Y.ToString(CultureInfo.InvariantCulture)" x="@legendSetting.LegendBorderRect.X.ToString(CultureInfo.InvariantCulture)"
+                  height="@legendSetting.LegendBorderRect.Height.ToString(CultureInfo.InvariantCulture)" width="@legendSetting.LegendBorderRect.Width.ToString(CultureInfo.InvariantCulture)"
+                  opacity="@legendSetting.LegendOpacity" fill="@legendSetting.Background" stroke="@legendSetting.BorderStroke"
+                  stroke-width="@legendSetting.BorderStrokeWidth.ToString(CultureInfo.InvariantCulture)"></rect>
+        <g id="@(CircularGauge.ID + "_Legend_Collections")" style="@clipUrl">
+            <g id="@(CircularGauge.ID + "_Legend_Translate")" transform="@legendSetting.LegendTranslate">
+                @for (int i = 0; i < legendSetting.LegendItemCollections.Count; i++)
+                {
+                    Legend legend = legendSetting.LegendItemCollections[i];
+                    <g id="@(CircularGauge.ID + "_Legend_Item_" + i)">
+                        @if (CircularGauge.LegendSettings.Shape == GaugeShape.Circle && legendSetting.LegendCircles.Count != 0)
+                        {
+                            <ellipse id="@(CircularGauge.ID + "_Legend_Axis_" + legend.AxisIndex + "_Shape" + "_" + i)" opacity="@legendSetting.LegendOpacity.ToString(CultureInfo.InvariantCulture)" fill="@legendSetting.LegendColors[i].Fill"
+                                     stroke="@legendSetting.LegendStroke" stroke-width="@legendSetting.LegendStrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="0" rx="@legendSetting.LegendCircles[i].RadiusX"
+                                     ry=" @legendSetting.LegendCircles[i].RadiusY.ToString(CultureInfo.InvariantCulture)" cx="@legendSetting.LegendCircles[i].CenterX.ToString(CultureInfo.InvariantCulture)" cy="@legendSetting.LegendCircles[i].CenterY.ToString(CultureInfo.InvariantCulture)"></ellipse>
+                        }
+                        else if (CircularGauge.LegendSettings.Shape == GaugeShape.Image && legendSetting.LegendShapePaths[i].ImagePath != null)
+                        {
+                            <path id="@(CircularGauge.ID + "_Legend_Axis_" + legend.AxisIndex + "_Shape" + "_" + i)" opacity="@legendSetting.LegendOpacity.ToString(CultureInfo.InvariantCulture)" fill="@legendSetting.LegendColors[i].Fill"
+                                  stroke="@legendSetting.LegendStroke" stroke-width="@legendSetting.LegendStrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="0" width="@legendSetting.LegendShapePaths[i].ImagePath.Width.ToString(CultureInfo.InvariantCulture)"
+                                  height="@legendSetting.LegendShapePaths[i].ImagePath.Height.ToString(CultureInfo.InvariantCulture)" x="@legendSetting.LegendShapePaths[i].ImagePath.X.ToString(CultureInfo.InvariantCulture)" y="@legendSetting.LegendShapePaths[i].ImagePath.Y.ToString(CultureInfo.InvariantCulture)"></path>
+                        }
+                        else
+                        {
+                            if (legendSetting.LegendShapePaths.Count > 0) { 
+                                <path id="@(CircularGauge.ID + "_Legend_Axis_" + legend.AxisIndex + "_Shape" + "_" + i)" opacity=" @legendSetting.LegendOpacity.ToString(CultureInfo.InvariantCulture)" fill=" @legendSetting.LegendColors[i].Fill"
+                                      stroke=" @legendSetting.LegendStroke" stroke-width="@legendSetting.LegendStrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="0" d="@legendSetting.LegendShapePaths[i].ShapePath"></path>
+                            }
+                        }
+                        <text id="@(CircularGauge.ID + "_Legend_Axis_" + legend.AxisIndex + "_Text" + "_" + i)" x="@legendSetting.LegendTextCollections[i].X.ToString(CultureInfo.InvariantCulture)" y="@legendSetting.LegendTextCollections[i].Y.ToString(CultureInfo.InvariantCulture)"
+                              fill="@legend.LegendToggleFill" text-anchor="@legendSetting.LegendTextCollections[i].Anchor" style="@legendSetting.LegendTextStyle">@legendSetting.LegendTextCollections[i].Text</text>
+                        </g>
+                    }
+            </g>
+        </g>
+        @if (legendSetting.IsPagingEnabled)
+        {
+            <g id="@(CircularGauge.ID + "_legend_navigation")" transform="@legendSetting.LegendPageTranslate">
+                <path id="@(CircularGauge.ID + "_legend_pageup")" opacity="1" fill="#545454" stroke="transparent" stroke-width="5" stroke-dasharray="" d="@legendSetting.LegendPageLeftPath.ShapePath"></path>
+                <text id="@(CircularGauge.ID + "_legend_pagenumber")" x="@legendSetting.LegendPageText.X.ToString(CultureInfo.InvariantCulture)" y="@legendSetting.LegendPageText.Y.ToString(CultureInfo.InvariantCulture)" fill="#212121" text-anchor="start" opacity="1"
+                      style="font-size:15px; font-style:normal ; font-weight:normal; font-family:Segoe UI;">@legendSetting.LegendPageText.Text</text>
+                    <path id="@(CircularGauge.ID + "_legend_pagedown")" opacity="1" fill="#545454" stroke="transparent" stroke-width="5" stroke-dasharray="" d="@legendSetting.LegendPageRightPath.ShapePath"></path>
+                </g>
+            }
+    </g>
+}
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+}

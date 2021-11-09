@@ -1,0 +1,43 @@
+{
+	"name": "ej2-blazor-source",
+	"version": "17.1.5",
+	"description": "Syncfusion Blazor Components",
+	"author": "Syncfusion Inc.",
+	"license": "SEE LICENSE IN license",
+	"keywords": [
+		"blazor",
+		"blazor-source"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://gitlab.syncfusion.com/essential-studio/ej2-blazor-source.git"
+	},
+	"config": {
+		"ghooks": {
+			"build": "gulp build"
+		}
+	},
+	"scripts": {
+		"build": "gulp build",
+		"interop-build": "gulp minify-ship-interop",
+		"publish": "gulp publish-nuget"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.12.9",
+		"@babel/plugin-transform-runtime": "^7.12.1",
+		"@babel/preset-env": "^7.12.7",
+		"babel-loader": "^8.2.1",
+		"ghooks": "^2.0.4",
+		"gulp": "^4.0.2",
+		"gulp-dotnet-cli": "^1.0.2",
+		"require-dir": "^0.3.2",
+		"shelljs": "^0.7.0",
+		"simple-git": "^1.43.0",
+		"table": "^5.4.6",
+		"webpack": "^4.35.3",
+		"webpack-bundle-analyzer": "^3.6.1",
+		"webpack-merge": "4.2.2",
+		"webpack-node-externals": "^1.7.2",
+		"webpack-stream": "^5.2.1"
+	}
+}

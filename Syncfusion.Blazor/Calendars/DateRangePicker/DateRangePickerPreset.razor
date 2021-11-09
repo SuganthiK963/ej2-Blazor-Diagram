@@ -1,0 +1,55 @@
+
+@using System.ComponentModel;
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+
+@namespace Syncfusion.Blazor.Calendars
+@inherits SfBaseComponent;
+@implements IDisposable;
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+
+
+@code {
+
+    [CascadingParameter]
+    internal DateRangePickerPresets parent { get; set; }
+    /// <exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Defines the end date of the preset range
+    /// </summary>
+    [Parameter]
+    public DateTime End { get; set; }
+
+    /// <summary>
+    /// Defines the label string of the preset range.
+    /// </summary>
+    [Parameter]
+    public string Label { get; set; }
+
+    /// <summary>
+    /// Defines the start date of the preset range.
+    /// </summary>
+    [Parameter]
+    public DateTime Start { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        this.parent.UpdateChildProperty(this);
+    }
+
+    internal override void ComponentDispose()
+    {
+        this.parent = null;
+
+    }
+}

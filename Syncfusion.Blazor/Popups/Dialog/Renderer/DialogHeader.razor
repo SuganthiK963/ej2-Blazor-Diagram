@@ -1,0 +1,54 @@
+@using Syncfusion.Blazor.Buttons;
+@using Microsoft.AspNetCore.Components.Web;
+
+@namespace Syncfusion.Blazor.Popups.Internal
+@inherits SfBaseComponent;
+
+@if (Parent.IsHeaderContentExist() || Parent.ShowCloseIcon)
+{
+    <div id="@(Parent.ID)_dialog-header" class="@HEADERCONTENT">
+        @if (Parent.ShowCloseIcon)
+        {
+            <SfButton CssClass="@BTNCSSCLASS" IconCss="@BTNICONCSS" @attributes="@Parent.CloseIconAttributes" OnClick="@CloseIconClickHandler"></SfButton>
+        }
+        @if (Parent.IsHeaderContentExist())
+        {
+            <div id="@(Parent.ID)_title" class="@HEADER">
+                @if (Parent.HeaderTemplate != null)
+                {
+                    @Parent.HeaderTemplate
+                }
+                else
+                {
+                    @((MarkupString)Parent.Header)
+                }
+            </div>
+        }
+    </div>
+}
+
+@code{
+    [CascadingParameter]
+    internal SfDialog Parent { get; set; }
+
+    const string HEADER = "e-dlg-header";
+    const string CLOSE_ICON = "Close Icon";
+    const string HEADERCONTENT = "e-dlg-header-content";
+    const string BTNICONCSS = "e-icon-dlg-close e-icons";
+    const string BTNCSSCLASS = "e-dlg-closeicon-btn e-flat";
+
+    internal async Task CloseIconClickHandler(MouseEventArgs args)
+    {
+        await Parent.HideDialog(CLOSE_ICON, new BeforeCloseEventArgs() { Event = args });
+    }
+
+    internal void Refresh()
+    {
+       StateHasChanged();
+    }
+
+    internal override void ComponentDispose()
+    {
+        Parent = null;
+    }
+}

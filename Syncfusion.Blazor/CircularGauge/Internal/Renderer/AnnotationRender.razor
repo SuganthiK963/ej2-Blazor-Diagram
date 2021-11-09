@@ -1,0 +1,40 @@
+﻿@using Syncfusion.Blazor.CircularGauge;
+@using Microsoft.AspNetCore.Components;
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@if (CircularGauge.Axes != null)
+{
+    @for (int i = 0; i < CircularGauge.Axes.Count; i++)
+    {
+    <div id="@(CircularGauge.ID + "_Axis_" + i + "_Annotation")">
+        @for (int j = 0; j < CircularGauge.Axes[i].Annotations.Count; j++)
+        {
+            CircularGaugeAnnotation annotation = CircularGauge.Axes[i].Annotations[j];
+            @if (CircularGauge.AxisRenderer.AxisCollection[i].Annotations.Count != 0)
+            {
+                Annotation annotationValue = CircularGauge.AxisRenderer.AxisCollection[i].Annotations[j];
+                <div id="@(CircularGauge.ID + "_Axis_" + i + "_Annotation_" + j)" aria-label="@annotationValue.Description"
+                     style="@("position: absolute; z-index:" + @annotation.ZIndex + "; transform:" + (@annotation.AutoAngle ?
+                              "rotate(" + (@annotation.Angle - 90) + "deg)" : "rotate(0deg);") + ";" + @annotationValue.AnnotationPosition + ";" +
+                              annotationValue.Visibility + ";")">
+                @if (annotation.ContentTemplate != null)
+                {
+                    @CircularGauge.AxisRenderer.AnnotationRenderer.RenderSecondaryElements(annotation, j, i)
+                }
+                else if (!string.IsNullOrEmpty(CircularGauge.Axes[i].AxisValues.AnnotationContent[j]))
+                {
+                    <div id="StringTemplate" style="@annotationValue.AnnotationTextStyle">
+                        @CircularGauge.Axes[i].AxisValues.AnnotationContent[j]
+                    </div>
+                }
+            </div>
+            }
+        }
+    </div>
+    }
+}
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+}

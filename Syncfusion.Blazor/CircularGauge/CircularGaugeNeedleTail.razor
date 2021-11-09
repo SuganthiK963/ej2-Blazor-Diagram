@@ -1,0 +1,9 @@
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+@using System.ComponentModel;
+
+@inherits SfBaseComponent;
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

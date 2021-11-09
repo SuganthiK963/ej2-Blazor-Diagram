@@ -1,0 +1,73 @@
+﻿@using Syncfusion.Blazor.Navigations
+@using System.Collections.ObjectModel;
+@using Syncfusion.Blazor.Diagram.SymbolPalette;
+@using Syncfusion.Blazor.Diagram;
+@namespace Syncfusion.Blazor.Diagram.Internal
+@{
+    string SVGDIV = "SVGDIV";
+    string Container = "_Container";
+}
+<SfAccordion LoadOnDemand="false" ID=@this.Parent.ID ExpandMode="@this.Parent.PaletteExpandMode">
+    <AccordionEvents Expanding="@this.Parent.OnExpandingEvent"></AccordionEvents>
+    @foreach (Palette palettes in this.Parent.Palettes)
+    {
+        <AccordionItems>
+            <AccordionItem IconCss="@palettes.IconCss" Expanded="@palettes.IsExpanded">
+                <HeaderTemplate>@palettes.Title</HeaderTemplate>
+                <ContentTemplate>
+                    <div id="@palettes.ID" class="e-remove-palette" style="overflow: auto">
+                        @foreach (NodeBase symbol in @palettes.Symbols)
+                        {
+                            if (symbol is Node node && node.Shape.Type == Shapes.SVG && this.Parent.FirstRender)
+                            {
+
+                            }
+                        }
+                        @foreach (NodeBase symbol in @palettes.Symbols)
+                        {
+                            if ((symbol is Node node && node.Wrapper != null) || (symbol is Connector connector && connector.Wrapper != null))
+                            {
+                                bool isNode = symbol is Node;
+                                Node obj = symbol as Node;
+                                string id = (isNode ? (symbol as Node).ID : (symbol as Connector).ID) + @SVGDIV;
+                                string containerId = (isNode ? (symbol as Node).ID : (symbol as Connector).ID) + @Container;
+                                DiagramSize symbolSize = this.Parent.GetSymbolSize((NodeBase) symbol);
+                                string divWidth = symbolSize.Width + "px";
+                                string divHeight = symbolSize.Height + "px";
+                                if (isNode && obj.Shape.Type.ToString() == "HTML" && obj.Wrapper != null && this.Parent.SymbolPaletteTemplates != null && this.Parent.SymbolPaletteTemplates.NodeTemplate != null)
+                                {
+                                    <div id="@containerId" class="e-symbol-draggable" title="@symbol.ID" style="overflow: hidden; width: @divWidth; height: @divHeight; float: left">
+                                        @this.Parent.SymbolPaletteTemplates.NodeTemplate(obj)
+                                    </div>
+                                }
+                                else
+                                {
+                                    if ((symbol is Connector) || (symbol as Node).ParentId == string.Empty)
+                                    {
+                                        <div id="@containerId" class="e-symbol-draggable" title="@symbol.ID" style="overflow: hidden; width: @divWidth; height: @divHeight; float: left">
+                                            <svg id=@id width="@divWidth" height="@divHeight" pointer-events="none" style="margin-left: 10px; margin-top: 10px">
+                                                <g>
+                                                    @if (isNode)
+                                                    {
+                                                        ObservableCollection<Node> childNodes = null;
+                                                        ObservableCollection<Node> symbols = this.Parent.GetPaletteSymbols((symbol));
+                                                        childNodes = DiagramRenderer.GetChildNodes((symbol as Node), symbols);
+                                                        @DiagramRenderer.RenderElement(new FragmentParameter() {Element = (symbol as Node).Wrapper, Nodes = childNodes, IsCreateGElement = true, GroupElement = (symbol as Node).Wrapper})
+                                                    }
+                                                    else
+                                                    {
+                                                        @DiagramRenderer.RenderElement(new FragmentParameter() {Element = (symbol as Connector).Wrapper, IsCreateGElement = true})
+                                                    }
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </ContentTemplate>
+            </AccordionItem>
+        </AccordionItems>
+    }
+</SfAccordion>

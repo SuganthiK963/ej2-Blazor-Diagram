@@ -1,0 +1,54 @@
+﻿@using Syncfusion.Blazor.CircularGauge;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@{ TooltipCollection tooltipSetting = CircularGauge.AxisRenderer.TooltipRenderer.TooltipSetting; }
+@if ((((CircularGauge.Tooltip.TooltipTemplate != null) && tooltipSetting.IsPointer) || (CircularGauge.Tooltip.RangeSettings != null && CircularGauge.Tooltip.RangeSettings.Template != null && tooltipSetting.IsRange)
+              || (CircularGauge.Tooltip.AnnotationSettings != null && CircularGauge.Tooltip.AnnotationSettings.Template != null && tooltipSetting.IsAnnotation)))
+{
+    <div id="@(CircularGauge.ID + "_Tooltip")" style="position: absolute;pointer-events:none;z-index:10; left: @(tooltipSetting.Location.X + "px");
+     top:@(tooltipSetting.Location.Y + "px");">
+        @if (CircularGauge.Tooltip.TooltipTemplate != null && tooltipSetting.IsPointer)
+        {
+            @CircularGauge.AxisRenderer.TooltipRenderer.RenderTooltipTemplate(CircularGauge.Tooltip.TooltipTemplate)
+        }
+        else if (CircularGauge.Tooltip.AnnotationSettings != null && CircularGauge.Tooltip.AnnotationSettings.Template != null && tooltipSetting.IsAnnotation)
+        {
+            @CircularGauge.AxisRenderer.TooltipRenderer.RenderTooltipTemplate(CircularGauge.Tooltip.AnnotationSettings.Template)
+        }
+        else if (CircularGauge.Tooltip.RangeSettings != null && CircularGauge.Tooltip.RangeSettings.Template != null && tooltipSetting.IsRange)
+        {
+            @CircularGauge.AxisRenderer.TooltipRenderer.RenderTooltipTemplate(CircularGauge.Tooltip.RangeSettings.Template)
+        }
+    </div>
+}
+else
+{
+    @if (tooltipSetting.IsRange)
+    {
+        <SvgTooltip ID="@(CircularGauge.ID + "_")" Content="@tooltipSetting.RangeTooltipStart" FontColor="@tooltipSetting.RangeFontColor" FontFamily="@tooltipSetting.RangeFontFamily" FontStyle="@tooltipSetting.RangeFontStyle"
+                    FontWeight="@tooltipSetting.RangeFontWeight" FontOpacity="@tooltipSetting.RangeFontOpacity" BorderColor="@tooltipSetting.RangeTooltipStroke" BorderWidth="@tooltipSetting.RangeTooltipStrokeWidth"
+                    LocationX="@tooltipSetting.Location.X" LocationY="@tooltipSetting.Location.Y" X="@tooltipSetting.TooltipRect.X" Y="@tooltipSetting.TooltipRect.Y" Height="@tooltipSetting.TooltipRect.Height" Width="@tooltipSetting.TooltipRect.Width"
+                    TextSize="@tooltipSetting.RangeFontSize" Fill="@tooltipSetting.RangeTooltipFill" Opacity="1" IsInverted="@tooltipSetting.ArrowInverted" RenderArrow="true" IsIE="@CircularGauge.IsIE"></SvgTooltip>
+    }
+    else if (tooltipSetting.IsPointer)
+    {
+        <SvgTooltip ID="@(CircularGauge.ID + "_")" Content="@tooltipSetting.PointerValue" FontColor="@tooltipSetting.PointerFontColor" FontFamily="@tooltipSetting.PointerFontFamily" FontStyle="@tooltipSetting.PointerFontStyle"
+                    FontWeight="@tooltipSetting.PointerFontWeight" FontOpacity="@tooltipSetting.PointerFontOpacity" BorderColor="@tooltipSetting.TooltipStroke" BorderWidth="@tooltipSetting.TooltipStrokeWidth"
+                    LocationX="@tooltipSetting.Location.X" LocationY="@tooltipSetting.Location.Y" X="@tooltipSetting.TooltipRect.X" Y="@tooltipSetting.TooltipRect.Y" Height="@tooltipSetting.TooltipRect.Height" Width="@tooltipSetting.TooltipRect.Width"
+                    TextSize="@tooltipSetting.PointerFontSize" Fill="@tooltipSetting.TooltipColor" Opacity="1" IsInverted="@tooltipSetting.ArrowInverted" RenderArrow="true" IsIE="@CircularGauge.IsIE"></SvgTooltip>
+    }
+    else if (tooltipSetting.IsAnnotation && CircularGauge.Tooltip.AnnotationSettings != null && !string.IsNullOrEmpty(CircularGauge.Tooltip.AnnotationSettings.Format))
+    {
+        <SvgTooltip ID="@(CircularGauge.ID + "_")" Content="@tooltipSetting.AnnotationTooltipFormat" FontColor="@tooltipSetting.AnnotationFontColor" FontFamily="@tooltipSetting.AnnotationFontFamily" FontStyle="@tooltipSetting.AnnotationFontStyle"
+                    FontWeight="@tooltipSetting.AnnotationFontWeight" FontOpacity="@tooltipSetting.AnnotationFontOpacity" BorderColor="@tooltipSetting.AnnotationTooltipStroke" BorderWidth="@tooltipSetting.AnnotationTooltipStrokeWidth"
+                    LocationX="@tooltipSetting.Location.X" LocationY="@tooltipSetting.Location.Y" X="@tooltipSetting.TooltipRect.X" Y="@tooltipSetting.TooltipRect.Y" Height="@tooltipSetting.TooltipRect.Height" Width="@tooltipSetting.TooltipRect.Width"
+                    TextSize="@tooltipSetting.AnnotationFontSize" Fill="@tooltipSetting.AnnotationTooltipFill" Opacity="1" IsInverted="true" RenderArrow="true" IsIE="@CircularGauge.IsIE"></SvgTooltip>
+    }
+}
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+}

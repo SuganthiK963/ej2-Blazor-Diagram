@@ -1,0 +1,46 @@
+@using System.ComponentModel;
+
+@namespace Syncfusion.Blazor.Popups.Internal
+@inherits SfBaseComponent;
+
+@if ((Parent.ContentTemplate != null && string.IsNullOrEmpty(Parent.Content)) || (Parent.ContentTemplate == null && !string.IsNullOrEmpty(Parent.Content)))
+{
+    <div id="@(Parent.ID)_dialog-content" class="@CONTENT">
+        @if (Parent.ContentTemplate != null)
+        {
+            @Parent.ContentTemplate
+        }
+        else
+        {
+            @((MarkupString)Parent.Content)
+        }
+        @Parent.ChildContent
+    </div>
+}
+else
+{
+    <div id="@(Parent.ID)_dialog-content" class="@CONTENT"> @ChildContent </div>
+}
+
+@code{
+    [CascadingParameter]
+    internal SfDialog Parent { get; set; }
+
+    ///<exclude/>
+    [Parameter]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public RenderFragment ChildContent { get; set; }
+
+    const string CONTENT = "e-dlg-content";
+
+    internal void Refresh()
+    {
+       StateHasChanged();
+    }
+
+    internal override void ComponentDispose()
+    {
+        ChildContent = null;
+        Parent = null;
+    }
+}

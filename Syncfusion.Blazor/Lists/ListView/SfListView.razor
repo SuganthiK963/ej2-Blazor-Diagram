@@ -1,0 +1,55 @@
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Lists.Internal;
+@namespace Syncfusion.Blazor.Lists
+@inherits SfBaseComponent;
+@typeparam TValue
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+@{
+
+    <div @attributes="@GetAttributes()" @ref="ElementRef">
+        <CascadingValue Value="@this">
+            @ChildContent
+            @if (ShowHeader)
+            {
+                <div class="@HEADER">
+                    <div class="@BACKICON" style="display: @DISPLAY"></div>
+                    @if (HeaderTemplate != null)
+                    {
+                        <div class="@HEADERTEMPLATECLASS">@HeaderTemplate</div>
+                    }
+                    else
+                    {
+                        <div class="@TEXT">
+                            <span class="@HEADERTEXT">@HeaderTitle</span>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="e-content">
+                @* Need to loop the listbase component*@
+                @if (listViewDataSource != null && listViewDataSource.Any())
+                {
+                    @foreach (var source in listViewDataSource)
+                    {
+                        @*Need to provide this line with Name = ListParent, So that Listbase can access the
+                            instance of this component if needed*@
+                        <CascadingValue Value="@this" Name="ListParent">
+                            <SfListBase @ref="ListBase" ListBaseOptionModel="optionsInternal" DataSource="@source.Value" CheckBoxPosition="@CheckBoxPosition" Id="@ID" VirtualScrolling="@EnableVirtualization" StartingPosition="@virtualElementStartIndex" EndPosition="@virtualElementEndIndex"
+                                        LiElementHeight="@listElementHeight" TValue="TValue" ItemTemplatePropertyName="@(nameof(this.Template))" GroupTemplatePropertyName="@(nameof(this.GroupTemplate))">
+                                <ListBaseFields TValue="TValue" Id="@this.ListFields?.Id" Text="@this.ListFields?.Text" IsChecked="@ListFields?.IsChecked"
+                                                Enabled="@ListFields?.Enabled" IsVisible="@ListFields?.ListIsVisible" IconCss="@ListFields?.IconCss"
+                                                Child="@ListFields?.Child" Tooltip="@ListFields?.Tooltip" HtmlAttributes="@ListFields?.HtmlAttributes"
+                                                GroupBy="@ListFields?.GroupBy" />
+                            </SfListBase>
+                        </CascadingValue>
+                    }
+                }
+            </div>
+        </CascadingValue>
+    </div>
+}

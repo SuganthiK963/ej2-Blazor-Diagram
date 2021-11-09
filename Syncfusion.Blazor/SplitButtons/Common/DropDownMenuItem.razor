@@ -1,0 +1,73 @@
+@namespace Syncfusion.Blazor.SplitButtons
+@inherits SfBaseComponent
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [CascadingParameter]
+    internal DropDownMenuItems Parent { get; set; }
+
+    /// <summary>
+    /// Set custom content for items.
+    /// </summary>
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Defines class/multiple classes separated by a space for the item that is used to include an icon.
+    /// Action item can include font icon and sprite image.
+    /// </summary>
+    [Parameter]
+    public string IconCss { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Specifies separator between the items. Separator are horizontal lines used to group action items.
+    /// </summary>
+    [Parameter]
+    public bool Separator { get; set; }
+
+    /// <summary>
+    /// Used to enable or disable the action items.
+    /// </summary>
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    /// <summary>
+    /// Specifies text for item.
+    /// </summary>
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Specifies url for item that creates the anchor link to navigate to the url provided.
+    /// </summary>
+    [Parameter]
+    public string Url { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Specifies unique id for item.
+    /// </summary>
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
+    /// You can add the additional HTML attributes such as style, title etc., to the item
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> HtmlAttributes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Parent.UpdateChildProperty(this);
+    }
+
+    internal override void ComponentDispose()
+    {
+        Parent?.RemoveChildProperty(this);
+        Parent = null;
+        ChildContent = null;
+    }
+}

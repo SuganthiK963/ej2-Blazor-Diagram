@@ -1,0 +1,53 @@
+﻿@inherits SfBaseComponent
+@namespace Syncfusion.Blazor.Buttons
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div @attributes="attributes" role="listbox">
+    <div class="@(PARENTCLASS)" role="listbox" aria-label="listbox">
+        <CascadingValue Value="@this">
+            @ChildContent
+            @if (SfBaseUtils.IsNotNullOrEmpty(this.Chips))
+            {
+                foreach (ChipItem chip in Chips)
+                {
+                    UpdateRefsCount(Chips.Count);
+                    int index = Chips.IndexOf(chip);
+                    bool isAvatar = CssClass.IndexOf(ROOTAVATAR) < 0;
+                    GetAttributes(index);
+                    <div @ref="elementRefs[index]" @onmousedown="@(()=>OnChipMouseDown(index, false))" @onclick="@(()=>OnChipClick(index, false))" @onfocus="@(() => OnChipFocus(index < 0 ? 0 : index))" @onfocusout="@(() => OnChipFocusOut())" @onkeydown="@((KeyboardEventArgs args) => OnKeyDown(index, args))" @attributes="chipAttributes">
+                        @if (String.IsNullOrEmpty(chip.LeadingIconCss) && String.IsNullOrEmpty(chip.LeadingIconUrl) && !String.IsNullOrEmpty(chip.LeadingText))
+                        {
+                            <span class="@(isAvatar ? CHIPICON : CHIPAVATAR)">@chip.LeadingText</span>
+                        }
+                        else if (!String.IsNullOrEmpty(chip.LeadingIconCss))
+                        {
+                            <span class="@(isAvatar ? CHIPICON : CHIPAVATAR) @chip.LeadingIconCss"></span>
+                        }
+                        else if (!String.IsNullOrEmpty(chip.LeadingIconUrl))
+                        {
+                            <span class="@(isAvatar ? CHIPICON : CHIPAVATAR) @IMGURL" style="background-image:url(@chip.LeadingIconUrl)"></span>
+                        }
+                        @if (!(String.IsNullOrEmpty(chip.Text)))
+                        {
+                            <span class="@CHIPTEXT">@chip.Text</span>
+                        }
+                        @if (!String.IsNullOrEmpty(chip.TrailingIconCss))
+                        {
+                            <span class="@CHIPDELETE @chip.TrailingIconCss"></span>
+                        }
+                        else if (!String.IsNullOrEmpty(chip.TrailingIconUrl))
+                        {
+                            <span class="@TRIALURL" style="background-image:url(@chip.TrailingIconUrl)"></span>
+                        }
+                        else if (EnableDelete)
+                        {
+                            <span class="@CHIPDELETE @DELBTN" @onclick="@(()=>OnDeleteClick(index, false))"></span>
+                        }
+                    </div>
+                }
+            }
+        </CascadingValue>
+    </div>
+</div>

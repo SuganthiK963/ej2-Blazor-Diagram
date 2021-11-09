@@ -1,0 +1,74 @@
+@namespace Syncfusion.Blazor.Internal
+@inherits ComponentBase;
+
+@using System.Text.RegularExpressions;
+
+@if (showLicenseMessage && SyncfusionService.IsLicenseValidated)
+{
+    <div class="sf-license-warning">
+        <span>@startContent <a href="@licenseLink" target="_blank">@licenseLinkContent</a> @endContent</span>
+        <span class="sf-license-close-btn" @onclick="OnWarningClosed"></span>
+    </div>
+}
+
+@code {
+    [Inject]
+    private SyncfusionBlazorService SyncfusionService { get; set; }
+    private string startContent { get; set; }
+    private string licenseLink { get; set; }
+    private string licenseLinkContent { get; set; }
+    private string endContent { get; set; }
+    private bool showLicenseMessage { get; set; } = false;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+#if SyncfusionLicense
+        if (firstRender && !SyncfusionService.IsLicenseValidated)
+        {
+            SyncfusionService.IsLicenseValidated = true;
+            this.ValidateLicense();
+        }
+#endif
+    }
+
+#if SyncfusionLicense
+    internal void ValidateLicense()
+    {
+        var licenseContent = Syncfusion.Licensing.FusionLicenseProvider.GetLicenseType(Syncfusion.Licensing.Platform.Blazor);
+
+        if (Syncfusion.Licensing.Platform.Blazor >= 0)
+        {
+            // Check the license content null or empty
+            if (!string.IsNullOrEmpty(licenseContent))
+            {
+                Regex pattern = new Regex(@"\bhelp topic\b\((.*?)\)");
+                Regex text = new Regex(@"\bhelp topic\b");
+                Regex link = new Regex(@"\((.*?)\)");
+                MatchCollection c = pattern.Matches(licenseContent);
+                for (int i = 0; i < c.Count; i++)
+                {
+                    var cText = text.Match(c[i].Value);
+                    var cLink = link.Match(c[i].Value);
+                    string[] licenseContents = pattern.Split(licenseContent);
+                    this.startContent = licenseContents[0];
+                    this.endContent = licenseContents[licenseContents.Length - 1];
+                    this.licenseLink = cLink.Value.Replace('(', ' ').Replace(')', ' ');
+                    this.licenseLinkContent = cText.Value.Replace('[', ' ').Replace(']', ' ');
+                }
+                this.showLicenseMessage = true;
+                StateHasChanged();
+            }
+            else
+            {
+                this.showLicenseMessage = false;
+            }
+        }
+    }
+#endif
+
+    // Close the license warning when clicking the close icon.
+    internal void OnWarningClosed()
+    {
+        showLicenseMessage = false;
+    }
+}

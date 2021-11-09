@@ -1,0 +1,22 @@
+﻿@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Charts.Sparkline.Internal;
+
+@namespace Syncfusion.Blazor.Charts
+
+@typeparam TValue;
+@inherits SfDataBoundComponent;
+@implements ISparkline;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<CascadingValue Value="@this">
+    @ChildContent
+    <div id="@ID" @ref="element" class="e-control e-sparkline e-lib" style="display:block;">
+        <div id="@(ID + "_Secondary_Element")" style="position:relative">
+            <SparklineTooltip TValue="TValue"></SparklineTooltip>
+            <SparklineTrackline TValue="TValue"></SparklineTrackline>
+        </div>
+        @ChartContent
+    </div>
+</CascadingValue>

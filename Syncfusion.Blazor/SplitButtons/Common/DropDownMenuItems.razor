@@ -1,0 +1,49 @@
+@using System.ComponentModel;
+
+@namespace Syncfusion.Blazor.SplitButtons
+@inherits SfBaseComponent
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [CascadingParameter]
+    internal SfDropDownButton DropDownButton { get; set; }
+    [CascadingParameter]
+    internal SfSplitButton SplitButton { get; set; }
+
+    /// <exclude />
+    [Parameter]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public RenderFragment ChildContent { get; set; }
+
+    private List<DropDownMenuItem> Items { get; set; } = new List<DropDownMenuItem>();
+
+    internal void UpdateChildProperty(DropDownMenuItem Item)
+    {
+        Items.Add(Item);
+    }
+
+    internal void RemoveChildProperty(DropDownMenuItem item)
+    {
+        if (Items.Contains(item))
+            Items.Remove(item);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (DropDownButton != null)
+            DropDownButton.UpdateChildProperty(Items);
+        if (SplitButton != null)
+            SplitButton.UpdateChildProperty(Items);
+    }
+
+    internal override void ComponentDispose()
+    {
+        DropDownButton = null;
+        SplitButton = null;
+        ChildContent = null;
+    }
+}

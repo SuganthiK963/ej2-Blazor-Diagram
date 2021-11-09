@@ -1,0 +1,572 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+ <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <RazorLangVersion Condition="'$(TargetFramework)'!='net5.0'">3.0</RazorLangVersion>
+    <BlazorLinkOnBuild>false</BlazorLinkOnBuild>
+    <LangVersion>8.0</LangVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Version>18.2.0.56</Version>
+    <FileVersion>18.2.0.56</FileVersion>
+    <PackageId>Syncfusion.Blazor</PackageId>
+    <Title>Syncfusion Blazor Components</Title>
+    <Company>Syncfusion Inc.</Company>
+    <Authors>Syncfusion Inc.</Authors>
+    <Product>Syncfusion Blazor Components</Product>
+    <Copyright>Copyright 2001 - 2020 Syncfusion Inc.</Copyright>
+    <AssemblyName>Syncfusion.Blazor</AssemblyName>
+    <RootNamespace>Syncfusion.Blazor</RootNamespace>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://www.syncfusion.com/nuget/license?utm_source=nuget&amp;utm_medium=listing</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.syncfusion.com/blazor-components/?utm_source=nuget&amp;utm_medium=listing</PackageProjectUrl>
+    <PackageIconUrl>https://www.syncfusion.com/content/images/nuget/sync_logo_icon.png</PackageIconUrl>
+    <PackageDescription>Syncfusion Blazor Components are built from the ground up to be lightweight, responsive, and touch-friendly. It includes over 65+ components, including grid, chart, scheduler, barcode generator, listbox, file manager, powerpoint or presentation, excel and much more.
+
+Components Included:
+GRIDS
+    DataGrid
+    Pivot Table
+    Tree Grid
+DATA VISUALIZATION
+    Charts
+    Circular Gauge
+    Diagram
+    Heatmap chart
+    Linear Gauge
+    Maps
+    Range Selector
+    Smith Chart
+    Sparkline Charts
+    Stock Chart
+    TreeMap
+    Kanban
+    Progress Bar
+EDITORS
+    Rich Text Editor
+    In-place Editor
+    Word Processor
+CALENDARS
+    Scheduler
+    Calendar
+    DatePicker
+    DateRangePicker
+    DateTime Picker
+    TimePicker
+BUTTONS
+    Button
+    Chips
+    Dropdown Menu
+    Progress Button
+    Split Button
+DROPDOWNS
+    AutoComplete
+    ComboBox
+    Dropdown List
+    MultiSelect Dropdown
+NAVIGATION
+    Accordion
+    Context Menu
+    Menu Bar
+    Sidebar
+    Tabs
+    Toolbar
+    TreeView
+INPUTS
+    TextBox
+    Input Mask
+    Numeric Textbox
+    Radio Button
+    Checkbox
+    Color Picker
+    File Upload
+    Range Slider
+    Toggle Switch Button
+LAYOUT
+    Dialog
+    ListView
+    Splitter
+    Tooltip
+NOTIFICATIONS
+    Toast
+FORMS
+   Query Builder
+Viewer
+    PDF Viewer
+
+Helpful links:
+Documentation: https://blazor.syncfusion.com/documentation/?utm_source=nuget&amp;utm_medium=listing
+Demos: https://blazor.syncfusion.com/demos/?utm_source=nuget&amp;utm_medium=listing
+
+Support:
+Incident: https://www.syncfusion.com/support/directtrac/incidents/newincident/?utm_source=nuget&amp;utm_medium=listing
+Forum: https://www.syncfusion.com/forums/blazor-components/?utm_source=nuget&amp;utm_medium=listing
+
+This is a commercial product and requires a paid license for possession or use. Syncfusion’s licensed software, including this component, is subject to the terms and conditions of Syncfusion's EULA (https://www.syncfusion.com/eula/es/). To acquire a license, you can purchase one at https://www.syncfusion.com/sales/products or start a free 30-day trial here (https://www.syncfusion.com/account/manage-trials/start-trials).
+
+© Copyright 2020 Syncfusion, Inc. All Rights Reserved. The Syncfusion Essential Studio license and copyright applies to this distribution.
+    
+    </PackageDescription>
+    <PackageReleaseNotes>https://blazor.syncfusion.com/documentation/release-notes/18.2.56/?utm_source=nuget&amp;utm_medium=listing</PackageReleaseNotes>
+    <PackageTags>syncfusion;blazor;datagrid;charts;scheduler;event-calendar;diagram;flowchart;mindmap;org-chart;datatable;richtexteditor;rte;html-editor;markdown-editor;dropdown;autocomplete;datepicker;timepicker;numericedit;treeview;file-upload;barcode-generator;listbox;file-manager;powerpoint-or-presentation;excel;dotnet;razor;Blazor;blazor-component;ui-controls;ui-components;tabcontrol</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\bin\Release\netstandard2.1\Syncfusion.Blazor.xml</DocumentationFile>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_1;$(SyncfusionLicensing);Release</DefineConstants>
+    <CodeAnalysisRuleSet>CodeAnalyzerRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_1;$(SyncfusionLicensing);Release</DefineConstants>
+    <CodeAnalysisRuleSet>CodeAnalyzerRuleSet.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="BarcodeGenerator\**" />
+    <Compile Remove="Cards\**" />
+    <Compile Remove="Diagrams\**" />
+    <Compile Remove="FileManager\**" />
+    <Compile Remove="Gantt\**" />
+    <Compile Remove="Grids\**" />
+    <Compile Remove="HeatMap\**" />
+    <Compile Remove="InPlaceEditor\**" />
+    <Compile Remove="Kanban\**" />
+    <Compile Remove="Layouts\**" />
+    <Compile Remove="LinearGauge\**" />
+    <Compile Remove="Maps\**" />
+    <Compile Remove="Notifications\**" />
+    <Compile Remove="PdfViewer\**" />
+    <Compile Remove="PivotView\**" />
+    <Compile Remove="ProgressBar\**" />
+    <Compile Remove="QueryBuilder\**" />
+    <Compile Remove="RichTextEditor\**" />
+    <Compile Remove="Schedule\**" />
+    <Compile Remove="Themes\**" />
+    <Compile Remove="TreeGrid\**" />
+    <Compile Remove="TreeMap\**" />
+    <Content Remove="BarcodeGenerator\**" />
+    <Content Remove="Cards\**" />
+    <Content Remove="Diagrams\**" />
+    <Content Remove="FileManager\**" />
+    <Content Remove="Gantt\**" />
+    <Content Remove="Grids\**" />
+    <Content Remove="HeatMap\**" />
+    <Content Remove="InPlaceEditor\**" />
+    <Content Remove="Kanban\**" />
+    <Content Remove="Layouts\**" />
+    <Content Remove="LinearGauge\**" />
+    <Content Remove="Maps\**" />
+    <Content Remove="Notifications\**" />
+    <Content Remove="PdfViewer\**" />
+    <Content Remove="PivotView\**" />
+    <Content Remove="ProgressBar\**" />
+    <Content Remove="QueryBuilder\**" />
+    <Content Remove="RichTextEditor\**" />
+    <Content Remove="Schedule\**" />
+    <Content Remove="Themes\**" />
+    <Content Remove="TreeGrid\**" />
+    <Content Remove="TreeMap\**" />
+    <EmbeddedResource Remove="BarcodeGenerator\**" />
+    <EmbeddedResource Remove="Cards\**" />
+    <EmbeddedResource Remove="Diagrams\**" />
+    <EmbeddedResource Remove="FileManager\**" />
+    <EmbeddedResource Remove="Gantt\**" />
+    <EmbeddedResource Remove="Grids\**" />
+    <EmbeddedResource Remove="HeatMap\**" />
+    <EmbeddedResource Remove="InPlaceEditor\**" />
+    <EmbeddedResource Remove="Kanban\**" />
+    <EmbeddedResource Remove="Layouts\**" />
+    <EmbeddedResource Remove="LinearGauge\**" />
+    <EmbeddedResource Remove="Maps\**" />
+    <EmbeddedResource Remove="Notifications\**" />
+    <EmbeddedResource Remove="PdfViewer\**" />
+    <EmbeddedResource Remove="PivotView\**" />
+    <EmbeddedResource Remove="ProgressBar\**" />
+    <EmbeddedResource Remove="QueryBuilder\**" />
+    <EmbeddedResource Remove="RichTextEditor\**" />
+    <EmbeddedResource Remove="Schedule\**" />
+    <EmbeddedResource Remove="Themes\**" />
+    <EmbeddedResource Remove="TreeGrid\**" />
+    <EmbeddedResource Remove="TreeMap\**" />
+    <None Remove="BarcodeGenerator\**" />
+    <None Remove="Cards\**" />
+    <None Remove="Diagrams\**" />
+    <None Remove="FileManager\**" />
+    <None Remove="Gantt\**" />
+    <None Remove="Grids\**" />
+    <None Remove="HeatMap\**" />
+    <None Remove="InPlaceEditor\**" />
+    <None Remove="Kanban\**" />
+    <None Remove="Layouts\**" />
+    <None Remove="LinearGauge\**" />
+    <None Remove="Maps\**" />
+    <None Remove="Notifications\**" />
+    <None Remove="PdfViewer\**" />
+    <None Remove="PivotView\**" />
+    <None Remove="ProgressBar\**" />
+    <None Remove="QueryBuilder\**" />
+    <None Remove="RichTextEditor\**" />
+    <None Remove="Schedule\**" />
+    <None Remove="Themes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DocumentEditor\**" />
+    <Content Remove="DocumentEditor\**" />
+    <None Remove="DocumentEditor\**" />
+    <None Remove="TreeGrid\**" />
+    <None Remove="TreeMap\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Buttons\Button\SfButton.razor" />
+    <None Include="Buttons\CheckBox\SfCheckBox.razor" />
+    <None Include="Buttons\Chips\ChipItems.razor" />
+    <None Include="Buttons\Chips\ChipItem\ChipItem.razor" />
+    <None Include="Buttons\Chips\Chip\SfChip.razor" />
+    <None Include="Buttons\Icon\SfIcon.razor" />
+    <None Include="Buttons\RadioButton\SfRadioButton.razor" />
+    <None Include="Buttons\Switch\SfSwitch.razor" />
+    <None Include="Buttons\Syncfusion.Blazor.Buttons.csproj" />
+    <None Include="Buttons\_Imports.razor" />
+    <None Include="Calendars\Base\Renderer\CalendarBaseRender.razor" />
+    <None Include="Calendars\Base\Renderer\CalendarDayCell.razor" />
+    <None Include="Calendars\Base\Renderer\CalendarTableHeader.razor" />
+    <None Include="Calendars\Calendar\SfCalendar.razor" />
+    <None Include="Calendars\DatePicker\SfDatePicker.razor" />
+    <None Include="Calendars\DateRangePicker\DateRangePickerPreset.razor" />
+    <None Include="Calendars\DateRangePicker\DateRangePickerPresets.razor" />
+    <None Include="Calendars\DateRangePicker\SfDateRangePicker.razor" />
+    <None Include="Calendars\DateTimePicker\SfDateTimePicker.razor" />
+    <None Include="Calendars\Syncfusion.Blazor.Calendars.csproj" />
+    <None Include="Calendars\TimePicker\SfTimePicker.razor" />
+    <None Include="Calendars\_Imports.razor" />
+    <None Include="Charts\BulletChart\BulletChartDataLabel.razor" />
+    <None Include="Charts\BulletChart\BulletChartLegendSettings.razor" />
+    <None Include="Charts\BulletChart\BulletChartRangeCollection.razor" />
+    <None Include="Charts\BulletChart\BulletChartTooltip.razor" />
+    <None Include="Charts\BulletChart\Internal\BulletChartLegend.razor" />
+    <None Include="Charts\BulletChart\Internal\BulletChartTooltipRender.razor" />
+    <None Include="Charts\BulletChart\SfBulletChart.razor" />
+    <None Include="Charts\BulletChart\Syncfusion.Blazor.BulletChart.csproj" />
+    <None Include="Charts\BulletChart\_Imports.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartCenter.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartMargin.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartSelectedDataIndex.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartSelectedDataIndexes.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartSubTitleStyle.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\AccumulationChartTitleStyle.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Annotation\AccumulationChartAnnotation.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Annotation\AccumulationChartAnnotations.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Legend\AccumulationChartLegendBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Legend\AccumulationChartLegendFont.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Legend\AccumulationChartLegendMargin.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Legend\AccumulationChartLegendSettings.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Legend\AccumulationChartLocation.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartAnimation.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartConnector.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartDataLabelBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartDataLabelFont.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartEmptyPointBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartEmptyPointSettings.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartSeries.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartSeriesBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationChartSeriesCollection.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Series\AccumulationDataLabelSettings.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\SfAccumulationChart.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Tooltip\AccumulationChartTooltipBorder.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Tooltip\AccumulationChartTooltipSettings.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Components\Tooltip\AccumulationChartTooltipTextStyle.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Internal\Annotation\AnnotationElements.razor" />
+    <None Include="Charts\Charts\AccumulationChart\Internal\Base\TemplateDataLabel.razor" />
+    <None Include="Charts\Charts\Chart\Renderer\Scrollbar\ChartScrollbar.razor" />
+    <None Include="Charts\Charts\Chart\Renderer\Scrollbar\ScrollbarContent.razor" />
+    <None Include="Charts\Charts\Chart\Renderer\UserInteractions\Selection\SvgSelectionPath.razor" />
+    <None Include="Charts\Charts\Chart\Renderer\UserInteractions\Selection\SvgSelectionRect.razor" />
+    <None Include="Charts\Charts\Chart\Renderer\UserInteractions\Selection\SvgSelectionRectCollection.razor" />
+    <None Include="Charts\Charts\Chart\SfChart.razor" />
+    <None Include="Charts\Charts\Common\BaseSelection\SelectionStyleComponent.razor" />
+    <None Include="Charts\Charts\Common\BaseSelection\StyleElement.razor" />
+    <None Include="Charts\Charts\Common\BaseTooltip\ChartTooltipComponent.razor" />
+    <None Include="Charts\Charts\Common\BaseTooltip\TrimTooltipBase.razor" />
+    <None Include="Charts\Charts\Syncfusion.Blazor.Charts.csproj" />
+    <None Include="Charts\Charts\_Imports.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgAxisGroup.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgCircle.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgEllipse.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgImage.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgLine.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgPath.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgPattern.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgPolygon.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgRect.razor" />
+    <None Include="Charts\DataVizCommon\SvgComponents\SvgText.razor" />
+    <None Include="Charts\DataVizCommon\Syncfusion.Blazor.DataVizCommon.csproj" />
+    <None Include="Charts\DataVizCommon\_Imports.razor" />
+    <None Include="Charts\RangeNavigator\Components\Models\RangeNavigatorStyleSettings.razor" />
+    <None Include="Charts\RangeNavigator\Components\Models\RangeNavigatorThumbSettings.razor" />
+    <None Include="Charts\RangeNavigator\Components\PeriodSelector\Internal\PeriodSelectorContent.razor" />
+    <None Include="Charts\RangeNavigator\Components\PeriodSelector\RangeNavigatorPeriods.razor" />
+    <None Include="Charts\RangeNavigator\Components\PeriodSelector\RangeNavigatorPeriodSelectorSettings.razor" />
+    <None Include="Charts\RangeNavigator\Components\Series\RangeNavigatorSeries.razor" />
+    <None Include="Charts\RangeNavigator\Components\Series\RangeNavigatorSeriesCollection.razor" />
+    <None Include="Charts\RangeNavigator\Components\SfRangeNavigator.razor" />
+    <None Include="Charts\RangeNavigator\Components\Tooltip\RangeNavigatorRangeTooltipSettings.razor" />
+    <None Include="Charts\RangeNavigator\Internal\PeriodSelector\PeriodSelectorItems.razor" />
+    <None Include="Charts\RangeNavigator\Internal\Renderer\SvgSliderGroup.razor" />
+    <None Include="Charts\RangeNavigator\Syncfusion.Blazor.RangeNavigator.csproj" />
+    <None Include="Charts\RangeNavigator\_Imports.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartHorizontalAxis.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartHorizontalMajorGridLines.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartHorizontalMinorGridLines.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartRadialAxis.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartRadialMajorGridLines.razor" />
+    <None Include="Charts\SmithChart\Components\Axis\SmithChartRadialMinorGridLines.razor" />
+    <None Include="Charts\SmithChart\Components\Legend\SmithChartLegendItemStyle.razor" />
+    <None Include="Charts\SmithChart\Components\Legend\SmithChartLegendLocation.razor" />
+    <None Include="Charts\SmithChart\Components\Legend\SmithChartLegendSettings.razor" />
+    <None Include="Charts\SmithChart\Components\Legend\SmithChartLegendTitle.razor" />
+    <None Include="Charts\SmithChart\Components\Marker\SmithChartDataLabelConnectorLine.razor" />
+    <None Include="Charts\SmithChart\Components\Marker\SmithChartSeriesDatalabel.razor" />
+    <None Include="Charts\SmithChart\Components\Marker\SmithChartSeriesDataLabelBorder.razor" />
+    <None Include="Charts\SmithChart\Components\Marker\SmithChartSeriesMarker.razor" />
+    <None Include="Charts\SmithChart\Components\Marker\SmithChartSeriesMarkerBorder.razor" />
+    <None Include="Charts\SmithChart\Components\Series\SmithChartSeries.razor" />
+    <None Include="Charts\SmithChart\Components\Series\SmithChartSeriesCollection.razor" />
+    <None Include="Charts\SmithChart\Components\Series\SmithChartSeriesTooltip.razor" />
+    <None Include="Charts\SmithChart\Components\SfSmithChart.razor" />
+    <None Include="Charts\SmithChart\Components\SmithchartModel\SmithChartBorder.razor" />
+    <None Include="Charts\SmithChart\Components\SmithchartModel\SmithChartFont.razor" />
+    <None Include="Charts\SmithChart\Components\Title\SmithChartSubtitle.razor" />
+    <None Include="Charts\SmithChart\Components\Title\SmithChartTitle.razor" />
+    <None Include="Charts\SmithChart\Internal\Tooltip\TooltipComponent.razor" />
+    <None Include="Charts\SmithChart\Syncfusion.Blazor.SmithChart.csproj" />
+    <None Include="Charts\SmithChart\_Imports.razor" />
+    <None Include="Charts\Sparkline\Components\Axis\SparklineAxisSettings.razor" />
+    <None Include="Charts\Sparkline\Components\ContainerArea\SparklineContainerArea.razor" />
+    <None Include="Charts\Sparkline\Components\DataLabel\SparklineDataLabelSettings.razor" />
+    <None Include="Charts\Sparkline\Components\Marker\SparklineMarkerSettings.razor" />
+    <None Include="Charts\Sparkline\Components\RangeBand\SparklineRangeBandSettings.razor" />
+    <None Include="Charts\Sparkline\Components\SfSparkline.razor" />
+    <None Include="Charts\Sparkline\Components\Tooltip\SparklineTooltipSettings.razor" />
+    <None Include="Charts\Sparkline\Internal\SparklineTooltip.razor" />
+    <None Include="Charts\Sparkline\Internal\SparklineTrackline.razor" />
+    <None Include="Charts\Sparkline\Syncfusion.Blazor.Sparkline.csproj" />
+    <None Include="Charts\Sparkline\_Imports.razor" />
+    <None Include="Charts\StockChart\Components\Annotation\StockChartAnnotations.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxes.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxis.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisCrosshairTooltip.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisLabelStyle.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisLineStyle.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisMajorGridLines.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisMajorTickLines.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisMinorGridLines.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisMinorTickLines.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisStripLine.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisStripLineBorder.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisStripLines.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisStripLineTextStyle.razor" />
+    <None Include="Charts\StockChart\Components\Axis\CommonAxes\StockChartAxisTitleStyle.razor" />
+    <None Include="Charts\StockChart\Components\Axis\PrimaryXAxis\StockChartPrimaryXAxis.razor" />
+    <None Include="Charts\StockChart\Components\Axis\PrimaryYAxis\StockChartPrimaryYAxis.razor" />
+    <None Include="Charts\StockChart\Components\CustomChart\CustomChart.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartChartArea.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartChartAreaBorder.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartChartBorder.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartChartMargin.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartFont.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartMargin.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartPeriod.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartPeriods.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartSelectedDataIndex.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartSelectedDataIndexes.razor" />
+    <None Include="Charts\StockChart\Components\Customization\StockChartTitleStyle.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartIndicator.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartIndicatorAnimation.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartIndicators.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartLowerLine.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartMacdLine.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartPeriodLine.razor" />
+    <None Include="Charts\StockChart\Components\Indicators\StockChartUpperLine.razor" />
+    <None Include="Charts\StockChart\Components\Rows &amp; Columns\StockChartRow.razor" />
+    <None Include="Charts\StockChart\Components\Rows &amp; Columns\StockChartRowBorder.razor" />
+    <None Include="Charts\StockChart\Components\Rows &amp; Columns\StockChartRows.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartCornerRadius.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartDataLabel.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartDatalabelBorder.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartDataLabelSettings.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartEmptyPointBorder.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartEmptyPointSettings.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartMarkerBorder.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartMarkerSettings.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartSeries.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartSeriesAnimation.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartSeriesBorder.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartSeriesCollection.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartSeriesMarker.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartTrendline.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartTrendlineMarkerBorder.razor" />
+    <None Include="Charts\StockChart\Components\Series\StockChartTrendlines.razor" />
+    <None Include="Charts\StockChart\Components\SfStockChart.razor" />
+    <None Include="Charts\StockChart\Components\StockEvents\StockChartStockEvent.razor" />
+    <None Include="Charts\StockChart\Components\StockEvents\StockChartStockEvents.razor" />
+    <None Include="Charts\StockChart\Components\StockEvents\StockChartStockEventsBorder.razor" />
+    <None Include="Charts\StockChart\Components\StockEvents\StockChartStockEventsTextStyle.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Crosshair\StockChartCrosshairLine.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Crosshair\StockChartCrosshairSettings.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Tooltip\StockChartTooltipBorder.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Tooltip\StockChartTooltipSettings.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Tooltip\StockChartTooltipTextStyle.razor" />
+    <None Include="Charts\StockChart\Components\UserIneractions\Zooming\StockChartZoomSettings.razor" />
+    <None Include="Charts\StockChart\Internal\CustomComponents\StockChartDropDown.razor" />
+    <None Include="Charts\StockChart\Syncfusion.Blazor.StockChart.csproj" />
+    <None Include="Charts\StockChart\_Imports.razor" />
+    <None Include="CircularGauge\CircularGaugeAnnotation.razor" />
+    <None Include="CircularGauge\CircularGaugeAnnotations.razor" />
+    <None Include="CircularGauge\CircularGaugeAnnotationTooltipSettings.razor" />
+    <None Include="CircularGauge\CircularGaugeAxes.razor" />
+    <None Include="CircularGauge\CircularGaugeAxis.razor" />
+    <None Include="CircularGauge\CircularGaugeAxisLabelStyle.razor" />
+    <None Include="CircularGauge\CircularGaugeCap.razor" />
+    <None Include="CircularGauge\CircularGaugeLegendSettings.razor" />
+    <None Include="CircularGauge\CircularGaugeNeedleTail.razor" />
+    <None Include="CircularGauge\CircularGaugePointer.razor" />
+    <None Include="CircularGauge\CircularGaugePointers.razor" />
+    <None Include="CircularGauge\CircularGaugeRange.razor" />
+    <None Include="CircularGauge\CircularGaugeRanges.razor" />
+    <None Include="CircularGauge\CircularGaugeRangeTooltipSettings.razor" />
+    <None Include="CircularGauge\CircularGaugeTooltipSettings.razor" />
+    <None Include="CircularGauge\ColorStops.razor" />
+    <None Include="CircularGauge\Internal\CircularGauge\SfCircularGauge.razor" />
+    <None Include="CircularGauge\Internal\Renderer\AnnotationRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\AxisRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\LegendRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\PointerRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\RangeRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\SvgTooltip.razor" />
+    <None Include="CircularGauge\Internal\Renderer\TicksRender.razor" />
+    <None Include="CircularGauge\Internal\Renderer\TooltipRender.razor" />
+    <None Include="CircularGauge\LinearGradient.razor" />
+    <None Include="CircularGauge\RadialGradient.razor" />
+    <None Include="CircularGauge\Syncfusion.Blazor.CircularGauge.csproj" />
+    <None Include="CircularGauge\_Imports.razor" />
+    <None Include="DropDowns\AutoComplete\SfAutoComplete.razor" />
+    <None Include="DropDowns\Base\NoRecord.razor" />
+    <None Include="DropDowns\ComboBox\SfComboBox.razor" />
+    <None Include="DropDowns\DropDownList\SfDropDownList.razor" />
+    <None Include="DropDowns\ListBox\SfListBox.razor" />
+    <None Include="DropDowns\MultiSelect\SfMultiSelect.razor" />
+    <None Include="DropDowns\Syncfusion.Blazor.DropDowns.csproj" />
+    <None Include="DropDowns\_Imports.razor" />
+    <None Include="Inputs\Base\SfInputBase.razor" />
+    <None Include="Inputs\ColorPicker\Internal\ColorPalette.razor" />
+    <None Include="Inputs\ColorPicker\Internal\ColorPicker.razor" />
+    <None Include="Inputs\ColorPicker\Internal\ColorPickerBase.razor" />
+    <None Include="Inputs\ColorPicker\Internal\ColorPickerTextBox.razor" />
+    <None Include="Inputs\ColorPicker\SfColorPicker.razor" />
+    <None Include="Inputs\MaskedTextBox\SfMaskedTextBox.razor" />
+    <None Include="Inputs\NumericTextBox\SfNumericTextBox.razor" />
+    <None Include="Inputs\Slider\ColorRange\SliderColorRanges.razor" />
+    <None Include="Inputs\Slider\Internal\SliderTicksRender.razor" />
+    <None Include="Inputs\Slider\Internal\TickElement.razor" />
+    <None Include="Inputs\Slider\SfSlider.razor" />
+    <None Include="Inputs\Slider\SliderLimits.razor" />
+    <None Include="Inputs\Syncfusion.Blazor.Inputs.csproj" />
+    <None Include="Inputs\TextBox\SfTextBox.razor" />
+    <None Include="Inputs\Uploader\SfUploader.razor" />
+    <None Include="Inputs\Uploader\UploaderButtons.razor" />
+    <None Include="Inputs\Uploader\UploaderFiles.razor" />
+    <None Include="Inputs\Uploader\UploaderTemplates.razor" />
+    <None Include="Inputs\_Imports.razor" />
+    <None Include="Lists\ListBase\Complex\ComplexListItem.razor" />
+    <None Include="Lists\ListBase\Complex\CreateListFromComplex.razor" />
+    <None Include="Lists\ListBase\Primitive\CreateListFromPrimitive.razor" />
+    <None Include="Lists\ListBase\Primitive\PrimitiveListItem.razor" />
+    <None Include="Lists\ListBase\SfListBase.razor" />
+    <None Include="Lists\ListView\SfListView.razor" />
+    <None Include="Lists\Syncfusion.Blazor.Lists.csproj" />
+    <None Include="Lists\_Imports.razor" />
+    <None Include="Navigations\Accordion\AccordionAnimationSettings.razor" />
+    <None Include="Navigations\Accordion\AccordionItem.razor" />
+    <None Include="Navigations\Accordion\AccordionItems.razor" />
+    <None Include="Navigations\Accordion\Renderer\AccordionDataSourceRender.razor" />
+    <None Include="Navigations\Accordion\Renderer\AccordionItemRender.razor" />
+    <None Include="Navigations\Accordion\SfAccordion.razor" />
+    <None Include="Navigations\ContextMenu\SfContextMenu.razor" />
+    <None Include="Navigations\MenuBase\MenuItem.razor" />
+    <None Include="Navigations\MenuBase\MenuItems.razor" />
+    <None Include="Navigations\Menu\CreateMenuItem.razor" />
+    <None Include="Navigations\Menu\CreateMenuItems.razor" />
+    <None Include="Navigations\Menu\SfMenu.razor" />
+    <None Include="Navigations\Sidebar\SfSidebar.razor" />
+    <None Include="Navigations\Syncfusion.Blazor.Navigations.csproj" />
+    <None Include="Navigations\Tab\SfTab.razor" />
+    <None Include="Navigations\Tab\TabAnimationSettings.razor" />
+    <None Include="Navigations\Tab\TabHeaderTemplate.razor" />
+    <None Include="Navigations\Tab\TabItem.razor" />
+    <None Include="Navigations\Tab\TabItems.razor" />
+    <None Include="Navigations\Toolbar\EventRegister.razor" />
+    <None Include="Navigations\Toolbar\SfToolbar.razor" />
+    <None Include="Navigations\Toolbar\ToolbarContent.razor" />
+    <None Include="Navigations\Toolbar\ToolbarEvents.razor" />
+    <None Include="Navigations\Toolbar\ToolbarItem.razor" />
+    <None Include="Navigations\Toolbar\ToolbarItems.razor" />
+    <None Include="Navigations\TreeView\Complex\ComplexListItems.razor" />
+    <None Include="Navigations\TreeView\Complex\CreateListFromComplex.razor" />
+    <None Include="Navigations\TreeView\ListGeneration.razor" />
+    <None Include="Navigations\TreeView\SfTreeView.razor" />
+    <None Include="Navigations\TreeView\TreeViewFieldChild.razor" />
+    <None Include="Navigations\TreeView\TreeViewFieldsSettings.razor" />
+    <None Include="Navigations\TreeView\TreeViewNodeAnimationSettings.razor" />
+    <None Include="Navigations\_Imports.razor" />
+    <None Include="Popups\Dialog\ChildComponents\DialogButton.razor" />
+    <None Include="Popups\Dialog\ChildComponents\DialogButtons.razor" />
+    <None Include="Popups\Dialog\Renderer\DialogContent.razor" />
+    <None Include="Popups\Dialog\Renderer\DialogFooter.razor" />
+    <None Include="Popups\Dialog\Renderer\DialogHeader.razor" />
+    <None Include="Popups\Dialog\SfDialog.razor" />
+    <None Include="Popups\Syncfusion.Blazor.Popups.csproj" />
+    <None Include="Popups\Tooltip\SfTooltip.razor" />
+    <None Include="Popups\_Imports.razor" />
+    <None Include="Spinner\Renderer\Bootstrap.razor" />
+    <None Include="Spinner\Renderer\Bootstrap4.razor" />
+    <None Include="Spinner\Renderer\FabricHighContrast.razor" />
+    <None Include="Spinner\Renderer\Material.razor" />
+    <None Include="Spinner\SfSpinner.razor" />
+    <None Include="Spinner\Syncfusion.Blazor.Spinner.csproj" />
+    <None Include="SplitButtons\ButtonGroup\ButtonGroupButton.razor" />
+    <None Include="SplitButtons\ButtonGroup\SfButtonGroup.razor" />
+    <None Include="SplitButtons\Common\DropDownMenuItem.razor" />
+    <None Include="SplitButtons\Common\DropDownMenuItems.razor" />
+    <None Include="SplitButtons\DropDownButton\DropDownMenu.razor" />
+    <None Include="SplitButtons\DropDownButton\SfDropDownButton.razor" />
+    <None Include="SplitButtons\ProgressButton\SfProgressButton.razor" />
+    <None Include="SplitButtons\SplitButton\SfSplitButton.razor" />
+    <None Include="SplitButtons\Syncfusion.Blazor.SplitButtons.csproj" />
+    <None Include="SplitButtons\_Imports.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="*.razor">
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
+
+   <PropertyGroup>
+    <ComponentsPackageVersion>3.1.8</ComponentsPackageVersion>
+    <ComponentsPackageVersion Condition="'$(TargetFramework)'=='net5.0'">5.0.0</ComponentsPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(ComponentsPackageVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Syncfusion.Licensing" Version="18.2.0.56" Condition="$(DefineConstants.Contains('SyncfusionLicense'))" />
+    <PackageReference Include="Syncfusion.PdfExport.Net.Core" Version="18.2.0.56" />
+    <PackageReference Include="Syncfusion.ExcelExport.Net.Core" Version="18.2.0.56" />
+  </ItemGroup>
+  
+</Project>

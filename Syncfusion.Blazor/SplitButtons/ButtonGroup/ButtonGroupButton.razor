@@ -1,0 +1,32 @@
+﻿@using Syncfusion.Blazor.Buttons
+
+@namespace Syncfusion.Blazor.SplitButtons
+@inherits SfBaseComponent
+
+@if (ButtonGroup.Mode == SelectionMode.Default)
+{
+   if (ChildContent == null && string.IsNullOrEmpty(Content))
+   {
+        <SfButton CssClass="@CssClass" IconCss="@IconCss" Disabled="Disabled" IsToggle="IsToggle" IsPrimary="IsPrimary" @attributes="@HtmlAttributes"></SfButton>
+   }
+   else
+   {
+        <SfButton CssClass="@CssClass" IconCss="@IconCss" Disabled="Disabled" IsToggle="IsToggle" IsPrimary="IsPrimary" Content="@Content" @attributes="@HtmlAttributes">@ChildContent</SfButton>
+   }
+}
+else
+{
+    var id = SfBaseUtils.GenerateID("SfButtonGroup");
+    <input type="@(ButtonGroup.Mode == SelectionMode.Single ? "radio" : "checkbox")" id="@id" name="@(string.IsNullOrEmpty(Name) ? ButtonGroup.inputName : Name)" value="@(string.IsNullOrEmpty(Value) ? id : Value)" checked="@Selected" disabled="@Disabled" @attributes="HtmlAttributes">
+    <label for="@id" class=@("e-btn " + @CssClass) @onclick="ClickHandler">
+        @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Left || IconPosition == IconPosition.Top))
+        {
+            <span class="@IconCss @iconCss"></span>
+        }
+        @ChildContent
+        @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Right || IconPosition == IconPosition.Bottom))
+        {
+            <span class="@IconCss"></span>
+        }
+    </label>
+}

@@ -1,0 +1,76 @@
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Popups.Internal;
+
+@inherits SfBaseComponent
+@namespace Syncfusion.Blazor.Popups
+@inject ISyncfusionStringLocalizer Localizer
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+@if (!IsModal)
+{
+    @if (IsLoadOnDemand && IsDemand)
+    {
+        <div @ref="DialogElement" id="@ID" class="@dialogClass" role="dialog" aria-labelledby="@(ID)" aria-describedby="@(ID)_dialog-content" @attributes="@dialogAttribute">
+            <CascadingValue Value="@this">
+                <DialogHeader @ref="headerRef" />
+                <DialogContent @ref="contentRef">
+                    @ChildContent
+                </DialogContent>
+                <DialogFooter @ref="footerRef" />
+            </CascadingValue>
+        </div>
+    }
+    else @if (!IsLoadOnDemand)
+    {
+        <div @ref="DialogElement" id="@ID" class="@dialogClass" role="dialog" aria-labelledby="@(ID)" aria-describedby="@(ID)_dialog-content" @attributes="@dialogAttribute">
+            <CascadingValue Value="@this">
+                <DialogHeader @ref="headerRef" />
+                <DialogContent @ref="contentRef">
+                    @ChildContent
+                </DialogContent>
+                <DialogFooter @ref="footerRef" />
+            </CascadingValue>
+        </div>
+    }
+}
+else
+{
+    @if (IsLoadOnDemand && IsDemand)
+    {
+        <div id="@(MODAL + "-" + ID)" class="@CONTAINER" style="@styles">
+            <div @ref="ModalDialogElement" id="@ID" class="@dialogClass" aria-modal="true" role="dialog" aria-labelledby="@(ID)" aria-describedby="@(ID)_dialog-content" @attributes="@dialogAttribute">
+                <CascadingValue Value="@this">
+                    <DialogHeader @ref="modalHeaderRef" />
+                    <DialogContent @ref="modalContentRef">
+                        @ChildContent
+                    </DialogContent>
+                    <DialogFooter @ref="modalFooterRef" />
+                </CascadingValue>
+            </div>
+            @if (IsModal)
+            {
+                <div class="@OVERLAY" style="z-index: @index; display: @display" @onclick="@OverlayClickHandler"></div>
+            }
+        </div>
+    }
+    else @if (!IsLoadOnDemand)
+    {
+        <div id="@(MODAL + "-" + ID)" class="@CONTAINER" style="@styles">
+            <div @ref="ModalDialogElement" id="@ID" class="@dialogClass" aria-modal="true" role="dialog" aria-labelledby="@(ID)" aria-describedby="@(ID)_dialog-content" @attributes="@dialogAttribute">
+                <CascadingValue Value="@this">
+                    <DialogHeader @ref="modalHeaderRef" />
+                    <DialogContent @ref="modalContentRef">
+                        @ChildContent
+                    </DialogContent>
+                    <DialogFooter @ref="modalFooterRef" />
+                </CascadingValue>
+            </div>
+            @if (IsModal)
+            {
+                <div class="@OVERLAY" style="z-index: @index; display: @display" @onclick="@OverlayClickHandler"></div>
+            }
+        </div>
+    }
+}

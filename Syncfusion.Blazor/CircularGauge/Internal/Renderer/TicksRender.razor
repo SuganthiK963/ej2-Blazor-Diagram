@@ -1,0 +1,37 @@
+﻿@using System.Globalization; 
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@{ Axis axis = CircularGauge.AxisRenderer.AxisCollection[AxisIndex]; }
+<g id="@(CircularGauge.ID + "_Axis_MajorTickLines_" + AxisIndex)">
+    @for (int j = 0; j < axis.MajorTickLinePath.Count; j++)
+    {
+        <path id="@(CircularGauge.ID + "_Axis_Major_TickLine_" + AxisIndex + "_" + j)" d="@axis.MajorTickLinePath[j]" stroke="@axis.MajorTickLineStroke[j]"
+              stroke-width="@axis.MajorTickLineStrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="@axis.MajorTickDashArray" style="pointer-events:none"></path>
+    }
+</g>
+<g id="@(CircularGauge.ID + "_Axis_MinorTickLines_" + AxisIndex)">
+    @for (int k = 0; k < axis.MinorTickPath.Count; k++)
+    {
+        <path id="@(CircularGauge.ID + "_Axis_Minor_TickLine_" + AxisIndex + "_" + k)" d="@axis.MinorTickPath[k]" stroke="@axis.MinorTickLineStroke[k]"
+              stroke-width="@axis.MinorTickLineStrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="@axis.MinorTickDashArray" style="pointer-events:none"></path>
+    }
+</g>
+<g id="@(CircularGauge.ID + "_Axis_Labels_" + AxisIndex)">
+    @for (int m = 0; m < axis.TextSettingCollection.Count; m++)
+    {
+        <text>
+            <text id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Label_" + m)" x="@axis.TextSettingCollection[m].X.ToString(CultureInfo.InvariantCulture)" y="@axis.TextSettingCollection[m].Y.ToString(CultureInfo.InvariantCulture)"
+                  fill="@axis.TextSettingCollection[m].Fill" text-anchor="@axis.TextSettingCollection[m].Anchor" transform="@axis.TextSettingCollection[m].Transform"
+                  opacity="@axis.LabelOpacity.ToString(CultureInfo.InvariantCulture)" style="@axis.LabelFontStyle">@axis.TextSettingCollection[m].Text</text>
+        </text>
+    }
+</g>
+
+@code {
+    [CascadingParameter]
+    SfCircularGauge CircularGauge { get; set; }
+
+    [Parameter]
+    public int AxisIndex { get; set; }
+}

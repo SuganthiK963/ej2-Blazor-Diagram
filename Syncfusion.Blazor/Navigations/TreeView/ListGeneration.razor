@@ -1,0 +1,15 @@
+@inherits CreateListFromComplex<TValue>;
+@typeparam TValue;
+@namespace Syncfusion.Blazor.Navigations.Internal
+
+@if (!Parent.IsDestroyed)
+{
+    @if (ListData != null && ListData.Any())
+    {
+        <CreateListFromComplex TValue="TValue" ListData="@ListData" TreeItemCreating="BeforeNodeCreate"></CreateListFromComplex>
+    }
+    else
+    {
+        <ul class="e-list-parent e-ul" role="tree"></ul>
+    }
+}

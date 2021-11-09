@@ -1,0 +1,20 @@
+@namespace Syncfusion.Blazor.Buttons
+@inherits SfInputBase<TChecked>
+@typeparam TChecked
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div role="@ROLE" class="@rootClass" @onmousedown="@OnMouseDownHandler" @onclick="@OnClickHandler" aria-checked="@(Convert.ToBoolean(@Checked).ToString().ToLower())" aria-disabled="@Disabled.ToString().ToLower()" @ontouchstart="@OnTouchHandler" @ontouchmove="@OnTouchHandler" @ontouchmove:preventDefault @ontouchend="@OnTouchHandler" @ontouchend:preventDefault="@preventDefault">
+    <input @ref="input" id="@idValue" class="e-control e-switch e-lib" type="checkbox" name="@Name" value="@Value" checked="@Checked" disabled="@Disabled" @onfocus="@OnFocusHandler" @onfocusout="@OnFocusOutHandler" @onkeyup="@OnKeyupHandler" @attributes="@htmlAttr" />
+    <span class="@innerClass" @attributes="@htmlAttr">
+        <span class="e-switch-on">@OnLabel</span>
+        <span class="e-switch-off">@OffLabel</span>
+    </span>
+    <span class="@handleClass" @attributes="@htmlAttr">
+        @if (SyncfusionService.options.EnableRippleEffect)
+        {
+            <span class="@rippleClass" @ref="@rippleElement" data-ripple=true style=@POINTEREVENTS></span>
+        }
+    </span>
+</div>

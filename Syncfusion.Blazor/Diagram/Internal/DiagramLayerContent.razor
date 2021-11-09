@@ -1,0 +1,23 @@
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+@{
+    @if (Parent.BasicElements != null && Parent.BasicElements.Count > 0)
+    {
+        @DiagramRenderer.RenderBasicElements(Parent.BasicElements)
+    }
+    @if (!Parent.DiagramAction.HasFlag(DiagramAction.Layouting))
+    {
+        @if (Parent.Nodes != null && Parent.Nodes.Count > 0)
+        {
+            @DiagramRenderer.RenderNodes(Parent.Nodes)
+        }
+        @if (Parent.Connectors != null && Parent.Connectors.Count > 0)
+        {
+            @DiagramRenderer.RenderConnectors(Parent.Connectors)
+        }
+        @if (TextAnnotationConnectors != null && TextAnnotationConnectors.Count > 0)
+        {
+            @DiagramRenderer.RenderConnectors(TextAnnotationConnectors)
+        }
+    }
+}

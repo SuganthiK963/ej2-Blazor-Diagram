@@ -1,0 +1,17 @@
+@namespace Syncfusion.Blazor.Buttons
+@inherits SfInputBase<TChecked>
+@typeparam TChecked
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div class="@rootClass">
+    <input @ref="input" id="@idValue" class="@RADIOBUTTONCLASS" type="@TYPE" name="@Name" value="@Value" checked="@RadioChecked" disabled="@Disabled" @onclick="@OnClickHandler" @attributes="@htmlAttr" />
+    <label for="@idValue" class="@labelClass">
+        @if (SyncfusionService.options.EnableRippleEffect)
+        {
+            <span class="@RIPPLE" @ref="@rippleElement" data-ripple=@DATARIPPLE></span>
+        }
+        <span class="@LABEL">@Label</span>
+    </label>
+</div>

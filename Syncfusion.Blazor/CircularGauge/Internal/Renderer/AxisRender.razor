@@ -1,0 +1,50 @@
+﻿@using Syncfusion.Blazor.CircularGauge;
+@using Microsoft.AspNetCore.Components;
+@using System.Globalization; 
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@if (CircularGauge.AxisRenderer.AxisSetting.AxisVisible)
+{
+    Axis axisSetting = CircularGauge.AxisRenderer.AxisSetting;
+    if (!string.IsNullOrEmpty(axisSetting.OuterBackground))
+    {
+    <rect id="@(CircularGauge.ID + "_CircularGaugeBorder")" x="@axisSetting.BorderX.ToString(CultureInfo.InvariantCulture)" y="@axisSetting.BorderY.ToString(CultureInfo.InvariantCulture)"
+          width="@axisSetting.BorderRectWidth.ToString(CultureInfo.InvariantCulture)" height="@axisSetting.BorderRectHeight.ToString(CultureInfo.InvariantCulture)"
+          stroke="@axisSetting.BorderStrokeColor" stroke-width="@axisSetting.BorderStrokeWidth.ToString(CultureInfo.InvariantCulture)"
+          fill="@axisSetting.OuterBackground">
+    </rect>
+    }
+    @if (CircularGauge.AxisRenderer.TitleRender.TitleSetting != null)
+    {
+        <text>
+            <text id="@(CircularGauge.ID + "_CircularGaugeTitle")" x="@CircularGauge.AxisRenderer.TitleRender.TitleSetting.X.ToString(CultureInfo.InvariantCulture)" y="@CircularGauge.AxisRenderer.TitleRender.TitleSetting.Y.ToString(CultureInfo.InvariantCulture)"
+                  fill="@CircularGauge.AxisRenderer.TitleRender.TitleSetting.Fill" opacity="@CircularGauge.AxisRenderer.TitleRender.TitleOpacity.ToString(CultureInfo.InvariantCulture)" text-anchor="@CircularGauge.AxisRenderer.TitleRender.TitleSetting.Anchor"
+                  aria-label="@CircularGauge.AxisRenderer.TitleRender.Description" tabindex="@(CircularGauge.TabIndex.ToString(CultureInfo.InvariantCulture))" style="@CircularGauge.AxisRenderer.TitleRender.TitleFontStyle">
+                @CircularGauge.AxisRenderer.TitleRender.TitleSetting.Text
+            </text>
+        </text>
+    }
+    <g id="@(CircularGauge.ID + "_AxesCollection")">
+        @if (CircularGauge.AxisRenderer.AxisCollection != null && (CircularGauge.AxisRenderer.AxisCollection.Count > 0) && CircularGauge.Axes != null)
+        {
+            @for (int i = 0; i < CircularGauge.Axes.Count; i++)
+            {
+                Axis axis = CircularGauge.AxisRenderer.AxisCollection[i];
+                <g id="@(CircularGauge.ID + "_Axes_Group_" + i)">
+                    <path id="@(CircularGauge.ID + "_AxisOuterLine_" + i)" d="@axis.AxisOuterPath" stroke="transparent" stroke-width="0" fill="@axis.AxesOuterBackground"
+                          style="pointer-events:none;"></path>
+                    <RangeRender AxisIndex="i"></RangeRender>
+                    <path id="@(CircularGauge.ID + "_AxisLine_" + i)" d="@axis.AxisLinePath" stroke="@axis.Stroke"
+                          stroke-width="@axis.StrokeWidth.ToString(CultureInfo.InvariantCulture)" stroke-dasharray="@axis.DashArray" fill="transparent" style="pointer-events:none"></path>
+                    <TicksRender AxisIndex="i"></TicksRender>
+                    <PointerRender AxisIndex="i"></PointerRender>
+                </g>
+            }
+        }
+    </g>
+}
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+}

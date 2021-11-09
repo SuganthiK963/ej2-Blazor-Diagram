@@ -1,0 +1,56 @@
+﻿@inherits SfBaseComponent;
+@namespace Syncfusion.Blazor.Charts.BulletChart.Internal
+
+@if (BulletChart?.AvailableSize != null && BulletChart?.LegendSettings != null && BulletChart.LegendSettings.Visible)
+{
+    <clipPath id="@(BulletChart.ID + "_chart_legend_clipPath")">
+        <rect id="@(BulletChart.ID + "_chart_legend_clipPath_rect")" opacity="@BulletChart.LegendSettings.Opacity.ToString(culture)" fill="@BulletChart.LegendSettings.Background" stroke="@clipath.Stroke" stroke-width="@clipath.StrokeWidth.ToString(culture)"
+              x="@clipath.Bound.X.ToString(culture)" y="@clipath.Bound.Y.ToString(culture)" height="@clipath.Bound.Height.ToString(culture)" width="@clipath.Bound.Width.ToString(culture)">
+        </rect>
+    </clipPath>
+    <g id="@(BulletChart.ID + "_chart_legend_g")">
+        @if (BulletChart.LegendSettings.Border != null)
+        {
+            BulletChartLegendBorder border = BulletChart.LegendSettings.Border;
+            <rect id="@(BulletChart.ID + "_chart_legend_element")" x="@legendBorder.X.ToString(culture)" y="@legendBorder.Y.ToString(culture)" height="@legendBorder.Height.ToString(culture)" width="@legendBorder.Width.ToString(culture)" stroke="@border.Color" stroke-width="@border.Width.ToString(culture)" opacity="@BulletChart.LegendSettings.Opacity.ToString(culture)" fill="@BulletChart.LegendSettings.Background">
+            </rect>
+        }
+        <g id="@(BulletChart.ID + "_chart_legend_collections")" style="@("clip-path:url(#" + BulletChart.ID + "_chart_legend_clipPath)")">
+            <g id="@(BulletChart.ID + "_chart_legend_translate_g")" transform="@legendItemTransform.ToString(culture)">
+                @for (int i = 0; i < BulletChart.Render?.LegendCollections?.Count; i++)
+                {
+                    LegendModel legend = BulletChart.Render.LegendCollections[i];
+                    <g id="@(BulletChart.ID + "_chart_legend_translate_g_" + i)">
+                        @if (legend.Shape != LegendShape.Circle)
+                        {
+                            <path id="@(BulletChart.ID + "_chart_legend_shape_" + i)" fill="@legend.Fill" stroke="@legend.Fill" stroke-width="@legend.StrokeWidth.ToString(culture)" d="@legend.Path.ToString(culture)" opacity="1">
+                            </path>
+                        }
+                        else
+                        {
+                            <ellipse id="@(BulletChart.ID + "_chart_legend_shape_" + i)" fill="@legend.Fill" stroke="@legend.Fill" stroke-width="@legend.StrokeWidth.ToString(culture)" rx="@legend.X.ToString(culture)" ry="@legend.Y.ToString(culture)" cx="@legend.Width.ToString(culture)" cy="@legend.Height.ToString(culture)" opacity="1">
+                            </ellipse>
+                        }
+                        <text id="@(BulletChart.ID + "_chart_legend_text_" + i)" x="@legend.TextInfo.X.ToString(culture)" y="@legend.TextInfo.Y.ToString(culture)" fill="@textStyle.Color" font-size="@textStyle.Size.ToString(culture)" font-style="@textStyle.FontStyle"
+                              font-family="@textStyle.FontFamily" font-weight="@textStyle.FontWeight" opacity="@textStyle.Opacity.ToString(culture)">
+                            @legend.Text
+                        </text>
+                    </g>
+                }
+            </g>
+        </g>
+        @if (legendPage != null)
+        {
+            <g id="@(BulletChart.ID + "_chart_legend_navigation")" transform="@legendPage.Transform">
+                <path id="@(BulletChart.ID + "_chart_legend_pageup")" tabindex="@legendPage.LeftTabIndex" fill="@legendPage.Fill" stroke="@legendPage.Color" stroke-width="5" d="@legendPage.LeftPagePath.ToString(culture)" opacity="1">
+                </path>
+                <text id="@(BulletChart.ID + "_chart_legend_pagenumber")" x="@legendPage.TextLocation.X.ToString(culture)" y="@legendPage.TextLocation.Y.ToString(culture)" fill="@textStyle.Color" font-size="@textStyle.Size.ToString(culture)" font-style="@textStyle.FontStyle"
+                      font-family="@textStyle.FontFamily" font-weight="@textStyle.FontWeight" opacity="@textStyle.Opacity.ToString(culture)">
+                    @legendPage.Text
+                </text>
+                <path id="@(BulletChart.ID + "_chart_legend_pagedown")" tabindex="@legendPage.RightTabIndex" fill="@legendPage.Fill" stroke="@legendPage.Color" stroke-width="5" d="@legendPage.RightPagePath.ToString(culture)" opacity="1">
+                </path>
+            </g>
+        }
+    </g>
+}

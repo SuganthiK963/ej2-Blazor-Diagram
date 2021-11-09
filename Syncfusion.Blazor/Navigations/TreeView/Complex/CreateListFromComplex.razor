@@ -1,0 +1,32 @@
+﻿@namespace Syncfusion.Blazor.Navigations.Internal
+@using Microsoft.AspNetCore.Components;
+
+@typeparam TValue
+@inherits TreeViewListItems<TValue>
+
+<ul @attributes="GetAttributes()">
+    @{
+        int nodeLevel = 1;
+        if (TreeNodeLevel != 1) { nodeLevel = TreeNodeLevel; }
+        int listLength = ListData.ToList().Count;
+        TreeParent.ChildCount = listLength;
+        if (nodeLevel != 1 && TreeParent.IsNodeRendered)
+        {
+            TreeParent.NodeLen = 0;
+        }
+        @for (int i = 0; i < listLength; i++)
+        {
+            TValue item = ListData.ElementAt(i);
+            FieldsValueMapping<List<TValue>> mappedData = GetMappedData(item);
+            TreeItemCreatedArgs<TValue> itemCreatingArgs = InvokeTreeItemCreating(item, mappedData, nodeLevel);
+            if (itemCreatingArgs != null && itemCreatingArgs.TreeOptions != null && itemCreatingArgs.TreeOptions.TreeViewFields != null)
+            {
+                MapSettings(ListModel, true);
+                mappedData = GetMappedData(item);
+            }
+            <CascadingValue Value="@this" Name="ListBase" @key="@(item)">
+                <ComplexListItems ListData="@(item)" TValue="TValue" TreeNodeLevel="@nodeLevel" TreeOptions="itemCreatingArgs.TreeOptions" HasChild="@(itemCreatingArgs.TreeOptions.ChildData != null )" MappedData="mappedData" ListModel="ListModel" RandomID="@SfBaseUtils.GenerateID(IDPREFIX)" Index="i" />
+            </CascadingValue>
+        }
+    }
+</ul>

@@ -1,0 +1,24 @@
+@namespace Syncfusion.Blazor.Buttons
+@inherits SfBaseComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<button @ref="btn" @attributes="htmlAttributes" class="@btnClass" disabled="@Disabled" @onclick="OnClickHandler">
+    @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Left || IconPosition == IconPosition.Top))
+    {
+        <span class="@IconCss @iconCss"></span>
+    }
+    @if (string.IsNullOrEmpty(Content))
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Content
+    }
+    @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Right || IconPosition == IconPosition.Bottom))
+    {
+        <span class="@IconCss @iconCss"></span>
+    }
+</button>

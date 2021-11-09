@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+*.sln
+Nuget/
+.vscode/
+wwwroot/
+nuget.exe
+node_modules/
+Scripts/bundles/
+Scripts/index.js
+package-lock.json
+Scripts/entries.json
+Scripts/individual-entries.json
+Scripts/modules/sf-import-script.js

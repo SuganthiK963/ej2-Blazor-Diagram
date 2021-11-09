@@ -1,0 +1,197 @@
+﻿@using Syncfusion.Blazor.Buttons.Internal;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.Navigations; 
+@using Syncfusion.Blazor.Spinner;
+@namespace Syncfusion.Blazor.Navigations.Internal
+@typeparam TValue
+@inherits TreeViewListItems<TValue>;
+
+@{
+    // Creates complex list based on the complex model template property.
+    string text = MappedData?.Text;
+    <li @ref="liElement" @attributes="@GetAttributes()">
+        @if (TreeParent.FullRowSelect)
+        {
+            <div class="e-fullrow"></div>
+        }
+        @{
+            bool hasChildren = false;
+            // Need HtmlAttibutes type in object from js to use here
+                <div class="@GetContainerClass()">
+                    @if (TreeOptions != null)
+                    {
+                        @if (TreeOptions.ChildData != null || TreeOptions.IconClass != null || MappedData.HasChildren || (MappedData.Child != null && MappedData.Child?.ToList().Count > 0))
+                        {
+                            hasChildren = true;
+                            string ExpandIconClass = "e-icon-expandable";
+                            @if ((TreeParent.ExpandedNodes != null ? TreeParent.ExpandedNodes.Contains(MappedData.Id.ToString()): true) && ((TreeOptions.ChildData != null && MappedData.Expanded) || (this.TreeOptions.ChildData != null && this.TreeOptions.IsExpanded)))
+                            {
+                                ExpandIconClass = "e-icon-collapsible";
+                                if (!TreeParent.CurrentExpandedNodes.Contains(MappedData.Id))
+                                {
+                                    TreeParent.CurrentExpandedNodes.Add(MappedData.Id);
+                                }
+                            }
+                            @if (TreeParent.Target == MappedData.Id)
+                            {
+                                ExpandIconClass = ExpandIconClass + " e-icons-spinner";
+                            }
+                            <div class="@($"e-icons interaction {ExpandIconClass}")">
+                                @if (TreeParent.Target == MappedData.Id)
+                                {
+                                    <SfSpinner @ref="TreeParent.SpinnerRef" Size="@(TreeParent.IsDevice ? "16":"14")" Visible="true" CssClass="e-treeview-spinner"></SfSpinner>
+                                }
+                            </div>
+                        }
+                        else if (hasChildren && ListModel.ExpandCollapse)
+                        {
+                            <div class="@($"e-icons interaction e-icon-expandable")"></div>
+                        }
+                    }
+                    @if (TreeParent.ShowCheckBox)
+                    {
+                        bool intermediate = false;
+                        bool checkBoxStatus = false;
+                        if (TreeOptions.IsChecked == "true") { checkBoxStatus = true; }
+                        else if(TreeOptions.IsChecked == "false") { checkBoxStatus = false; }
+                        else if (TreeOptions.IsChecked == "intermediate") { intermediate = true; }
+                        @SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = checkBoxStatus, Indeterminate = intermediate });
+                    }
+                    @if (MappedData.Url != null)
+                    {
+                        // anchor with its own attr type needs to be
+                        // @MappedData.UrlAttributes
+                        Dictionary<string, object> urlAttribute = new Dictionary<string, object>();
+                        @if (TreeOptions != null && TreeOptions.IsTree)
+                        {
+                            string classList = "e-list-text e-list-url";
+                            urlAttribute = new Dictionary<string, object>() { { "class", classList } };
+                        }
+                        @if (TreeOptions != null && TreeOptions.FullRowNavigate)
+                        {
+                            <a href="@MappedData.Url" @attributes="@urlAttribute">
+                                <div class="e-anchor-wrap">
+                                    @RenderIconElement(MappedData)
+                                    @RenderImageElement(MappedData)
+                                    @if (IsTemplate){ @TreeOptions.NodeTemplate(ListData); }
+                                    else{ @text }
+                                </div> 
+                            </a>
+                        }
+                        else
+                        {
+                            @RenderIconElement(MappedData)
+                            @if (MappedData.ImageUrl != null) { @RenderImageElement(MappedData) }
+                <a href="@MappedData.Url" @attributes="@urlAttribute">
+                    @if (IsTemplate)
+                    { @TreeOptions.NodeTemplate(ListData); }
+                    else{ @text }
+                </a>
+                        }
+                    }
+                    else
+                    {
+                        @RenderIconElement(MappedData)
+                        @if (MappedData.ImageUrl != null) { @RenderImageElement(MappedData) }
+                        <span class="e-list-text">
+                            @if (IsTemplate && !TreeOptions.IsEdit)
+                            {
+                                @TreeOptions.NodeTemplate(ListData);
+                            }
+                            else
+                            {
+                                if (TreeOptions.IsEdit)
+                                {
+                                    bool RTL = (TreeParent.EnableRtl || (SyncfusionService != null && SyncfusionService.options.EnableRtl));
+                                    <SfTextBox @ref="inputElement" CssClass="@TreeParent.CssClass" Value="@text" EnableRtl="@RTL" Blur="EditedValue" Created="OnCreate">
+                                    </SfTextBox>
+                                }
+                                else
+                                { @text }
+                        }
+                        </span>
+                    }
+                </div>
+
+            @if (TreeOptions != null && TreeOptions.ChildData != null)
+            {
+                if (TreeOptions.TreeViewFields != null) { ListModel.Fields = TreeOptions.TreeViewFields; }
+                var nodelevel = TreeNodeLevel + 1;
+                TreeOptions.NodeLevel = TreeNodeLevel;
+                <CreateListFromComplex TValue="TValue" TreeOptions="@TreeOptions" TreeNodeLevel="@nodelevel" ListModel="ListModel" ListData="(IEnumerable<TValue>)TreeOptions.ChildData" TreeItemCreating="@TreeParent.ListReference.BeforeNodeCreate"></CreateListFromComplex>
+            }
+        }
+    </li>
+}
+
+@code {
+    private SfTextBox inputElement { get; set; }
+    private ElementReference liElement { get; set; }
+    private async void EditedValue()
+    {
+        await TreeParent.TriggerNodeEdittedEvent(inputElement.Value);
+        inputElement.Dispose();
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && (TreeParent.IsNodeRendered || TreeParent.IsNodeExpanded ))
+        {
+            NodeRenderEventArgs<TValue> args = new NodeRenderEventArgs<TValue>()
+            {
+                Name = "OnNodeRender",
+                Node = liElement,
+                NodeData = ListData,
+                Text = MappedData?.Text
+            };
+            TreeParent.NodeLen = TreeParent.NodeLen + 1;
+            if (!TreeParent.IsRenderedNodes.Contains(MappedData.Id) && TreeParent.TreeviewEvents?.OnNodeRender.HasDelegate == true) {
+                TreeParent.IsRenderedNodes.Add(MappedData.Id);
+                await SfBaseUtils.InvokeEvent<NodeRenderEventArgs<TValue>>(TreeParent.TreeviewEvents?.OnNodeRender, args);
+            }
+            if (TreeParent.NodeLen == TreeParent.ChildCount) {
+                TreeParent.NodeLen = 0;
+                TreeParent.IsNodeExpanded = false;
+                TreeParent.IsNodeRendered = false;
+                 if (TreeParent.ListReference.DataType == TreeViewDataType.RemoteData && TreeParent.AllowTextWrap && TreeParent.IsDataSourceChanged)
+                {
+                    await InvokeMethod("sfBlazor.TreeView.updateTextWrap", new object[] { TreeParent.Element});
+                    TreeParent.IsDataSourceChanged = false;
+                }
+            }
+        }
+    }
+    private async Task OnCreate()
+    {
+        await InvokeMethod("sfBlazor.TreeView.setFocus", inputElement, liElement);
+    }
+    private RenderFragment RenderIconElement(FieldsValueMapping<List<TValue>> mappedData)
+    {
+        RenderFragment iconElement = null;
+        @if (ListModel.ShowIcon && (mappedData.IconCss != null))
+        {
+            string iconClass = "e-list-icon";
+            iconElement =@<div class="@($"{iconClass} {mappedData.IconCss}")"></div>;
+        }
+        return iconElement;
+    }
+
+    private RenderFragment RenderImageElement(FieldsValueMapping<List<TValue>> mappedData)
+    {
+        RenderFragment imageElement = null;
+        @if (mappedData.ImageUrl != null)
+        {
+            Dictionary<string, object> imageAttribute = new Dictionary<string, object>();
+            string AltText = mappedData.Text + " image";
+            @if (TreeOptions != null && TreeOptions.IsTree)
+            {
+                imageAttribute = new Dictionary<string, object>() { { "class", "e-list-img" }, { "alt", AltText } };
+                imageElement =@<img src="@mappedData.ImageUrl" @attributes="imageAttribute" />;
+            }
+            else
+            {
+                imageElement =@<img src="@mappedData.ImageUrl" alt="@AltText"/>;
+            }
+        }
+        return imageElement;
+    }
+}

@@ -1,0 +1,51 @@
+﻿@using Syncfusion.Blazor;
+
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+@inherits SfBaseComponent;
+
+<div id="@(this.ID + "Tooltip")" style="@("pointer-events:none; position:absolute; left:" + elementLeft.ToString(culture) + "px; top:" + elementTop.ToString(culture) + "px;")">
+    <svg id="@(this.ID + "Tooltip_svg")" opacity="@Opacity.ToString(culture)" height="@svgProperties.Height.ToString(culture)" width="@svgProperties.Width.ToString(culture)">
+        <g id="@(this.ID + "Tooltip_group")" transform="translate(0,0)">
+            <path id="@(this.ID + "Tooltip_path")" d="@path.Direction" stroke="@path.Stroke" stroke-width="@BorderWidth.ToString(culture)" opacity="@path.Opacity.ToString(culture)"
+                  fill="@path.Fill" filter="@(IsIE ? string.Empty : "url(#" + this.ID + "Tooltip_shadow)")"></path>
+            <text id="@(this.ID + "Tooltip_text")" x="@textSetting.X.ToString(culture)" y="@textSetting.Y.ToString(culture)" transform="@textSetting.Transform" text-anchor="@textSetting.Anchor"
+                  font-family="@FontFamily" font-style="@FontStyle" font-size="@TextSize.ToString(culture)" opacity="@FontOpacity.ToString(culture)" font-weight="@FontWeight">
+                @for (int i = 0; i < textCollection.Count; i++)
+                {
+                    @if (!double.IsNaN(textCollection[i].X))
+                    {
+                        if (!double.IsNaN(textCollection[i].DY))
+                        {
+                            <tspan x="@textCollection[i].X.ToString(culture)" dy="@textCollection[i].DY.ToString(culture)" fill="@FontColor" font-weight="@textCollection[i].FontWeight">@textCollection[i].Text</tspan>
+                        }
+                        else
+                        {
+                            <tspan x="@textCollection[i].X.ToString(culture)" fill="@FontColor" font-weight="@textCollection[i].FontWeight">@textCollection[i].Text</tspan>
+                        }
+                    }
+                    else
+                    {
+                        <tspan fill="@FontColor" font-weight="@textCollection[i].FontWeight">@textCollection[i].Text</tspan>
+                    }
+                }
+            </text>
+            @if (this.EnableShadow)
+            {
+                <defs id="@(this.ID + "TooltipSVG_tooltip_definition")">
+                    <filter id="@(this.ID + "Tooltip_shadow")" height="130%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"></feGaussianBlur>
+                        <feOffset dx="3" dy="3" result="offsetblur"></feOffset>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.5"></feFuncA>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode></feMergeNode>
+                            <feMergeNode in="SourceGraphic">
+                            </feMergeNode>
+                        </feMerge>
+                    </filter>
+                </defs>
+            }
+        </g>
+    </svg>
+</div>

@@ -1,0 +1,36 @@
+@using Syncfusion.Blazor.Buttons;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.SplitButtons.Internal;
+@inherits SfBaseComponent
+@namespace Syncfusion.Blazor.SplitButtons
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+@{
+    var cssClass = string.IsNullOrEmpty(CssClass) ? DROPDOWNBTN : DROPDOWNBTN + SPACE + CssClass;
+    if (renderPopup)
+        cssClass += ACTIVE;
+    var btnClass = cssClass;
+    if (Content == null)
+    {
+        btnClass += " e-icon-button";
+    }
+}
+<SfButton @ref="@btnRef" @attributes="htmlAttributes" IconCss=@IconCss Disabled=@Disabled EnableRtl=@EnableRtl OnClick="@ButtonClickAsync" @onkeydown="@KeyDownHandler"
+          IconPosition="@(IconPosition == SplitButtonIconPosition.Top ? Syncfusion.Blazor.Buttons.IconPosition.Top : Syncfusion.Blazor.Buttons.IconPosition.Left)"
+          CssClass="@btnClass">
+     @Content
+    <CascadingValue Value="@this">@ChildContent</CascadingValue>
+    <span class="e-btn-icon e-icons@(CssClass != null && CssClass.Contains(VERTICAL) ? ICONBOTTOM : string.Empty) e-caret"></span>
+    <CascadingValue Value="@this">
+        @if (renderPopup)
+        {
+            <div @ref="popup" id="@popupId" class="@popupCls" @onclick:stopPropagation>
+                @if (Items != null)
+                {
+                    <DropDownMenu></DropDownMenu>
+                }
+                @PopupContent
+            </div>
+        }
+    </CascadingValue>
+</SfButton>

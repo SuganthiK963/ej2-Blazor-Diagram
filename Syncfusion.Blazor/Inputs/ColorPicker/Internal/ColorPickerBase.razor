@@ -1,0 +1,33 @@
+﻿@namespace Syncfusion.Blazor.Inputs.Internal
+@inject ISyncfusionStringLocalizer Localizer
+<div @ref="container" class="@containerClass" data-ripple="true" style="@containerStyle">
+    @if (Parent.IsDevice && !Parent.Inline && Parent.ShowModel)
+    {
+        <div class="@DEVICE_MODEL" style="@DISPLAY_NONE"></div>
+    }
+    @if (pickerMode)
+    {
+        <ColorPicker @ref="colorPicker"></ColorPicker>
+    }
+    else
+    {
+        <ColorPalette @ref="colorPalette"></ColorPalette>
+    }
+    @if (Parent.ModeSwitcher || Parent.ShowButtons)
+    {
+        <div class="@CTRL_SWITCH">
+            @if (Parent.ModeSwitcher)
+            {
+                <button class="@SWITCH_BTN_CLS" title="@(Localizer.GetText(MODE_SWITCHER_KEY) ?? SWITCH_MODE)" @onclick="@SwitchMode" disabled="@Parent.Disabled"></button>
+            }
+            @if (Parent.ShowButtons)
+            {
+                var apply = Localizer.GetText(APPLY_KEY) ?? APPLY; var cancel = Localizer.GetText(CANCEL_KEY) ?? CANCEL;
+                <div class="@CTRL_BTN">
+                    <button class="@APPLY_CLS" title="@apply" @onclick="@ApplyClickHandler" disabled="@Parent.Disabled">@apply</button>
+                    <button class="@CANCEL_CLS" title="@cancel" @onclick="@CancelClickHandler" disabled="@Parent.Disabled">@cancel</button>
+                </div>
+            }
+        </div>
+    }
+</div>

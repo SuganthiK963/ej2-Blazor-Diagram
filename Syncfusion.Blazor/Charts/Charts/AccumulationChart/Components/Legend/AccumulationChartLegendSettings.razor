@@ -1,0 +1,8 @@
+@inherits SfBaseComponent;
+@using Syncfusion.Blazor.Charts.Internal
+@implements Syncfusion.Blazor.Charts.ILegend
+@namespace Syncfusion.Blazor.Charts
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

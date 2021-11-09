@@ -1,0 +1,53 @@
+﻿@namespace Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+@inherits SfBaseComponent;
+@using Syncfusion.Blazor.Internal;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+@*Tooltip element*@
+<div id="@ID" @ref="tooltipElement" @attributes="@attributes">
+    <CascadingValue Value="@this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@*Dynamically generating tooltip element on JSInterop server method call*@
+@if (this.renderWrapper)
+{
+    <div id="@(ID)_content_placeholder" style="display:none">
+        <div id="@(ID)_content" class="@TooltipContentClass @CssClass" role="tooltip" aria-hidden="false">
+            <div class="e-tip-content">
+                @if (this.Content != null)
+                {
+                    @((MarkupString)this.Content.ToString())
+                }
+                else if (this.ContentTemplate != null)
+                {
+                    @ContentTemplate
+                }
+            </div>
+            @if (this.ShowTipPointer)
+            {
+                <div class="@ARROWTIP">
+                    <div class="@ARROWTIPOUTER"></div>
+                    <div class="@ARROWTIPINNER"></div>
+                </div>
+            }
+            @if (IsSticky)
+            {
+                <div class="@CLOSEICON" @onclick="@StickyClose"></div>
+            }
+        </div>
+    </div>
+}
+
+@code{ 
+    const string TooltipContentClass = "e-hidden e-tooltip-wrap e-popup e-lib";
+    const string ARROWTIP = "e-arrow-tip";
+    const string ARROWTIPOUTER = "e-arrow-tip-outer";
+    const string ARROWTIPINNER = "e-arrow-tip-inner";
+    const string CLOSEICON = "e-icons e-tooltip-close";
+}

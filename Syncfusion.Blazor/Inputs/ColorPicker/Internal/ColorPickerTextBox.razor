@@ -1,0 +1,31 @@
+﻿@namespace Syncfusion.Blazor.Inputs.Internal
+<div class="@SELECTED_VALUE">
+    <div class="@INPUT_CONTAINER">
+        @if (!Parent.containerClass.Contains(HIDE_HEX))
+        {
+            <SfTextBox Value="@hexValue" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)" FloatLabelType="@FloatLabelType.Always" HtmlAttributes="@hexAttributes" Input="@HexInputHandler" Placeholder="HEX" Readonly="@readOnly"></SfTextBox>
+        }
+        @if (!Parent.containerClass.Contains(HIDE_RGBA))
+        {
+            <SfNumericTextBox Format="n0" @bind-Value="@rValue" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)" TValue="double?" Min="0" Max="@rMax" ShowSpinButton="false" FloatLabelType="@FloatLabelType.Always" Placeholder="@rgbLabel[0]" Readonly="@readOnly">
+                <NumericTextBoxEvents TValue="double?" ValueChange="@FirstInputHandler"></NumericTextBoxEvents>
+            </SfNumericTextBox>
+            <SfNumericTextBox Format="n0" @bind-Value="@gValue" TValue="double?" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)" Min="0" Max="@gbMax" ShowSpinButton="false" FloatLabelType="@FloatLabelType.Always" Placeholder="@rgbLabel[1]" Readonly="@readOnly">
+                <NumericTextBoxEvents TValue="double?" ValueChange="@SecondInputHandler"></NumericTextBoxEvents>
+            </SfNumericTextBox>
+            <SfNumericTextBox Format="n0" @bind-Value="@bValue" TValue="double?" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)" Min="0" Max="@gbMax" ShowSpinButton="false" FloatLabelType="@FloatLabelType.Always" Placeholder="@rgbLabel[2]" Readonly="@readOnly">
+                <NumericTextBoxEvents TValue="double?" ValueChange="@ThirdInputHandler"></NumericTextBoxEvents>
+            </SfNumericTextBox>
+            @if (Parent.EnableOpacity)
+            {
+                <SfNumericTextBox Format="n0" @bind-Value="@opacityValue" TValue="double?" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)" Min="0" Max="100" ShowSpinButton="false" FloatLabelType="@FloatLabelType.Always" Placeholder="A" Readonly="@readOnly">
+                    <NumericTextBoxEvents TValue="double?" ValueChange="@OpacityInputHandler"></NumericTextBoxEvents>
+                </SfNumericTextBox>
+            }
+        }
+    </div>
+    @if (!Parent.containerClass.Contains(HIDE_VALUE_SWITCH))
+    {
+        <button class="@FORMAT_SWITCH" @onclick="@FormatSwitchHandler" disabled="@Parent.Disabled"></button>
+    }
+</div>

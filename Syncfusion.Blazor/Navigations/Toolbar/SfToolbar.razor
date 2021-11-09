@@ -1,0 +1,40 @@
+@using Syncfusion.Blazor.Navigations.Internal
+@namespace Syncfusion.Blazor.Navigations
+
+@inherits SfBaseComponent
+
+@using Syncfusion.Blazor.Internal;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div id="@ID" @ref="Element" class="@ToolbarClass" @attributes="containerAttributes" style="width:@SfBaseUtils.FormatUnit(this.Width);height:@SfBaseUtils.FormatUnit(this.Height);">
+    <CascadingValue Value="@this">
+        <div class="@(IsInitialModeMultiRow ? "e-toolbar-items e-toolbar-multirow" : "e-blazor-toolbar-items")">
+            @ChildContent
+            @if (ToolbarItems != null)
+            {
+                @foreach (ItemModel Item in ToolbarItems)
+                {
+                    <ToolbarContent Index="@Item.Index" Item="@Item"></ToolbarContent>
+                }
+            }
+        </div>
+        @if (IsInitialModeMultiRow)
+        {
+            <div class="e-blazor-toolbar-items"></div>
+        }
+    </CascadingValue>
+</div>
+
+<style>
+    .e-toolbar .e-blazor-toolbar-items {
+        position: absolute;
+        top: -9999px;
+        visibility: hidden;
+    }
+</style>
+
+@code {
+    internal ElementReference Element;
+}

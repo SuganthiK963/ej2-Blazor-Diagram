@@ -1,0 +1,9 @@
+﻿@namespace Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+<CascadingValue Value="@this">
+    @ChildContent
+    <AccordionItemRender @key="this" Item="this"></AccordionItemRender>
+</CascadingValue>

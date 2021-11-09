@@ -1,0 +1,15 @@
+﻿@using Syncfusion.Blazor.SplitButtons;
+@inherits SfBaseComponent;
+
+@namespace Syncfusion.Blazor.Charts.Internal
+
+<SfDropDownButton Content=@Content>
+    <DropDownButtonEvents ItemSelected="@ItemSelected">
+    </DropDownButtonEvents>
+    <DropDownMenuItems>
+        @foreach (DropDownMenuItem item in Items)
+        {
+            <DropDownMenuItem Disabled="@item.Disabled" IconCss="@item.IconCss" Id="@item.Id" Separator="@item.Separator" Text="@item.Text" Url="@item.Url"></DropDownMenuItem>
+        }
+    </DropDownMenuItems>
+</SfDropDownButton>

@@ -1,0 +1,112 @@
+﻿@using Syncfusion.Blazor.Navigations
+
+@namespace Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+<li class=@itemClass @attributes="Item.itemHtmlAttributes" aria-disabled=@(isDisabled ? "true": "false")>
+    @Item.ChildContent
+    @if (baseParent != null && baseParent.BreadcrumbTemplates != null && baseParent.BreadcrumbTemplates.ItemTemplate != null)
+    {
+        @baseParent.BreadcrumbTemplates.ItemTemplate(Item);
+    }
+    else
+    {
+        var attributes = isDisabled ? new Dictionary<string, object>() { { "tabindex", "-1" } } : null;
+        bool isIconLeft = Item.IconCss != null && (!itemClass.Contains("e-icon-right") && !baseParent.BreadcrumbClass.Contains("e-icon-right"));
+        bool isIconRight = Item.IconCss != null && (itemClass.Contains("e-icon-right") || baseParent.BreadcrumbClass.Contains("e-icon-right"));
+        string content = "";
+        if (isIconLeft || isIconRight)
+        {
+            if (isIconRight) { content += Item.Text; }
+            content += "<span class='" + "e-breadcrumb-icon " + Item.IconCss + "'></span>";
+            if (isIconLeft) { content += Item.Text; }
+        }
+        else
+        {
+            content += Item.Text;
+        }
+        if (!baseParent.EnableActiveItemNavigation && (Index == ((baseParent.MaxItems != 0 && baseParent.OverflowMode == BreadcrumbOverflowMode.Default) ? parent.endCount : parent.Items.Count - 1) || (baseParent.ActiveItem != null && Item.Url == baseParent.ActiveItem)))
+        {
+            <span class="e-breadcrumb-text">@((MarkupString)content)</span>
+        }
+        else if (!baseParent.EnableNavigation)
+        {
+            <a class="e-breadcrumb-text" @attributes="attributes" @onclick="((MouseEventArgs e) => AnchorClick(Item, e))" href=@Item.Url @onclick:preventDefault="true" @onfocus="FocusHandler" @onfocusout="FocusOutHandler">@((MarkupString)content)</a>
+        }
+        else
+        {
+            <a class="e-breadcrumb-text" @attributes="attributes" @onclick="((MouseEventArgs e) => AnchorClick(Item, e))" href=@Item.Url @onfocus="FocusHandler" @onfocusout="FocusOutHandler">@((MarkupString)content)</a>
+        }
+    }
+</li>
+
+@code {
+    private string itemClass { get; set; }
+    private bool isDisabled { get; set; }
+
+    [CascadingParameter]
+    private CreateBreadcrumbItems parent { get; set; }
+
+    [CascadingParameter]
+    private SfBreadcrumb baseParent { get; set; }
+
+    [Parameter]
+    public BreadcrumbItem Item { get; set; }
+
+    [Parameter]
+    public int Index { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        itemClass = "e-breadcrumb-item" + (Item.Text == null ? " e-icon-item" : "");
+        if (Item.itemHtmlAttributes != null && Item.itemHtmlAttributes.ContainsKey("class"))
+        {
+            itemClass = SfBaseUtils.AddClass(itemClass, Item.itemHtmlAttributes["class"] as string);
+            Item.itemHtmlAttributes.Remove("class");
+        }
+        isDisabled = baseParent.BreadcrumbClass.Contains("e-disabled") || itemClass.Contains("e-disabled");
+    }
+
+    private async Task AnchorClick(BreadcrumbItem item, MouseEventArgs e)
+    {
+        await SfBaseUtils.InvokeEvent(baseParent.ItemClicked, new BreadcrumbClickedEventArgs { Item = item });
+        if (baseParent.OverflowMode == BreadcrumbOverflowMode.Default && parent.endCount != 0)
+        {
+            int index = baseParent.Items.IndexOf(item);
+            if (parent.startCount > 1)
+            {
+                parent.startCount -= (parent.endCount - index);
+            }
+            parent.endCount = index;
+            parent.UpdateStateHasChanged();
+        }
+        if (baseParent.EnablePersistence)
+        {
+            await InvokeMethod("window.localStorage.setItem", new object[] { baseParent.IdValue, item.Url });
+        }
+        if (item.Url != null)
+        {
+            await baseParent.UpdateActiveItem(item.Url);
+            parent.UpdateStateHasChanged();
+        }
+    }
+
+    private void FocusHandler()
+    {
+        itemClass = itemClass + " e-focus";
+    }
+
+    private void FocusOutHandler()
+    {
+        itemClass = itemClass.Replace(" e-focus", "");
+    }
+
+    internal override void ComponentDispose()
+    {
+        parent = null;
+        baseParent = null;
+        Item = null;
+    }
+}

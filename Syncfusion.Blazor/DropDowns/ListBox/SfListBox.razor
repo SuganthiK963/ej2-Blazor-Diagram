@@ -1,0 +1,198 @@
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Inputs.Internal;
+@using Syncfusion.Blazor.Buttons.Internal;
+@typeparam TValue
+@typeparam TItem
+@namespace Syncfusion.Blazor.DropDowns
+@inherits SfDropDownBase<TItem>;
+@inject ISyncfusionStringLocalizer Localizer
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+@{
+    var attributes = GetAttributes("root");
+}
+<div @ref="element" id="@id" class="@container" tabindex="0" data-ripple="true" role="listbox" @attributes="@attributes" @onkeydown="@(async (e) => { if (ListDataSource != null && ListDataSource.Count() > 0) { await KeyActionHandler(e, ListDataSource.ElementAt(0), true); } })">
+    @if (AllowFiltering && toolbarSettings != null)
+    {
+        <div class="@TOOLBARCLASS">
+            <span class="@FILTERPARENT">
+                <SfInputBase @ref="filterInputObj" RootClass="@FILTERCLASS" @bind-Value="@filterValue" @attributes="@(new Dictionary<string, object>() { { ROLE, LISTBOX } })" IsShowSpinnerOnClear="true" Placeholder="@this.FilterBarPlaceholder" ShowClearButton="true" Type="text" Autocomplete="off"
+                             @onkeyup="SearchList" BindClearBtnEvents="@InvokeClearBtnEvent" BindClearBtnTouchEvents="@InvokeClearBtnEvent" OnChange="@ChangeHandler">
+                </SfInputBase>
+            </span>
+            <select class="@SELECT" multiple="" name="@LISTBOX">
+                @foreach (var listValue in selectedValues)
+                {
+                    <option selected value="@listValue"></option>
+                }
+            </select>
+            <input class="@COMPONENTCLASS" aria-disabled="@(!Enabled)" style="@DISPLAY">
+            @if (render)
+            {
+                @if (selectionSettings != null && selectionSettings.ShowCheckbox && selectionSettings.ShowSelectAll)
+                {
+                    bool check = false; bool indeterminate = false;
+                    <div class="@SELECTALL" aria-checked="@(indeterminate ? MIXED : check.ToString())" @onclick="@(async () => await SelectAllHandler(true, true))">
+                        @if (ListDataSource != null && ListDataSource.Count() > 0)
+                        {
+                            check = selectedValues.Count == ListDataSource.Count(); indeterminate = !check && selectedValues.Count > 0;
+                            var unSelectLocaleText = Localizer.GetText(UNSELECTALLKEY);
+                            var selectLocaleText = Localizer.GetText(SELECTALLKEY);
+                            @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = check, Indeterminate = indeterminate }))
+                            <span class="@SELECTALLTEXT">
+                                @if (check)
+                                    @(string.IsNullOrEmpty(unSelectLocaleText) ? UNSELECTALLVALUE : unSelectLocaleText)
+                                else
+                                    @(string.IsNullOrEmpty(selectLocaleText) ? SELECTALLVALUE : selectLocaleText)
+                            </span>
+                        }
+                    </div>
+                }
+                var ulAttribute = GetAttributes("ul");
+                <ul class="@ULCLASS" @attributes="@ulAttribute" role="@PRESENTATION" style="@ULSTYLE">
+                    @if (ListDataSource != null && ListDataSource.Count() > 0)
+                    {
+                        @foreach (var list in ListDataSource)
+                        {
+                            Task.Run(async delegate
+                            {
+                                await SfBaseUtils.InvokeEvent<BeforeItemRenderEventArgs<TItem>>(Delegates?.OnItemRender, new BeforeItemRenderEventArgs<TItem>() { Name = ONITEMRENDER, Item = list.CurItemData });
+                            });
+                            var listAttribute = GetListAttributes(list);
+                            <li class="@list.ListClass" @key="@list" @attributes="@listAttribute" @onclick="@(async (e) => await ClickHandler(list, e.ShiftKey, e.CtrlKey))" @onkeydown="@(async (e) => await KeyActionHandler(e, list, false))" @onkeydown:stopPropagation @onmousedown="@(async () => await MouseDownHandler(list))">
+                                @if (selectionSettings != null && selectionSettings.ShowCheckbox)
+                                    @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = selectedValues.Contains(list.Value) }))
+                                @if (!list.IsHeader && this.ItemTemplate != null)
+                                    @ItemTemplate(list.CurItemData)
+                                else
+                                {
+                                        @if (!string.IsNullOrEmpty(Fields?.IconCss))
+                                        {
+                                            <span class="@list.IconCss"></span>
+                                        }
+                                        @list.Text
+                                }
+                            </li>
+                        }
+
+                    }
+                    else
+                    {
+                        var actionFailueLocaleText = Localizer.GetText(ACTIONFAILUREKEY);
+                        var noRecordLocaleText = Localizer.GetText(NORECORDKEY);
+                        <li class="@NORECORDCLASS">
+                            @if (IsActionFaiure)
+                                @(string.IsNullOrEmpty(actionFailueLocaleText) ? ACTIONFAILUREVALUE : actionFailueLocaleText)
+                            else
+                            {
+                                if (NoRecordsTemplate != null)
+                                    @NoRecordsTemplate
+                                else
+                                    @(string.IsNullOrEmpty(noRecordLocaleText) ? NORECORDVALUE : noRecordLocaleText)
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            </div>
+        }
+        else
+        {
+            @if (AllowFiltering)
+            {
+                <span class="@FILTERPARENT">
+                    <SfInputBase @ref="filterInputObj" RootClass="@FILTERCLASS" @bind-Value="@filterValue" @attributes="@(new Dictionary<string, object>() { { ROLE, LISTBOX } })" IsShowSpinnerOnClear="true" Placeholder="@this.FilterBarPlaceholder" ShowClearButton="true" Type="text" Autocomplete="off"
+                        @onkeyup="SearchList" OnChange="@ChangeHandler" BindClearBtnEvents="@InvokeClearBtnEvent" BindClearBtnTouchEvents="@InvokeClearBtnEvent">
+                    </SfInputBase>
+                </span>
+            }
+            <select class="@SELECT" multiple="" name="@LISTBOX">
+                @foreach (var listValue in selectedValues)
+                {
+                    <option selected value="@listValue"></option>
+                }
+            </select>
+            <input class="@COMPONENTCLASS" aria-disabled="@(!Enabled)" style="@DISPLAY">
+            @if (render)
+            {
+                @if (selectionSettings != null && selectionSettings.ShowCheckbox && selectionSettings.ShowSelectAll)
+                {
+                    bool check = false; bool indeterminate = false;
+                    <div class="@SELECTALL" aria-checked="@(indeterminate ? MIXED : check.ToString())" @onclick="@(async () => await SelectAllHandler(true, true))">
+                        @if (ListDataSource != null && ListDataSource.Count() > 0)
+                        {
+                            check = selectedValues.Count == ListDataSource.Count(); indeterminate = !check && selectedValues.Count > 0;
+                            var unSelectLocaleText = Localizer.GetText(UNSELECTALLKEY);
+                            var selectLocaleText = Localizer.GetText(SELECTALLKEY);
+                            @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = check, Indeterminate = indeterminate }))
+                            <span class="@SELECTALLTEXT">
+                                @if (check)
+                                    @(string.IsNullOrEmpty(unSelectLocaleText) ? UNSELECTALLVALUE : unSelectLocaleText)
+                                else
+                                        @(string.IsNullOrEmpty(selectLocaleText) ? SELECTALLVALUE : selectLocaleText)
+                            </span>
+                        }
+                    </div>
+                }
+                var ulAttribute = GetAttributes("ul");
+                <ul class="@ULCLASS" @attributes="@ulAttribute" role="@PRESENTATION" style="@ULSTYLE">
+                    @if (ListDataSource != null && ListDataSource.Count() > 0)
+                    {
+                        @foreach (var list in ListDataSource)
+                        {
+                            Task.Run(async delegate
+                            {
+                                await SfBaseUtils.InvokeEvent<BeforeItemRenderEventArgs<TItem>>(Delegates?.OnItemRender, new BeforeItemRenderEventArgs<TItem>() { Name = ONITEMRENDER, Item = list.CurItemData });
+                            });
+                            var listAttribute = GetListAttributes(list);
+                            <li class="@list.ListClass" @key="@list" @attributes="@listAttribute" @onclick="@(async (e) => await ClickHandler(list, e.ShiftKey, e.CtrlKey))" @onkeydown="@(async (e) => await KeyActionHandler(e, list, false))" @onkeydown:stopPropagation @onmousedown="@(async () => await MouseDownHandler(list))">
+                                @if (selectionSettings != null && selectionSettings.ShowCheckbox)
+                                    @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = selectedValues.Contains(list.Value) }))
+                                @if (!list.IsHeader && this.ItemTemplate != null)
+                                    @ItemTemplate(list.CurItemData)
+                                else
+                                {
+                                        @if (!string.IsNullOrEmpty(Fields?.IconCss))
+                                        {
+                                            <span class="@list.IconCss"></span>
+                                        }
+                                        @list.Text
+                                }
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        var actionFailueLocaleText = Localizer.GetText(ACTIONFAILUREKEY);
+                        var noRecordLocaleText = Localizer.GetText(NORECORDKEY);
+                        <li class="@NORECORDCLASS">
+                            @if (IsActionFaiure)
+                                @(string.IsNullOrEmpty(actionFailueLocaleText) ? ACTIONFAILUREVALUE : actionFailueLocaleText)
+                            else
+                            {
+                                if (NoRecordsTemplate != null)
+                                    @NoRecordsTemplate
+                                else
+                                    @(string.IsNullOrEmpty(noRecordLocaleText) ? NORECORDVALUE : noRecordLocaleText)
+                            }
+                        </li>
+                    }
+                </ul>
+                }
+            }
+            @if (toolbarSettings != null && toolbarSettings.Items != null)
+            {
+                <div class="@TOOL" role="@TOOLBARROLE">
+                    @foreach (var item in toolbarSettings.Items)
+                    {
+                        var prop = CheckBtnDisabled(item);
+                        <button class="@BTNCLASS" type="@BTN" data-value="@item" title="@prop.ItemText" aria-label="@prop.ItemText" disabled="@prop.Disabled" @onclick="@(async () => await ToolbarClickHandler(item))">
+                            <span class="@(BTNICONS + @item.ToLower())"></span>
+                        </button>
+                    }
+                </div>
+            }
+        </div>

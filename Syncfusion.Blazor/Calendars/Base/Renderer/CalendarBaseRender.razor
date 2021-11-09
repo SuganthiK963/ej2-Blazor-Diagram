@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Components.Web;
+@using System.Globalization;
+@namespace Syncfusion.Blazor.Calendars.Internal
+@typeparam TValue
+@inherits CalendarBase<TValue>;
+
+<div class="@this.ContentHeader">
+    <div class="@TitleClass" aria-atomic="true" aria-live="assertive" aria-label="title" @onclick="@NavigateTitle">@(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(this.HeaderTitle))</div>
+    <div class="@ICON_CONTAINER">
+        <button class="@this.PrevIconClass" @ref="PrevElement" type="button" @attributes="@this.PrevIconAttr" aria-label="previous month" @onclick="@NavigatePreviousHandler">
+            <span class="@(PREV_SPAN + SPACE + ICON)"></span>
+        </button>
+        <button class="@this.NextIconClass" @ref="NextElement" type="button" @attributes="@this.NextIconAttr" aria-label="next month" @onclick="@NavigateNextHandler">
+            <span class="@(NEXT_SPAN + SPACE + ICON)"></span>
+        </button>
+    </div>
+</div>
+@if (this.ContentElement)
+{
+    this.Row = NumCells;
+    this.RowIterator = 0;
+    this.Count = NumCells;
+    RowEleClass = string.Empty;
+    RowAttr = new Dictionary<string, object>();
+    var rowCount = this.CellsCount / this.Count;
+    <div class="@this.ContentElementClass">
+        <table tabindex="0" role="grid" aria-activedescendant=@string.Empty>
+            @if (CalendarView == CalendarView.Month)
+            {
+                <CalendarTableHeader TCalendarHeader="TValue" CalendarRenderView="CalendarView"></CalendarTableHeader>
+            }
+            <tbody @ref="@this.TableBodyEle">
+                @for (int dayCells = 0; dayCells < rowCount; dayCells++)
+                {
+                <tr class="@(RowEleClass)" @attributes="@RowAttr" role="Row">
+                    @for (this.RowIterator = 0 + this.RowIterator; this.RowIterator < this.Row; RowIterator++)
+                    {
+                        DateTime localCalDate = (CalendarView == CalendarView.Month) ? this.LocalDate.AddDays(this.RowIterator) : (CalendarView == CalendarView.Year) ? this.LocalDate.AddMonths(this.RowIterator) : this.LocalDate.AddYears(this.RowIterator);
+                        LocalMainDate.Add(localCalDate);
+                        string cellClass = null;
+                        var listData = this.Parent.CellListData != null ? this.Parent.CellListData.Where(item => item.CellID == localCalDate.Ticks + "_" + this.RowIterator)?.FirstOrDefault() : null;
+                        if (listData != null)
+                        {
+                            cellClass = listData.ClassList;
+                        }
+                <CalendarDayCell @ref="@CalDayCell" CellClass="@cellClass" LocalDates="localCalDate" CurrentCellDate="this.CurrentDate" TCalendarCell="TValue" Cells="this.RowIterator" TodayCellDate="this.TodayDate" IsNavigation="IsNavigation"
+                                 CalendarRenderView="CalendarView" OnCellClick="this.ClickHandler" IsSelect="IsSelect" IsMultiSelect="this.MultiSelection" MultiselectValues="this.MultiValues" IsFocusTodayDate="@IsFocusTodayCell">
+                </CalendarDayCell>
+                    }
+                </tr>
+                    @if (CalendarView == CalendarView.Month)
+                    {
+                        @if (this.Parent.WeekNumber && RowIterator == OtherMonthCell + 1 && LocalMainDate[RowIterator - 1].AddDays(1).Month != this.CurrentDate.Month)
+                        {
+                            RowEleClass = OTHER_MONTH_ROW;
+                            RowAttr = StyleDisplayNone;
+                        }
+                        @if (!this.Parent.WeekNumber && RowIterator == OtherMonthCell && LocalMainDate[RowIterator - 1].AddDays(1).Month != this.CurrentDate.Month)
+                        {
+                            RowEleClass = OTHER_MONTH_ROW;
+                            RowAttr = StyleDisplayNone;
+                        }
+                        @if (this.Parent.WeekNumber)
+                        {
+                            @if (LocalMainDate[RowIterator - 1].AddDays(1).Month != this.CurrentDate.Month)
+                            {
+                                RowEleClass = OTHER_MONTH_ROW;
+                                RowAttr = StyleDisplayNone;
+                            }
+                        }
+                        else if (LocalMainDate[RowIterator - 1].AddDays(1).Month != this.CurrentDate.Month)
+                        {
+                            RowEleClass = OTHER_MONTH_ROW;
+                            RowAttr = StyleDisplayNone;
+                        }
+                    }
+                    this.Row = this.Row + this.Count;
+                    this.RowIterator = this.RowIterator + 0;
+                }
+            </tbody>
+        </table>
+    </div>
+    IsNavigation = false;
+}
+else if (this.IsDeviceMode && this.IsCellClicked)
+{
+    this.ContentElement = true;
+    StateHasChanged();
+    _ = SfBaseUtils.Animate(this.JSRuntime, this.TableBodyEle, this.Animate);
+    this.IsCellClicked = false;
+}
+@if (this.Parent.ShowTodayButton)
+{
+    <div class="@FOOTER">
+        <button role="button" type="button" aria-label="@this.TodayEleContent" class="@this.TodayEleClass" @onclick="@TodayButtonClick">@this.TodayEleContent</button>
+    </div>
+}

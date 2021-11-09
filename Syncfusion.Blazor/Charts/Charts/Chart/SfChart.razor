@@ -1,0 +1,95 @@
+﻿@using Syncfusion.Blazor.Charts.Chart.Internal
+@using Syncfusion.Blazor.Charts.Internal
+@using Syncfusion.Blazor.DataVizCommon
+
+@namespace Syncfusion.Blazor.Charts
+@inherits SfDataBoundComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<CascadingValue Value="this">
+    <ResourceManager LocaleKeys="@(new List<string>() { "chart" })"></ResourceManager>
+    @if (IsStockChart)
+    {
+        <g @ref="Element" id="@ID" class="e-control e-chart e-lib e-touch @CustomClass" style="@SetChartContainerStyle()">
+            <ChartBorderRenderer></ChartBorderRenderer>
+            <ChartAreaRenderer></ChartAreaRenderer>
+            <ChartTitleRenderer></ChartTitleRenderer>
+            <ChartLegendRenderer></ChartLegendRenderer>
+            <ChartColumnRendererContainer></ChartColumnRendererContainer>
+            <ChartRowRendererContainer></ChartRowRendererContainer>
+            <g id="@(ID + "AxisInsideCollection")">
+                <ChartAxisRendererContainer></ChartAxisRendererContainer>
+            </g>
+            <ChartStriplineBehindContainer></ChartStriplineBehindContainer>
+            <ChartIndicatorContainer></ChartIndicatorContainer>
+            <g id="@(ID + "SeriesCollection")">
+                <ChartSeriesRendererContainer></ChartSeriesRendererContainer>
+            </g>
+            <g id="@(ID + "AxisOutsideCollection")">
+                <ChartAxisOutsideContainer></ChartAxisOutsideContainer>
+            </g>
+            <g id="@(ID + "TrendLineCollection")">
+                <ChartTrendlineContainer></ChartTrendlineContainer>
+            </g>
+            <SvgAxisGroup @ref="CrossGroup"></SvgAxisGroup>
+            <ChartStriplineOverContainer></ChartStriplineOverContainer>
+            <ZoomToolkit @ref="ZoomingToolkitContent"></ZoomToolkit>
+            <ZoomContent @ref="ZoomingContent"></ZoomContent>
+            <SelectionStyleComponent @ref="@BaseSelection.StyleRender" ComponentId="@ID" GivenPattern="@BaseSelection.GivenPatterns"></SelectionStyleComponent>
+            @if (SelectionMode.ToString().Contains("Drag") || SelectionMode == SelectionMode.Lasso)
+            {
+                <SvgSelectionRectCollection @ref="@ParentRect"></SvgSelectionRectCollection>
+            }
+        </g>
+    }
+    else
+    {
+        <div id="@ID" dir="@GetDirection()" @ref="Element" class="e-control e-chart e-lib e-touch @CustomClass" style="@SetChartContainerStyle()">
+            <div id="pinchtarget" style="opacity: 0; position: absolute; display: block; width: 100px; height: 100px; background: transparent; top: -100px; left: -100px;"></div>
+            <div id="@(ID + "_Secondary_Element")" style="position: relative;">
+                <div id="@(ID + "_Annotation_Collections")">
+                    <ChartAnnotationRendererContainer></ChartAnnotationRendererContainer>
+                </div>
+                <ChartTooltipComponent @ref="@TemplateTooltip" ID="@(ID + "_tooltip")" Class="ejSVGTooltip" Style="pointer-events:none; position:absolute;z-index: 1"></ChartTooltipComponent>
+                <DataLabelTemplateContainer></DataLabelTemplateContainer>
+                <TrimTooltipBase @ref="@TrimTooltip"></TrimTooltipBase>
+                <ScrollbarContent @ref="ChartScrollBarContent"></ScrollbarContent>
+            </div>
+            <svg @ref="SvgElement" id="@GetSvgId()" height="@GetSvgHeight()" width="@GetSvgWidth()">
+                <ChartBorderRenderer></ChartBorderRenderer>
+                <ChartAreaRenderer></ChartAreaRenderer>
+                <ChartTitleRenderer></ChartTitleRenderer>
+                <ChartLegendRenderer></ChartLegendRenderer>
+                <ChartColumnRendererContainer></ChartColumnRendererContainer>
+                <ChartRowRendererContainer></ChartRowRendererContainer>
+                <g id="@(ID + "AxisInsideCollection")">
+                    <ChartAxisRendererContainer></ChartAxisRendererContainer>
+                </g>
+                <ChartStriplineBehindContainer></ChartStriplineBehindContainer>
+                <ChartIndicatorContainer></ChartIndicatorContainer>
+                <g id="@(ID + "SeriesCollection")">
+                    <ChartSeriesRendererContainer></ChartSeriesRendererContainer>
+                </g>
+                <CustomLegendRenderer></CustomLegendRenderer>
+                <g id="@(ID + "AxisOutsideCollection")">
+                    <ChartAxisOutsideContainer></ChartAxisOutsideContainer>
+                </g>
+                <g id="@(ID + "TrendLineCollection")">
+                    <ChartTrendlineContainer></ChartTrendlineContainer>
+                </g>
+                <SvgAxisGroup @ref="CrossGroup"></SvgAxisGroup>
+                <ChartStriplineOverContainer></ChartStriplineOverContainer>
+                <ZoomToolkit @ref="ZoomingToolkitContent"></ZoomToolkit>
+                <ZoomContent @ref="ZoomingContent"></ZoomContent>
+                <SelectionStyleComponent @ref="@BaseSelection.StyleRender" ComponentId="@ID" GivenPattern="@BaseSelection.GivenPatterns"></SelectionStyleComponent>
+                @if (SelectionMode.ToString().Contains("Drag") || SelectionMode == SelectionMode.Lasso)
+                {
+                    <SvgSelectionRectCollection @ref="@ParentRect"></SvgSelectionRectCollection>
+                }
+            </svg>
+        </div>
+        <StyleElement @ref="@SelectionStyleInstance"></StyleElement>
+        <StyleElement @ref="@HighlightStyleInstance"></StyleElement>
+    }
+    @ChildContent
+</CascadingValue>

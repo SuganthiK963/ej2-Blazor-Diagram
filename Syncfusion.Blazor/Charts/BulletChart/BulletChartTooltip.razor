@@ -1,0 +1,8 @@
+﻿@inherits SfBaseComponent
+@namespace Syncfusion.Blazor.Charts
+@typeparam TValue;
+@implements IBulletChartTooltip;
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

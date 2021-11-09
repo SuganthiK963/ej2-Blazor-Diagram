@@ -1,0 +1,12 @@
+﻿@namespace Syncfusion.Blazor.Inputs.Slider.Internal
+@inherits SfBaseComponent
+<li @ref="TickRef" @attributes="Attributes">
+    @if (!IsSmallTick)
+    {
+        <span class="@Parent.TickValue" @attributes="@SpanAttributes">@TickContent</span>
+        @if (Parent.Parent.Ticks.Placement == Placement.Both)
+        {
+            <span class="@Parent.TickValue" @attributes="@SpanAttributes">@TickContent</span>
+        }
+    }
+</li>

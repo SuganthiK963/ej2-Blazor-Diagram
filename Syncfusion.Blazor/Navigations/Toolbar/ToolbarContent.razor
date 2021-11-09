@@ -1,0 +1,23 @@
+@namespace Syncfusion.Blazor.Navigations.Internal
+@using Syncfusion.Blazor.Buttons;
+@implements IDisposable
+
+<div class="@ItemCss" aria-disabled=@(Item.Disabled ? "true" : "false") id="@(string.IsNullOrEmpty(Item.Id) ? SfBaseUtils.GenerateID(TOOLBAR_ITEM) : Item.Id)" data-index="@Index" @attributes="@itemAttributes">
+    @if (Item.Template != null)
+    {
+        @Item.Template
+    }
+    else if (Item.Type == ItemType.Button)
+    {
+        if (!string.IsNullOrEmpty(Item.Text))
+        {
+            <SfButton IconCss="@ButtonIconCss" @attributes="@buttonAttributes" IconPosition="@ButtonIconPosition" CssClass="@ButtonCss">
+                <span class="e-tbar-btn-text"> @Item.Text </span>
+            </SfButton>
+        }
+        else
+        {
+            <SfButton IconCss="@ButtonIconCss" @attributes="@buttonAttributes" IconPosition="@ButtonIconPosition" CssClass="@ButtonCss"></SfButton>
+        }
+    }
+</div>

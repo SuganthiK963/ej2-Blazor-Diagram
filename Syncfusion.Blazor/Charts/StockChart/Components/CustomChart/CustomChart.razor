@@ -1,0 +1,321 @@
+﻿@using Syncfusion.Blazor.Charts
+
+@namespace Syncfusion.Blazor.Charts.Chart.Internal
+
+<SfChart @ref="StockChart.ChartSettings" ID=@StockChart.GetId(SfStockChart.CHARTID) IsStockChart="true" IsTransposed=@StockChart.IsTransposed
+         IsMultiSelect=@StockChart.IsMultiSelect EnableRtl=@StockChart.EnableRtl
+         Width=@Convert.ToString(ChartSize.Width, culture) Height=@Convert.ToString(ChartSize.Height, culture)
+         SelectionMode=@StockChart.SelectionMode
+         Theme=@StockChart.Theme GetTooltipTop="@StockChart.GetSeriesTooltipTop">
+    <ChartAnnotations>
+        @foreach (StockChartAnnotation annotation in StockChart.Annotations)
+        {
+            <ChartAnnotation X=@annotation.X Y=@annotation.Y
+                             CoordinateUnits=@annotation.CoordinateUnits Description=@annotation.Description Region=@annotation.Region
+                             XAxisName=@annotation.XAxisName YAxisName=@annotation.YAxisName>
+                <ContentTemplate>
+                    @annotation.ContentTemplate
+                </ContentTemplate>
+            </ChartAnnotation>
+        }
+    </ChartAnnotations>
+    <ChartRows>
+        @foreach (StockChartRow row in StockChart.Rows)
+        {
+            <ChartRow Height=@row.Height>
+                <ChartBorder Color=@row.Border.Color Width=@row.Border.Width></ChartBorder>
+            </ChartRow>
+        }
+    </ChartRows>
+    <ChartMargin Top=StockChart.Margin.Top Bottom=StockChart.Margin.Bottom Right=StockChart.Margin.Right Left=StockChart.Margin.Left></ChartMargin>
+    <ChartSelectedDataIndexes>
+        @foreach (StockChartSelectedDataIndex selectedDataIndex in StockChart.SelectedDataIndexes)
+        {
+            <ChartSelectedDataIndex Point=@selectedDataIndex.Point Series=@selectedDataIndex.Series></ChartSelectedDataIndex>
+        }
+    </ChartSelectedDataIndexes>
+    <ChartEvents OnSeriesRender="StockChart.OnSeriesRender" Loaded="StockChart.OnChartLoaded" OnZooming="StockChart.OnZooming" OnPointClick="StockChart.OnPointClick"></ChartEvents>
+    <ChartArea Background=@ChartArea.Background BackgroundImage=@ChartArea.BackgroundImage Opacity=@ChartArea.Opacity>
+        <ChartAreaBorder Color=@ChartArea.Border.Color Width=@ChartArea.Border.Width />
+    </ChartArea>
+    @if (Tooltip.Template != null)
+    {
+        <ChartTooltipSettings Header="@GetTooltipHeader()" Enable=@Tooltip.Enable Shared=@Tooltip.Shared EnableMarker=@Tooltip.EnableMarker Duration=@Tooltip.Duration EnableAnimation=@Tooltip.EnableAnimation FadeOutDuration=@Tooltip.FadeOutDuration Format=@GetTooltipFormat() Fill=@Tooltip.Fill Opacity=@Tooltip.Opacity Template="@Tooltip.Template">
+        </ChartTooltipSettings>
+    }
+    else
+    {
+        <ChartTooltipSettings Header="@GetTooltipHeader()" Enable=@Tooltip.Enable Shared=@Tooltip.Shared EnableMarker=@Tooltip.EnableMarker Duration=@Tooltip.Duration EnableAnimation=@Tooltip.EnableAnimation FadeOutDuration=@Tooltip.FadeOutDuration Format=@GetTooltipFormat() Fill=@Tooltip.Fill Opacity=@Tooltip.Opacity>
+        </ChartTooltipSettings>
+    }
+    <ChartCrosshairSettings Enable=@Crosshair.Enable DashArray=@Crosshair.DashArray LineType=@Crosshair.LineType>
+        <ChartCrosshairLine Width=@Crosshair.Line.Width Color=@Crosshair.Line.Color></ChartCrosshairLine>
+    </ChartCrosshairSettings>
+    <ChartAxes>
+        @foreach (StockChartAxis axis in StockChart.Axes)
+        {
+            <ChartAxis @key="@axis.RendererKey" ValueType=@axis.ValueType CrossesAt=@axis.CrossesAt CrossesInAxis=@axis.CrossesInAxis
+                       Description=@axis.Description DesiredIntervals=@axis.DesiredIntervals EdgeLabelPlacement=@axis.EdgeLabelPlacement
+                       EnableAutoIntervalOnZooming=@axis.EnableAutoIntervalOnZooming EnableTrim=@axis.EnableTrim Interval=@axis.Interval
+                       IntervalType=@axis.IntervalType IsInversed=@axis.IsInversed LabelFormat=@axis.LabelFormat
+                       LabelIntersectAction=@axis.LabelIntersectAction LabelPlacement=@axis.LabelPlacement LabelPosition=@axis.LabelPosition
+                       LabelRotation=@axis.LabelRotation LogBase=@axis.LogBase Maximum=@axis.Maximum MaximumLabelWidth=@axis.MaximumLabelWidth
+                       MaximumLabels=@axis.MaximumLabels Minimum=@axis.Minimum MinorTicksPerInterval=@axis.MinorTicksPerInterval
+                       Name=@axis.Name OpposedPosition=@axis.OpposedPosition PlaceNextToAxisLine=@axis.PlaceNextToAxisLine PlotOffset=@axis.PlotOffset
+                       RangePadding=@axis.RangePadding RowIndex=@axis.RowIndex Skeleton=@axis.Skeleton Span=Convert.ToInt32(axis.Span) StartAngle=@axis.StartAngle
+                       TabIndex=@axis.TabIndex TickPosition=@axis.TickPosition Title=@axis.Title Visible=@axis.Visible ZoomFactor=@axis.ZoomFactor ZoomPosition=@axis.ZoomPosition>
+                @if (axis.CrosshairTooltip != null)
+                {
+                    <ChartAxisCrosshairTooltip Enable=@axis.CrosshairTooltip.Enable Fill=@axis.CrosshairTooltip.Fill>
+                        @if (axis.CrosshairTooltip.TextStyle != null)
+                        {
+                            <ChartCrosshairTextStyle Color=@axis.CrosshairTooltip.TextStyle.Color FontFamily=@axis.CrosshairTooltip.TextStyle.FontFamily
+                                                     FontStyle=@axis.CrosshairTooltip.TextStyle.FontStyle FontWeight=@axis.CrosshairTooltip.TextStyle.FontWeight
+                                                     Opacity=@axis.CrosshairTooltip.TextStyle.Opacity Size=@axis.CrosshairTooltip.TextStyle.Size TextAlignment=@axis.CrosshairTooltip.TextStyle.TextAlignment
+                                                     TextOverflow=@axis.CrosshairTooltip.TextStyle.TextOverflow></ChartCrosshairTextStyle>}
+                    </ChartAxisCrosshairTooltip>}
+                @if (axis.StripLines != null)
+                {
+                    <ChartStriplines>
+                        @foreach (StockChartAxisStripLine stripline in axis.StripLines)
+                        {
+                            <ChartStripline Color=@stripline.Color DashArray=@stripline.DashArray End=@stripline.End HorizontalAlignment=@stripline.HorizontalAlignment
+                                            IsRepeat=@stripline.IsRepeat IsSegmented=@stripline.IsSegmented Opacity=@stripline.Opacity RepeatEvery=@stripline.RepeatEvery
+                                            RepeatUntil=@stripline.RepeatUntil Rotation=@stripline.Rotation SegmentAxisName=@stripline.SegmentAxisName
+                                            SegmentEnd=@stripline.SegmentEnd SegmentStart=@stripline.SegmentStart Size=@stripline.Size SizeType=@stripline.SizeType
+                                            Start=@stripline.Start StartFromAxis=@stripline.StartFromAxis Text=@stripline.Text VerticalAlignment=@stripline.VerticalAlignment
+                                            Visible=@stripline.Visible ZIndex=@stripline.ZIndex>
+                                <ChartStriplineBorder Color=@stripline.Border.Color Width=@stripline.Border.Width></ChartStriplineBorder>
+                                <ChartStriplineTextStyle Color=@stripline.TextStyle.Color FontFamily=@stripline.TextStyle.FontFamily FontStyle=@stripline.TextStyle.FontStyle
+                                                         FontWeight=@stripline.TextStyle.FontWeight Opacity=@stripline.TextStyle.Opacity Size=@stripline.TextStyle.Size
+                                                         TextAlignment=@stripline.TextStyle.TextAlignment TextOverflow=@stripline.TextStyle.TextOverflow></ChartStriplineTextStyle>
+                            </ChartStripline>}
+                    </ChartStriplines>}
+                @if (axis.LabelStyle != null)
+                {
+                    @*<ChartAxisLabelStyle Color=@axis.LabelStyle.Color FontFamily=@axis.LabelStyle.FontFamily FontStyle=@axis.LabelStyle.FontStyle
+                                         FontWeight=@axis.LabelStyle.FontWeight Opacity=@axis.LabelStyle.Opacity Size=@axis.LabelStyle.Size
+                                         TextAlignment=@axis.LabelStyle.TextAlignment TextOverflow=@axis.LabelStyle.TextOverflow></ChartAxisLabelStyle>*@}
+                @if (axis.LineStyle != null)
+                {
+                    <ChartAxisLineStyle Color=@axis.LineStyle.Color DashArray=@axis.LineStyle.DashArray Width=@axis.LineStyle.Width></ChartAxisLineStyle>}
+                @if (axis.MajorGridLines != null)
+                {
+                    <ChartAxisMajorGridLines Color=@axis.MajorGridLines.Color Width=@axis.MajorGridLines.Width DashArray=@axis.MajorGridLines.DashArray></ChartAxisMajorGridLines>}
+                @if (axis.MajorTickLines != null)
+                {
+                    <ChartAxisMajorTickLines Color=@axis.MajorTickLines.Color Width=@axis.MajorTickLines.Width Height=@axis.MajorTickLines.Height></ChartAxisMajorTickLines>}
+                @if (axis.MajorGridLines != null)
+                {
+                    <ChartAxisMinorGridLines Color=@axis.MinorGridLines.Color Width=@axis.MinorGridLines.Width DashArray=@axis.MinorGridLines.DashArray></ChartAxisMinorGridLines>}
+                @if (axis.MinorTickLines != null)
+                {
+                    <ChartAxisMinorTickLines Color=@axis.MinorTickLines.Color Width=@axis.MinorTickLines.Width Height=@axis.MinorTickLines.Height></ChartAxisMinorTickLines>}
+                @if (axis.TitleStyle != null)
+                {
+                    @*<ChartAxisTitleStyle Color=@axis.TitleStyle.Color FontFamily=@axis.TitleStyle.FontFamily FontStyle=@axis.TitleStyle.FontStyle
+                                         FontWeight=@axis.TitleStyle.FontWeight Opacity=@axis.TitleStyle.Opacity Size=@axis.TitleStyle.Size
+                                         TextAlignment=@axis.TitleStyle.TextAlignment TextOverflow=@axis.TitleStyle.TextOverflow></ChartAxisTitleStyle>}*@}
+            </ChartAxis>
+        }
+    </ChartAxes>
+    @if (PrimaryXAxis != null)
+    {
+        <ChartPrimaryXAxis ValueType=@PrimaryXAxis.ValueType CrossesAt=@PrimaryXAxis.CrossesAt CrossesInAxis=@PrimaryXAxis.CrossesInAxis
+                           Description=@PrimaryXAxis.Description DesiredIntervals=@PrimaryXAxis.DesiredIntervals EdgeLabelPlacement=@PrimaryXAxis.EdgeLabelPlacement
+                           EnableAutoIntervalOnZooming=@PrimaryXAxis.EnableAutoIntervalOnZooming EnableTrim=@PrimaryXAxis.EnableTrim Interval=@PrimaryXAxis.Interval
+                           IntervalType=@GetXAxisIntervalType() IsInversed=@PrimaryXAxis.IsInversed LabelFormat=@PrimaryXAxis.LabelFormat
+                           LabelIntersectAction=@PrimaryXAxis.LabelIntersectAction LabelPlacement=@PrimaryXAxis.LabelPlacement LabelPosition=@PrimaryXAxis.LabelPosition
+                           LabelRotation=@PrimaryXAxis.LabelRotation LogBase=@PrimaryXAxis.LogBase Maximum=@PrimaryXAxis.Maximum MaximumLabelWidth=@PrimaryXAxis.MaximumLabelWidth
+                           MaximumLabels=@PrimaryXAxis.MaximumLabels Minimum=@PrimaryXAxis.Minimum MinorTicksPerInterval=@PrimaryXAxis.MinorTicksPerInterval
+                           Name=@PrimaryXAxis.Name OpposedPosition=@PrimaryXAxis.OpposedPosition PlaceNextToAxisLine=@PrimaryXAxis.PlaceNextToAxisLine PlotOffset=@PrimaryXAxis.PlotOffset
+                           RangePadding=@PrimaryXAxis.RangePadding RowIndex=@PrimaryXAxis.RowIndex Skeleton=@PrimaryXAxis.Skeleton Span=Convert.ToInt32(PrimaryXAxis.Span) StartAngle=@PrimaryXAxis.StartAngle
+                           TabIndex=@PrimaryXAxis.TabIndex TickPosition=@PrimaryXAxis.TickPosition Title=@PrimaryXAxis.Title Visible=@PrimaryXAxis.Visible ZoomFactor=@PrimaryXAxis.ZoomFactor ZoomPosition=@PrimaryXAxis.ZoomPosition>
+            @if (PrimaryXAxis.CrosshairTooltip != null)
+            {
+                <ChartAxisCrosshairTooltip Enable=@PrimaryXAxis.CrosshairTooltip.Enable Fill=@PrimaryXAxis.CrosshairTooltip.Fill>
+                    @if (PrimaryXAxis.CrosshairTooltip.TextStyle != null)
+                    {
+                        <ChartCrosshairTextStyle Color=@PrimaryXAxis.CrosshairTooltip.TextStyle.Color FontFamily=@PrimaryXAxis.CrosshairTooltip.TextStyle.FontFamily
+                                                 FontStyle=@PrimaryXAxis.CrosshairTooltip.TextStyle.FontStyle FontWeight=@PrimaryXAxis.CrosshairTooltip.TextStyle.FontWeight
+                                                 Opacity=@PrimaryXAxis.CrosshairTooltip.TextStyle.Opacity Size=@PrimaryXAxis.CrosshairTooltip.TextStyle.Size TextAlignment=@PrimaryXAxis.CrosshairTooltip.TextStyle.TextAlignment
+                                                 TextOverflow=@PrimaryXAxis.CrosshairTooltip.TextStyle.TextOverflow></ChartCrosshairTextStyle>}
+                </ChartAxisCrosshairTooltip>}
+            @if (PrimaryXAxis.StripLines != null)
+            {
+                <ChartStriplines>
+                    @foreach (StockChartAxisStripLine stripline in PrimaryXAxis.StripLines)
+                    {
+                        <ChartStripline Color=@stripline.Color DashArray=@stripline.DashArray End=@stripline.End HorizontalAlignment=@stripline.HorizontalAlignment
+                                        IsRepeat=@stripline.IsRepeat IsSegmented=@stripline.IsSegmented Opacity=@stripline.Opacity RepeatEvery=@stripline.RepeatEvery
+                                        RepeatUntil=@stripline.RepeatUntil Rotation=@stripline.Rotation SegmentAxisName=@stripline.SegmentAxisName
+                                        SegmentEnd=@stripline.SegmentEnd SegmentStart=@stripline.SegmentStart Size=@stripline.Size SizeType=@stripline.SizeType
+                                        Start=@stripline.Start StartFromAxis=@stripline.StartFromAxis Text=@stripline.Text VerticalAlignment=@stripline.VerticalAlignment
+                                        Visible=@stripline.Visible ZIndex=@stripline.ZIndex>
+                            <ChartStriplineBorder Color=@stripline.Border.Color Width=@stripline.Border.Width></ChartStriplineBorder>
+                            <ChartStriplineTextStyle Color=@stripline.TextStyle.Color FontFamily=@stripline.TextStyle.FontFamily FontStyle=@stripline.TextStyle.FontStyle
+                                                     FontWeight=@stripline.TextStyle.FontWeight Opacity=@stripline.TextStyle.Opacity Size=@stripline.TextStyle.Size
+                                                     TextAlignment=@stripline.TextStyle.TextAlignment TextOverflow=@stripline.TextStyle.TextOverflow></ChartStriplineTextStyle>
+                        </ChartStripline>}
+                </ChartStriplines>}
+            @if (PrimaryXAxis.LabelStyle != null)
+            {
+                @*<ChartAxisLabelStyle Color=@PrimaryXAxis.LabelStyle.Color FontFamily=@PrimaryXAxis.LabelStyle.FontFamily FontStyle=@PrimaryXAxis.LabelStyle.FontStyle
+                                     FontWeight=@PrimaryXAxis.LabelStyle.FontWeight Opacity=@PrimaryXAxis.LabelStyle.Opacity Size=@PrimaryXAxis.LabelStyle.Size
+                                     TextAlignment=@PrimaryXAxis.LabelStyle.TextAlignment TextOverflow=@PrimaryXAxis.LabelStyle.TextOverflow></ChartAxisLabelStyle>*@}
+            @if (PrimaryXAxis.LineStyle != null)
+            {
+                <ChartAxisLineStyle Color=@PrimaryXAxis.LineStyle.Color DashArray=@PrimaryXAxis.LineStyle.DashArray Width=@PrimaryXAxis.LineStyle.Width></ChartAxisLineStyle>}
+            @if (PrimaryXAxis.MajorGridLines != null)
+            {
+                <ChartAxisMajorGridLines Color=@PrimaryXAxis.MajorGridLines.Color Width=@PrimaryXAxis.MajorGridLines.Width DashArray=@PrimaryXAxis.MajorGridLines.DashArray></ChartAxisMajorGridLines>}
+            @if (PrimaryXAxis.MajorTickLines != null)
+            {
+                <ChartAxisMajorTickLines Color=@PrimaryXAxis.MajorTickLines.Color Width=@PrimaryXAxis.MajorTickLines.Width Height=@PrimaryXAxis.MajorTickLines.Height></ChartAxisMajorTickLines>}
+            @if (PrimaryXAxis.MajorGridLines != null)
+            {
+                <ChartAxisMinorGridLines Color=@PrimaryXAxis.MinorGridLines.Color Width=@PrimaryXAxis.MinorGridLines.Width DashArray=@PrimaryXAxis.MinorGridLines.DashArray></ChartAxisMinorGridLines>}
+            @if (PrimaryXAxis.MinorTickLines != null)
+            {
+                <ChartAxisMinorTickLines Color=@PrimaryXAxis.MinorTickLines.Color Width=@PrimaryXAxis.MinorTickLines.Width Height=@PrimaryXAxis.MinorTickLines.Height></ChartAxisMinorTickLines>}
+            @*@if (PrimaryXAxis.TitleStyle != null)
+            {
+                <ChartAxisTitleStyle Color=@PrimaryXAxis.TitleStyle.Color FontFamily=@PrimaryXAxis.TitleStyle.FontFamily FontStyle=@PrimaryXAxis.TitleStyle.FontStyle
+                                     FontWeight=@PrimaryXAxis.TitleStyle.FontWeight Opacity=@PrimaryXAxis.TitleStyle.Opacity Size=@PrimaryXAxis.TitleStyle.Size
+                                     TextAlignment=@PrimaryXAxis.TitleStyle.TextAlignment TextOverflow=@PrimaryXAxis.TitleStyle.TextOverflow></ChartAxisTitleStyle>}*@
+
+        </ChartPrimaryXAxis>}
+    @if (PrimaryYAxis != null)
+    {
+        <ChartPrimaryYAxis ValueType=@PrimaryYAxis.ValueType CrossesAt=@PrimaryYAxis.CrossesAt CrossesInAxis=@PrimaryYAxis.CrossesInAxis
+                           Description=@PrimaryYAxis.Description DesiredIntervals=@PrimaryYAxis.DesiredIntervals EdgeLabelPlacement=@PrimaryYAxis.EdgeLabelPlacement
+                           EnableAutoIntervalOnZooming=@PrimaryYAxis.EnableAutoIntervalOnZooming EnableTrim=@PrimaryYAxis.EnableTrim Interval=@PrimaryYAxis.Interval
+                           IntervalType=@PrimaryYAxis.IntervalType IsInversed=@PrimaryYAxis.IsInversed LabelFormat=@PrimaryYAxis.LabelFormat
+                           LabelIntersectAction=@PrimaryYAxis.LabelIntersectAction LabelPlacement=@PrimaryYAxis.LabelPlacement LabelPosition=@PrimaryYAxis.LabelPosition
+                           LabelRotation=@PrimaryYAxis.LabelRotation LogBase=@PrimaryYAxis.LogBase Maximum=@PrimaryYAxis.Maximum MaximumLabelWidth=@PrimaryYAxis.MaximumLabelWidth
+                           MaximumLabels=@PrimaryYAxis.MaximumLabels Minimum=@PrimaryYAxis.Minimum MinorTicksPerInterval=@PrimaryYAxis.MinorTicksPerInterval
+                           Name=@PrimaryYAxis.Name OpposedPosition=@PrimaryYAxis.OpposedPosition PlaceNextToAxisLine=@PrimaryYAxis.PlaceNextToAxisLine PlotOffset=@PrimaryYAxis.PlotOffset
+                           RangePadding=@PrimaryYAxis.RangePadding RowIndex=@PrimaryYAxis.RowIndex Skeleton=@PrimaryYAxis.Skeleton Span=Convert.ToInt32(PrimaryYAxis.Span) StartAngle=@PrimaryYAxis.StartAngle
+                           TabIndex=@PrimaryYAxis.TabIndex TickPosition=@PrimaryYAxis.TickPosition Title=@PrimaryYAxis.Title Visible=@PrimaryYAxis.Visible ZoomFactor=@PrimaryYAxis.ZoomFactor ZoomPosition=@PrimaryYAxis.ZoomPosition>
+            @if (PrimaryYAxis.CrosshairTooltip != null)
+            {
+                <ChartAxisCrosshairTooltip Enable=@PrimaryYAxis.CrosshairTooltip.Enable Fill=@PrimaryYAxis.CrosshairTooltip.Fill>
+                    @if (PrimaryYAxis.CrosshairTooltip.TextStyle != null)
+                    {
+                        <ChartCrosshairTextStyle Color=@PrimaryYAxis.CrosshairTooltip.TextStyle.Color FontFamily=@PrimaryYAxis.CrosshairTooltip.TextStyle.FontFamily
+                                                 FontStyle=@PrimaryYAxis.CrosshairTooltip.TextStyle.FontStyle FontWeight=@PrimaryYAxis.CrosshairTooltip.TextStyle.FontWeight
+                                                 Opacity=@PrimaryYAxis.CrosshairTooltip.TextStyle.Opacity Size=@PrimaryYAxis.CrosshairTooltip.TextStyle.Size TextAlignment=@PrimaryYAxis.CrosshairTooltip.TextStyle.TextAlignment
+                                                 TextOverflow=@PrimaryYAxis.CrosshairTooltip.TextStyle.TextOverflow></ChartCrosshairTextStyle>}
+                </ChartAxisCrosshairTooltip>}
+            @if (PrimaryYAxis.StripLines != null)
+            {
+                <ChartStriplines>
+                    @foreach (StockChartAxisStripLine stripline in PrimaryYAxis.StripLines)
+                    {
+                        <ChartStripline Color=@stripline.Color DashArray=@stripline.DashArray End=@stripline.End HorizontalAlignment=@stripline.HorizontalAlignment
+                                        IsRepeat=@stripline.IsRepeat IsSegmented=@stripline.IsSegmented Opacity=@stripline.Opacity RepeatEvery=@stripline.RepeatEvery
+                                        RepeatUntil=@stripline.RepeatUntil Rotation=@stripline.Rotation SegmentAxisName=@stripline.SegmentAxisName
+                                        SegmentEnd=@stripline.SegmentEnd SegmentStart=@stripline.SegmentStart Size=@stripline.Size SizeType=@stripline.SizeType
+                                        Start=@stripline.Start StartFromAxis=@stripline.StartFromAxis Text=@stripline.Text VerticalAlignment=@stripline.VerticalAlignment
+                                        Visible=@stripline.Visible ZIndex=@stripline.ZIndex>
+                            <ChartStriplineBorder Color=@stripline.Border.Color Width=@stripline.Border.Width></ChartStriplineBorder>
+                            <ChartStriplineTextStyle Color=@stripline.TextStyle.Color FontFamily=@stripline.TextStyle.FontFamily FontStyle=@stripline.TextStyle.FontStyle
+                                                     FontWeight=@stripline.TextStyle.FontWeight Opacity=@stripline.TextStyle.Opacity Size=@stripline.TextStyle.Size
+                                                     TextAlignment=@stripline.TextStyle.TextAlignment TextOverflow=@stripline.TextStyle.TextOverflow></ChartStriplineTextStyle>
+                        </ChartStripline>}
+                </ChartStriplines>}
+            @if (PrimaryYAxis.LabelStyle != null)
+            {
+                @*<ChartAxisLabelStyle Color=@PrimaryYAxis.LabelStyle.Color FontFamily=@PrimaryYAxis.LabelStyle.FontFamily FontStyle=@PrimaryYAxis.LabelStyle.FontStyle
+                                     FontWeight=@PrimaryYAxis.LabelStyle.FontWeight Opacity=@PrimaryYAxis.LabelStyle.Opacity Size=@PrimaryYAxis.LabelStyle.Size
+                                     TextAlignment=@PrimaryYAxis.LabelStyle.TextAlignment TextOverflow=@PrimaryYAxis.LabelStyle.TextOverflow></ChartAxisLabelStyle>*@}
+            @if (PrimaryYAxis.LineStyle != null)
+            {
+                <ChartAxisLineStyle Color=@PrimaryYAxis.LineStyle.Color DashArray=@PrimaryYAxis.LineStyle.DashArray Width=@PrimaryYAxis.LineStyle.Width></ChartAxisLineStyle>}
+            @if (PrimaryYAxis.MajorGridLines != null)
+            {
+                <ChartAxisMajorGridLines Color=@PrimaryYAxis.MajorGridLines.Color Width=@PrimaryYAxis.MajorGridLines.Width DashArray=@PrimaryYAxis.MajorGridLines.DashArray></ChartAxisMajorGridLines>}
+            @if (PrimaryYAxis.MajorTickLines != null)
+            {
+                <ChartAxisMajorTickLines Color=@PrimaryYAxis.MajorTickLines.Color Width=@PrimaryYAxis.MajorTickLines.Width Height=@PrimaryYAxis.MajorTickLines.Height></ChartAxisMajorTickLines>}
+            @if (PrimaryYAxis.MajorGridLines != null)
+            {
+                <ChartAxisMinorGridLines Color=@PrimaryYAxis.MinorGridLines.Color Width=@PrimaryYAxis.MinorGridLines.Width DashArray=@PrimaryYAxis.MinorGridLines.DashArray></ChartAxisMinorGridLines>}
+            @if (PrimaryYAxis.MinorTickLines != null)
+            {
+                <ChartAxisMinorTickLines Color=@PrimaryYAxis.MinorTickLines.Color Width=@PrimaryYAxis.MinorTickLines.Width Height=@PrimaryYAxis.MinorTickLines.Height></ChartAxisMinorTickLines>}
+            @if (PrimaryYAxis.TitleStyle != null)
+            {
+                @*<ChartAxisTitleStyle Color=@PrimaryYAxis.TitleStyle.Color FontFamily=@PrimaryYAxis.TitleStyle.FontFamily FontStyle=@PrimaryYAxis.TitleStyle.FontStyle
+                                     FontWeight=@PrimaryYAxis.TitleStyle.FontWeight Opacity=@PrimaryYAxis.TitleStyle.Opacity Size=@PrimaryYAxis.TitleStyle.Size
+                                     TextAlignment=@PrimaryYAxis.TitleStyle.TextAlignment TextOverflow=@PrimaryYAxis.TitleStyle.TextOverflow></ChartAxisTitleStyle>}*@}
+        </ChartPrimaryYAxis>
+    }
+    <ChartSeriesCollection>
+        @foreach (StockChartSeries series in Series)
+        {
+            <ChartSeries Fill=@series.Fill DataSource="@series.FilteredData" XName="@series.XName" YName="@SfStockChart.GetYName(series)" Type="@GetSeriesType(series.Type)"
+                         XAxisName="@series.XAxisName" YAxisName="@series.YAxisName" High="@series.High" Low="@series.Low" Open="@series.Open" Close="@series.Close" Volume="@series.Volume"
+                         BearFillColor=@series.BearFillColor BullFillColor=@series.BullFillColor CardinalSplineTension=@series.CardinalSplineTension ColumnSpacing=@series.ColumnSpacing
+                         ColumnWidth=@series.ColumnWidth DashArray=@series.DashArray EnableSolidCandles=@series.EnableSolidCandles EnableTooltip=@GetTooltipVisibility(series) Name=@series.Name
+                         Opacity=@series.Opacity PointColorMapping=@series.PointColorMapping Query=@series.Query SelectionStyle=@series.SelectionStyle TooltipMappingName=@series.TooltipMappingName
+                         Visible=@series.Visible Width=@series.Width TooltipFormat="@series.TooltipFormat">
+                <ChartSeriesAnimation Enable="@series.Animation.Enable" Delay="@series.Animation.Delay" Duration="@series.Animation.Duration"></ChartSeriesAnimation>
+                <ChartSeriesBorder Color="@series.Border.Color" Width="@series.Border.Width"></ChartSeriesBorder>
+                <ChartCornerRadius BottomLeft="@series.CornerRadius.BottomLeft" BottomRight="@series.CornerRadius.BottomRight" TopLeft="@series.CornerRadius.TopLeft" TopRight="@series.CornerRadius.TopRight" />
+                <ChartEmptyPointSettings Fill="@series.EmptyPointSettings.Fill" Mode="@series.EmptyPointSettings.Mode">
+                    <ChartEmptyPointBorder Color="@series.EmptyPointSettings.Border.Color" Width="@series.EmptyPointSettings.Border.Width"></ChartEmptyPointBorder>
+                </ChartEmptyPointSettings>
+                <ChartMarker Fill="@series.Marker.Fill" Height="@series.Marker.Height" ImageUrl="@series.Marker.ImageUrl" Opacity="@series.Marker.Opacity" Shape="@series.Marker.Shape" Width="@series.Marker.Width" Visible="@series.Marker.Visible">
+                    <ChartMarkerOffset X="@series.Marker.Offset.X" Y="@series.Marker.Offset.Y"></ChartMarkerOffset>
+                    <ChartMarkerBorder Color="@series.Marker.Border.Color" Width="@series.Marker.Border.Width"></ChartMarkerBorder>
+                    <ChartDataLabel Alignment="@series.Marker.DataLabel.Alignment" Angle="@series.Marker.DataLabel.Angle" EnableRotation="@series.Marker.DataLabel.EnableRotation"
+                                    Fill="@series.Marker.DataLabel.Fill" LabelIntersectAction="@series.Marker.DataLabel.LabelIntersectAction" Name="@series.Marker.DataLabel.Name"
+                                    Opacity="@series.Marker.DataLabel.Opacity" Position="@series.Marker.DataLabel.Position" Rx="@series.Marker.DataLabel.Rx" Ry="@series.Marker.DataLabel.Ry" Visible="@series.Marker.DataLabel.Visible">
+                        <ChartDataLabelFont Color=@series.Marker.DataLabel.Font.Color FontFamily=@series.Marker.DataLabel.Font.FontFamily FontStyle=@series.Marker.DataLabel.Font.FontStyle
+                                            FontWeight=@series.Marker.DataLabel.Font.FontWeight Opacity=@series.Marker.DataLabel.Font.Opacity Size=@series.Marker.DataLabel.Font.Size
+                                            TextAlignment=@series.Marker.DataLabel.Font.TextAlignment TextOverflow=@series.Marker.DataLabel.Font.TextOverflow></ChartDataLabelFont>
+                        <ChartDataLabelBorder Color="@series.Marker.DataLabel.Border.Color" Width="@series.Marker.DataLabel.Border.Width"></ChartDataLabelBorder>
+                        <ChartDataLabelMargin Top=@series.Marker.DataLabel.Margin.Top Bottom=@series.Marker.DataLabel.Margin.Bottom Right=@series.Marker.DataLabel.Margin.Right Left=@series.Marker.DataLabel.Margin.Left></ChartDataLabelMargin>
+                    </ChartDataLabel>
+                </ChartMarker>
+                <ChartTrendlines>
+                    @foreach (StockChartTrendline chartTrendline in series.Trendlines)
+                    {
+                        <ChartTrendline @key="@chartTrendline.RendererKey" BackwardForecast=@chartTrendline.BackwardForecast EnableTooltip=@chartTrendline.EnableTooltip
+                                        Fill=@chartTrendline.Fill ForwardForecast=@chartTrendline.ForwardForecast Intercept=@chartTrendline.Intercept
+                                        LegendShape=@chartTrendline.LegendShape Name=@chartTrendline.Name Period=@chartTrendline.Period
+                                        PolynomialOrder=@chartTrendline.PolynomialOrder Type=@chartTrendline.Type Width=@chartTrendline.Width>
+                            <ChartTrendlineMarker Fill="@chartTrendline.Marker.Fill" Height="@chartTrendline.Marker.Height" ImageUrl="@chartTrendline.Marker.ImageUrl" Opacity="@chartTrendline.Marker.Opacity" Shape="@chartTrendline.Marker.Shape" Width="@chartTrendline.Marker.Width" Visible="@chartTrendline.Marker.Visible">
+                            </ChartTrendlineMarker>
+                            <ChartTrendlineAnimation Enable="@chartTrendline.Animation.Enable" Duration="@chartTrendline.Animation.Duration" Delay="@chartTrendline.Animation.Delay"></ChartTrendlineAnimation>
+                        </ChartTrendline>
+                    }
+                </ChartTrendlines>
+            </ChartSeries>
+        }
+    </ChartSeriesCollection>
+    <ChartIndicators>
+        @foreach (StockChartIndicator chartIndicator in StockChart.Indicators)
+        {
+            bool isAnimation = StockChart.IsSelect ? false : chartIndicator.Animation.Enable;
+            <ChartIndicator @key="chartIndicator.RendererKey" DataSource=Series[0].FilteredData BandColor=@chartIndicator.BandColor Type=@chartIndicator.Type
+                            Field=@chartIndicator.Field SeriesName=@chartIndicator.SeriesName XAxisName=@chartIndicator.XAxisName
+                            YAxisName=@chartIndicator.YAxisName Fill=@chartIndicator.Fill Period=@chartIndicator.Period
+                            Close=@chartIndicator.Close DPeriod=@chartIndicator.DPeriod DashArray=@chartIndicator.DashArray
+                            FastPeriod=@chartIndicator.FastPeriod High=@chartIndicator.High KPeriod=@chartIndicator.KPeriod
+                            Low=@chartIndicator.Low MacdNegativeColor=@chartIndicator.MacdNegativeColor
+                            MacdPositiveColor=@chartIndicator.MacdPositiveColor MacdType=@chartIndicator.MacdType
+                            Open=@chartIndicator.Open OverBought=@chartIndicator.OverBought OverSold=@chartIndicator.OverSold
+                            ShowZones=@chartIndicator.ShowZones SlowPeriod=@chartIndicator.SlowPeriod StandardDeviation=@chartIndicator.StandardDeviation
+                            Volume=@chartIndicator.Volume Width=@chartIndicator.Width XName=@chartIndicator.XName>
+                <ChartIndicatorAnimation Enable="@isAnimation" Duration=@chartIndicator.Animation.Duration Delay=@chartIndicator.Animation.Delay></ChartIndicatorAnimation>
+            </ChartIndicator>
+        } @*PointColorMapping=@chartIndicator.PointColorMapping Query=@chartIndicator.Query*@
+    </ChartIndicators>
+    <ChartLegendSettings Visible="false"></ChartLegendSettings>
+    <ChartZoomSettings EnableDeferredZooming=@ZoomSettings.EnableDeferredZooming EnableMouseWheelZooming=@ZoomSettings.EnableMouseWheelZooming
+                       EnablePan=@ZoomSettings.EnablePan EnablePinchZooming=@ZoomSettings.EnablePinchZooming
+                       EnableScrollbar=@ZoomSettings.EnableScrollbar EnableSelectionZooming=@ZoomSettings.EnableSelectionZooming
+                       ToolbarItems=@ZoomSettings.ToolbarItems Mode=@ZoomSettings.Mode></ChartZoomSettings>
+</SfChart>

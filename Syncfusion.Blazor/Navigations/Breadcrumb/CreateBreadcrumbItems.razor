@@ -1,0 +1,111 @@
+﻿@using Syncfusion.Blazor.Navigations
+
+@namespace Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+@{
+    bool isCollapsed = false;
+    if (parent.OverflowMode == BreadcrumbOverflowMode.Collapsed && collapsed && parent.MaxItems != 0 && Items.Count > parent.MaxItems)
+    {
+        isCollapsed = true;
+    }
+    bool isDefaultOverflowMode = parent.OverflowMode == BreadcrumbOverflowMode.Default;
+    @for (var i = 0; i < Items.Count; i++)
+    {
+        if (isCollapsed && (i != 0 && i != Items.Count - 1))
+        {
+            continue;
+        }
+        else if (isDefaultOverflowMode && parent.MaxItems != 0 && (i < startCount || i > endCount) && i != 0)
+        {
+            continue;
+        }
+        BreadcrumbItem item = Items[i];
+        int index = i;
+        <CascadingValue Value="@this">
+            <CreateBreadcrumbItem Item="item" Index="index"></CreateBreadcrumbItem>
+        </CascadingValue>
+        @if (parent.ActiveItem != null && item.Url == parent.ActiveItem)
+        {
+            break;
+        }
+        if (i != ((parent.MaxItems != 0 && isDefaultOverflowMode) ? endCount : Items.Count - 1))
+        {
+            <BreadcrumbSeparator PreviousIndex="i"></BreadcrumbSeparator>
+        }
+        if (i == 0)
+        {
+            if (isCollapsed)
+            {
+                <li class="e-icons e-breadcrumb-collapsed" tabindex="0" @onkeyup='(e) => { if (e.Key == "Enter") { Expand(); } }' @onclick="Expand"></li>
+                <BreadcrumbSeparator PreviousIndex="i"></BreadcrumbSeparator>
+            }
+            else if (isDefaultOverflowMode && startCount > 1)
+            {
+                <BreadcrumbSeparator PreviousIndex="i"></BreadcrumbSeparator>
+            }
+        }
+    }
+}
+
+@code {
+    private bool collapsed { get; set; } = true;
+    internal int? startCount { get; set; } = null;
+    internal int endCount { get; set; } = 0;
+
+    [CascadingParameter]
+    private SfBreadcrumb parent { get; set; }
+
+    [Parameter]
+    public List<BreadcrumbItem> Items { get; set; }
+
+    private void Expand()
+    {
+        if (collapsed)
+        {
+            collapsed = false;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BeforeItemCreation();
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (Items != null && Items.Count > 0 && parent.OverflowMode == BreadcrumbOverflowMode.Default && parent.MaxItems != 0 && startCount == null)
+        {
+            startCount = Items.Count - (parent.MaxItems - 1);
+            endCount = Items.Count - 1;
+        }
+    }
+
+    private async Task BeforeItemCreation()
+    {
+        for (var i = 0; i < Items.Count; i++)
+        {
+            BreadcrumbItemRenderingEventArgs eventArgs = new BreadcrumbItemRenderingEventArgs { Item = Items[i] };
+            if (parent != null && parent.ItemRendering.HasDelegate)
+            {
+                await SfBaseUtils.InvokeEvent(parent.ItemRendering, eventArgs);
+                Items[i] = eventArgs.Item;
+            }
+        }
+    }
+
+    internal void UpdateStateHasChanged()
+    {
+        StateHasChanged();
+    }
+
+    internal override void ComponentDispose()
+    {
+        parent = null;
+        Items = null;
+    }
+}

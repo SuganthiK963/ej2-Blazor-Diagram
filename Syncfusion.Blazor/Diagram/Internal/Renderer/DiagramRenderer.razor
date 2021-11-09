@@ -1,0 +1,773 @@
+﻿@using System.Collections.ObjectModel;
+@using System.Globalization;
+@using Syncfusion.Blazor.Diagram.SymbolPalette;
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+@code {
+
+    internal static RenderFragment<Snapping> UpdateSnapping = snapping => __builder =>
+    {
+        if (snapping.Lines != null && snapping.Lines.Count > 0)
+        {
+            foreach (LineAttributes element in snapping.Lines)
+            {
+                @RenderLineElements(element);
+            }
+            snapping.Lines.Clear();
+        }
+    };
+
+    private const string PERCENTAGE = "%";
+    private static string groupGradientId = null;
+    private static bool isRenderGroupRect = true;
+
+    internal static RenderFragment<ObservableCollection<ICommonElement>> RenderBasicElements = elements => __builder =>
+    {
+        int i;
+        for (i = 0; i < elements.Count; i++)
+        {
+            @RenderElement(new FragmentParameter() { Element = elements[i], IsCreateGElement = false })
+        }
+    };
+
+
+    internal static RenderFragment<SelectionFragmentParameter> RenderSelector = parameters => __builder =>
+    {
+        ObservableCollection<BaseAttributes> attributes = GetSelectorAttributes(parameters);
+        @RenderDomElements(attributes)
+    };
+
+
+
+    internal static RenderFragment<ObservableCollection<BaseAttributes>> RenderDomElements = attributes => __builder =>
+    {
+        foreach (BaseAttributes attribute in attributes)
+        {
+            if (attribute is CircleAttributes circleAttributes)
+                @DiagramRenderer.RenderCicleElement(circleAttributes)
+            else if (attribute is LineAttributes lineAttributes)
+                @DiagramRenderer.RenderLineElements(lineAttributes)
+            else if (attribute is PathAttributes pathAttributes)
+                @DiagramRenderer.RenderPathElement(pathAttributes)
+            else if (attribute is ImageAttributes imageAttributes)
+                @DiagramRenderer.RenderImageElement(imageAttributes)
+            else if (attribute is RectAttributes rectAttributes)
+                @DiagramRenderer.RenderRectElement(rectAttributes)
+        }
+    };
+
+    internal static RenderFragment<SnapSettingsFragmentParameter> RenderHorizontalLine = parameters => __builder =>
+    {
+        SnapSettings SnapSettings = parameters.SnapSettingsValue;
+        ObservableCollection<BaseAttributes> attributes = SnapSettings.GetAttributes(true, SnapSettings, parameters.CurrentZoom);
+        SnapSettings.GetPathData(attributes);
+        @DrawGridLines(attributes)
+    };
+
+    internal static RenderFragment<SnapSettingsFragmentParameter> RenderVerticalLine = parameters => __builder =>
+    {
+        SnapSettings snapSettings = parameters.SnapSettingsValue;
+        ObservableCollection<BaseAttributes> attributes = SnapSettings.GetAttributes(false, snapSettings, parameters.CurrentZoom);
+        snapSettings.GetPathData(attributes);
+        @DrawGridLines(attributes)
+    };
+
+    internal static RenderFragment<ObservableCollection<BaseAttributes>> DrawGridLines = attributes => __builder =>
+    {
+        int i;
+        for (i = 0; i < attributes.Count; i++)
+        {
+            BaseAttributes attribute = attributes[i];
+            if (attribute is PathAttributes pathAttributes)
+            {
+                @DiagramRenderer.RenderPathElement(attribute as PathAttributes)
+            }
+            else
+            {
+                @DiagramRenderer.RenderCicleElement(attribute as CircleAttributes)
+            }
+        }
+    };
+
+    internal static RenderFragment<ObservableCollection<Node>> RenderNodes = nodes => __builder =>
+    {
+        int i;
+        for (i = 0; i < nodes.Count; i++)
+        {
+            Node node = nodes[i];
+            if (string.IsNullOrEmpty(node.ParentId))
+            {
+                if (node.Shape.Type == Shapes.SVG && Dictionary.MeasureNativeELementBounds.Count > 0 && node.NativeSize == null)
+                {
+                    node.NativeSize = DomUtil.MeasureNativeElement(node.ID);
+                }
+                ObservableCollection<Node> childNodes = null;
+                childNodes = GetChildNodes(node, nodes);
+                if (node.Wrapper != null && node.IsVisible)
+                {
+                    string id = node.ID + "_groupElement";
+                    ICommonElement nodeWrapper = node.Wrapper;
+                    if((node.Annotations !=null) && node.Annotations.Count > 0)
+                    {
+                        nodeWrapper.Description = node.Annotations[0].Content;
+                    }
+                    // transform is used in flip element
+                    <g id="@id" transform="translate(0,0)">
+                        @RenderElement(new FragmentParameter() { Element = nodeWrapper,  IsCreateGElement = false, GroupElement = node.Wrapper, IsGroup = node is NodeGroup, Nodes = childNodes})
+                    </g>
+                }
+            }
+        }
+    };
+
+
+    internal static RenderFragment<ObservableCollection<Connector>> RenderConnectors = connectors => __builder =>
+    {
+        int i;
+        for (i = 0; i < connectors.Count; i++)
+        {
+            Connector connector = connectors[i] as Connector;
+            if (string.IsNullOrEmpty(connector.ParentId))
+            {
+                if (connector.Wrapper != null && connector.IsVisible)
+                {
+                    string id = connector.ID + "_groupElement";
+                    ICommonElement connectorWrapper = connector.Wrapper;
+                    if ((connector.Annotations != null) && connector.Annotations.Count > 0)
+                    {
+                        connectorWrapper.Description = connector.Annotations[0].Content;
+                    }
+                    // transfrom is used in flip element
+                    <g id="@id" transform="translate(0,0)">
+                        @RenderElement(new FragmentParameter() { Element = connectorWrapper, IsCreateGElement = false })
+                    </g>
+                }
+            }
+        }
+    };
+
+    internal static RenderFragment<FragmentParameter> RenderElement = parameters => __builder =>
+    {
+        ICommonElement element = parameters.Element;
+        if ((element is DiagramContainer) || (element is Canvas))
+        {
+            @RenderContainer(parameters)
+        }
+        else if (element is PathElement pathElement)
+        {
+            if (pathElement.AbsolutePath != string.Empty)
+            {
+                @RenderPath(pathElement)
+            }
+        }
+        else if (element is TextElement)
+        {
+            @RenderText(new FragmentParameter() { Element = element, GroupElement = parameters.GroupElement })
+        }
+        else if (element is ImageElement)
+        {
+            @RenderImage(new FragmentParameter() { Element = element });
+        }
+        else if (element is DiagramHtmlElement)
+        {
+            @RenderHTML(new FragmentParameter() { Element = element });
+    }
+    else if (element is DiagramSvgElement)
+    {
+            @RenderNative(parameters);
+        }
+        else
+        {
+            @RenderRect(element)
+        }
+    };
+
+    static RenderFragment<FragmentParameter> RenderContainer = parameters => __builder =>
+    {
+        DiagramContainer element = parameters.Element as DiagramContainer;
+        if (parameters.IsCreateGElement)
+        {
+            string id = element?.ID + "_groupElement";
+            // transform is used in flip element
+            <g id="@id" transform="translate(0,0)">
+                @RenderChildElements(parameters)
+            </g>
+        }
+        else
+        {
+            parameters.IsCreateGElement = parameters.IsGroup;
+            @RenderChildElements(parameters)
+        }
+    };
+
+    internal static RenderFragment<PageSettings> RenderPageBreaks = pageSettings => __builder =>
+    {
+        if (pageSettings != null && pageSettings.Parent != null)
+        {
+            pageSettings.ValidatePageSize();
+            DiagramRect bounds = pageSettings.Parent.Scroller.GetPageBounds(true);
+            double x = (pageSettings.Parent.Scroller.Transform.TX + bounds.X) * pageSettings.Parent.Scroller.CurrentZoom;
+            double y = (pageSettings.Parent.Scroller.Transform.TY + bounds.Y) * pageSettings.Parent.Scroller.CurrentZoom;
+            double height = bounds.Height * pageSettings.Parent.Scroller.CurrentZoom;
+            double width = bounds.Width * pageSettings.Parent.Scroller.CurrentZoom;
+            string id = pageSettings.DiagramID;
+            string imageSource = pageSettings.Background.ImageSource;
+            string backgroundImageId = id + "_backgroundImageLayer";
+            string backgroundId = id + "_backgroundLayer";
+            <g id="@backgroundImageId" class="e-background-image-layer">
+                @{
+                    if (imageSource != string.Empty)
+                    {
+                        string scale = (pageSettings.Background.ImageScale.HasFlag(Scale.Slice) || pageSettings.Background.ImageScale .HasFlag(Scale.Meet)) ? pageSettings.Background.ImageScale .ToString() : string.Empty;
+                        string imgAlign = pageSettings.Background.ImageAlign.ToString();
+                        string aspectRatio = imgAlign[0].ToString(CultureInfo.InvariantCulture).ToLower() + imgAlign.Substring(1, imgAlign.Length - 1) + " " + scale.ToLower();
+                        <image x="@x" y="@y" width="@width" height="@height" preserveAspectRatio="@aspectRatio" href="@imageSource"></image>
+                    }
+                }
+            </g>
+            <g id="@backgroundId" class="e-background-layer">
+                @{
+                    RectAttributes attributes = new RectAttributes
+                    {
+                        ID = id + "_backgroundLayerrect",
+                        X = x,
+                        Y = y,
+                        Width = width,
+                        Height = height,
+                        Angle = 0,
+                        Stroke = string.Empty,
+                        StrokeWidth = 1,
+                        Fill = pageSettings.Background.Background,
+                        Opacity = 1,
+                        PivotX = 0,
+                        PivotY = 0,
+                        Visible = true,
+                        DashArray = "0",
+                        CornerRadius = 0
+                    };
+                    @RenderRectElement(attributes)
+                    if (pageSettings.ShowPageBreaks)
+                    {
+                        List<Segment> collection = pageSettings.Parent.Scroller.GetPageBreak(bounds);
+                        for (int i = 0; i < collection.Count; i++)
+                        {
+                            LineAttributes lineAttributes = new LineAttributes
+                            {
+                                ClassValues = "e-diagram-page-break",
+                                Fill = "none",
+                                Stroke = "#aaaaaa",
+                                StrokeWidth = 1,
+                                DashArray = "10 10",
+                                Opacity = 2,
+                                X = 0,
+                                Y = 0,
+                                Width = 0,
+                                Height = 0,
+                                Angle = 0,
+                                PivotX = 0,
+                                PivotY = 0,
+                                Visible = true,
+                                //StartPoint=new DiagramPoint { X= (collection[i].x1 + this.scroller.transform.tx) * this.scroller.currentZoom, Y= (collection[i].y1 + this.scroller.transform.ty) * this.scroller.currentZoom }
+                                StartPoint = new DiagramPoint { X = collection[i].X1, Y = collection[i].Y1 },
+                                EndPoint = new DiagramPoint { X = collection[i].X2, Y = collection[i].Y2 },
+                            };
+                            @RenderLineElements(lineAttributes)
+                        }
+                    }
+                }
+            </g>
+        }
+    };
+
+    static RenderFragment<FragmentParameter> RenderChildElements = parameters => __builder =>
+    {
+        DiagramContainer element = parameters.Element as DiagramContainer;
+        if (parameters.IsGroup)
+            groupGradientId = element.Children[0].ID;
+        if(element.Style.Gradient != null || (element.Style.Fill != "transparent" && element.Style.Fill != "none"))
+        {
+            @RenderRect(element)
+    }
+    if (element.HasChildren())
+    {
+        int i; int count = element.Children.Count;
+        FragmentParameter groupChildParameters = null;
+        for (i = 0; i < count; i++)
+        {
+            ICommonElement child = element.Children[i]; string childId = child.ID + "_groupElement";
+            if((element.Description != null) && !(child is TextElement))
+            {
+                child.Description = element.Description;
+            }
+            FragmentParameter childParameters;
+            if (child is DiagramSvgElement)
+            {
+                childParameters = new FragmentParameter() { Element = child, IsCreateGElement = parameters.IsCreateGElement, GroupElement = element, Nodes = parameters.Nodes };
+            }
+            else
+            {
+                childParameters = new FragmentParameter() { Element = child, IsCreateGElement = false, GroupElement = element, Nodes = parameters.Nodes };
+                if (child is DiagramContainer && !(child is Canvas))
+                {
+                    childParameters.IsGroup = true;
+                }
+            }
+            if (child is TextElement)
+            {
+                parameters.IsGroup = false;
+            }
+            if (!(i == 0 && parameters.IsGroup))
+            {
+                if (parameters.IsCreateGElement)
+                {
+                    if (child is TextElement)
+                    {
+                            @RenderElement(childParameters)
+                        }
+                        else
+                        {
+                            <g id="@childId">
+                                @RenderElement(childParameters)
+                            </g>
+                        }
+                    }
+                    else
+                    {
+                        @RenderElement(childParameters)
+                    }
+                }
+                else
+                {
+                    groupChildParameters = childParameters;
+                }
+            }
+            if (parameters.IsGroup && groupChildParameters != null && groupChildParameters.Element is DiagramContainer)
+            {
+                isRenderGroupRect = false;
+                @RenderChildElements(groupChildParameters)
+                isRenderGroupRect = true;
+            }
+        }
+    };
+
+    static RenderFragment<ICommonElement> RenderRect = element => __builder =>
+    {
+        RectAttributes attributes = new RectAttributes(element, null, false);
+        if (groupGradientId != null)
+        {
+            if (element.Style.Gradient != null)
+            {
+                attributes.Gradient = groupGradientId + ((element.Style.Gradient.BrushType == GradientType.Linear) ? "_linear" : "_radial");
+            }
+            groupGradientId = null;
+        }
+        @RenderRectElement(attributes)
+    };
+
+    internal static RenderFragment<CircleAttributes> RenderCicleElement = attributes => __builder =>
+    {
+        string description = "";
+        switch (attributes.ID)
+        {
+            case "ResizeNorthWest":
+                description= "Thumb to resize the selected object on top left side direction.";
+                break;
+            case "ResizeNorth":
+                description= "Thumb to resize the selected object on top side direction.";
+                break;
+
+            case "ResizeNorthEast":
+                 description= "Thumb to resize the selected object on top right side direction.";
+                 break;
+
+            case "ResizeWest":
+                description= "Thumb to resize the selected object on left side direction.";
+                break;
+
+            case "ResizeEast":
+                description= "Thumb to resize the selected object on right side direction.";
+                break;
+
+            case "ResizeSouthWest":
+                description= "Thumb to resize the selected object on bottom left side direction.";
+                break;
+
+            case "ResizeSouth":
+                description= "Thumb to resize the selected object on bottom side direction.";
+                break;
+
+            case "ResizeSouthEast":
+                description= "Thumb to resize the selected object on bottom right side direction.";
+                break;
+
+            case "connectorSourceThumb":
+                description = "Thumb to move the source point of the connector";
+                break;
+
+            case "connectorTargetThumb":
+                description = "Thumb to move the target point of the connector";
+                break;
+        }
+        string visible = attributes.Visible ? "visible" : "hidden";
+        if(string.IsNullOrEmpty(description))
+        {
+            <circle cx="@attributes.CenterX" cy="@attributes.CenterY" r="@attributes.Radius" visibility="@visible" fill="@attributes.Fill" stroke="@attributes.Stroke" stroke-width="@attributes.StrokeWidth" class="@attributes.ClassValues" />
+        }
+        else
+        {
+            <circle cx="@attributes.CenterX" cy="@attributes.CenterY" r="@attributes.Radius" visibility="@visible" aria-label="@description" fill="@attributes.Fill" stroke="@attributes.Stroke" stroke-width="@attributes.StrokeWidth" class="@attributes.ClassValues" />
+        }
+    };
+
+    internal static RenderFragment<LineAttributes> RenderLineElements = attributes => __builder =>
+    {
+        string id = (attributes.ID).ToString(CultureInfo.InvariantCulture);
+        string x1 = (attributes.StartPoint.X + attributes.X).ToString(CultureInfo.InvariantCulture);
+        string y1 = (attributes.StartPoint.Y + attributes.Y).ToString(CultureInfo.InvariantCulture);
+        string x2 = (attributes.EndPoint.X + attributes.X).ToString(CultureInfo.InvariantCulture);
+        string y2 = (attributes.EndPoint.Y + attributes.Y).ToString(CultureInfo.InvariantCulture);
+        string visible = attributes.Visible ? "visible" : "hidden";
+        string transform = "rotate(" + attributes.Angle + " " + (attributes.X + attributes.Width * attributes.PivotX) + " " + (attributes.Y+ attributes.Height* attributes.PivotY) + ")";
+        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        if (attributes.ID == "pivotLine")
+        {
+            <line x1="@x1" y1="@y1" x2="@x2" y2="@y2" id="@id" aria-label="@id" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" visibility="@visible" opacity="@opacity" transform="@transform" class="@attributes.ClassValues" />
+        }
+        else
+        {
+            <line x1="@x1" y1="@y1" x2="@x2" y2="@y2" id="@id" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" visibility="@visible" opacity="@opacity" transform="@transform" class="@attributes.ClassValues"/>
+        }
+    };
+
+                    static RenderFragment<PathElement> RenderPath = element => __builder =>
+                    {
+                        PathAttributes attributes = DiagramRenderer.GetPathAttributes(element, null, false);
+        @RenderPathElement(attributes)
+    };
+
+    internal static RenderFragment<RectAttributes> RenderRectElement = attributes => __builder =>
+    {
+        string x = attributes.X.ToString(CultureInfo.InvariantCulture);
+        string y = attributes.Y.ToString(CultureInfo.InvariantCulture);
+        string width = attributes.Width.ToString(CultureInfo.InvariantCulture);
+        string height = attributes.Height.ToString(CultureInfo.InvariantCulture);
+        string visible = attributes.Visible ? "visible" : "hidden";
+        string transform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + "," + (attributes.Y + attributes.Height * attributes.PivotY) + ")";
+        string radius = attributes.CornerRadius.ToString(CultureInfo.InvariantCulture);
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+        string fill = isRenderGroupRect ? ((attributes.Gradient != string.Empty) ? "url(#" + attributes.Gradient + ")" : attributes.Fill) : "none";
+
+        if (attributes.Shadow != null)
+        {
+            string id = attributes.ID + "_shadow";
+            string shadowColor = attributes.Shadow.Color.ToString(CultureInfo.InvariantCulture);
+            string shadowOpacity = attributes.Shadow.Opacity.ToString(CultureInfo.InvariantCulture);
+            DiagramPoint point = DiagramPoint.Transform(new DiagramPoint() { X = 0, Y = 0 }, attributes.Shadow.Angle, attributes.Shadow.Distance);
+            string shadowTransform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + ","
+                + (attributes.Y + attributes.Height * attributes.PivotY) + ")" +
+                "translate(" + (attributes.X + point.X) + "," + (attributes.Y + point.Y) + ")";
+
+            <rect id="@id" width="@width" height="@height" visibility="@visible" transform="@shadowTransform" rx="@radius" ry="@radius" opacity="@shadowOpacity" fill="@shadowColor" stroke="@shadowColor" class="@attributes.ClassValues"></rect>
+        }
+        if(string.IsNullOrEmpty(attributes.Description))
+        {
+            <rect id="@attributes.ID" x="@x" y="@y" width="@width" height="@height" visibility="@visible" transform="@transform" rx="@radius" ry="@radius" opacity="@opacity" fill="@fill" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" class="@attributes.ClassValues"></rect>
+        }
+        else
+        {
+            <rect id="@attributes.ID" x="@x" y="@y" width="@width" height="@height" visibility="@visible" aria-label="@attributes.Description" transform="@transform" rx="@radius" ry="@radius" opacity="@opacity" fill="@fill" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" class="@attributes.ClassValues"></rect>
+        }
+    };
+
+    internal static RenderFragment<PathAttributes> RenderPathElement = attributes => __builder =>
+    {
+        string x = attributes.X.ToString(CultureInfo.InvariantCulture);
+        string y = attributes.Y.ToString(CultureInfo.InvariantCulture);
+        string width = attributes.Width.ToString(CultureInfo.InvariantCulture);
+        string height = attributes.Height.ToString(CultureInfo.InvariantCulture);
+        string visible = attributes.Visible ? "visible" : "hidden";
+        string transform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + "," + (attributes.Y + attributes.Height * attributes.PivotY) + ")" + "translate(" + attributes.X + "," + attributes.Y + ")";
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+        string fill = (attributes.Gradient != string.Empty) ? "url(#" + attributes.Gradient + ")" : attributes.Fill;
+
+        if (attributes.Shadow != null)
+        {
+            string id = attributes.ID + "_shadow";
+            string shadowColor = attributes.Shadow.Color.ToString(CultureInfo.InvariantCulture);
+            string shadowOpacity = attributes.Shadow.Opacity.ToString(CultureInfo.InvariantCulture);
+            DiagramPoint point = DiagramPoint.Transform(new DiagramPoint() { X = 0, Y = 0 }, attributes.Shadow.Angle, attributes.Shadow.Distance);
+            string shadowTransform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + ","
+                + (attributes.Y + attributes.Height * attributes.PivotY) + ")" +
+                "translate(" + (attributes.X + point.X) + "," + (attributes.Y + point.Y) + ")";
+
+            <path id="@id" d="@attributes.Data" transform="@shadowTransform" visibility="@visible" opacity="@shadowOpacity" fill="@shadowColor" stroke="@shadowColor"></path>
+        }
+
+        if(attributes.ID == "rotateThumb")
+        {
+            <path id="@attributes.ID" aria-label="@attributes.ID" d="@attributes.Data" transform="@transform" visibility="@visible" opacity="@opacity" fill="@fill" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" class="@attributes.ClassValues"></path>
+        }
+        else
+        {
+            <path id="@attributes.ID" d="@attributes.Data" transform="@transform" visibility="@visible" opacity="@opacity" fill="@fill" stroke="@attributes.Stroke" stroke-width="@strokeWidth" stroke-dasharray="@attributes.DashArray" class="@attributes.ClassValues"></path>
+        }
+    };
+
+
+    internal static RenderFragment<Dictionary<string, GradientBrush>> RenderGradients = gradients => __builder =>
+    {
+        foreach (KeyValuePair<string, GradientBrush> element in gradients)
+        {
+            if (element.Value.BrushType == GradientType.Linear)
+            {
+                @RenderLinearGradient(element)
+            }
+            else
+            {
+                @RenderRadialGradient(element)
+            }
+        }
+    };
+
+    internal static RenderFragment<KeyValuePair<string, GradientBrush>> RenderLinearGradient = gradient => __builder =>
+    {
+        LinearGradientBrush linear = gradient.Value as LinearGradientBrush;
+        string id = gradient.Key + "_linear";
+        string x1 = linear.X1 + PERCENTAGE;
+        string x2 = linear.X2 + PERCENTAGE;
+        string y1 = linear.Y1 + PERCENTAGE;
+        string y2 = linear.Y2 + PERCENTAGE;
+
+        <linearGradient id="@id" x1="@x1" y1="@y1" x2="@x2" y2="@y2">
+            @RenderGradientStops(linear)
+        </linearGradient>
+    };
+
+    internal static RenderFragment<KeyValuePair<string, GradientBrush>> RenderRadialGradient = gradient => __builder =>
+    {
+        RadialGradientBrush radial = gradient.Value as RadialGradientBrush;
+        string id = gradient.Key + "_radial";
+        string cx = radial.CX + PERCENTAGE;
+        string cy = radial.CY + PERCENTAGE;
+        string fx = radial.FX + PERCENTAGE;
+        string fy = radial.FY + PERCENTAGE;
+        string r = radial.R + PERCENTAGE;
+
+        <radialGradient id="@id" cx="@cx" cy="@cy" r="@r" fx="@fx" fy="@fy">
+            @RenderGradientStops(radial)
+        </radialGradient>
+    };
+
+    internal static RenderFragment<GradientBrush> RenderGradientStops = gradient => __builder =>
+    {
+        double? max = null; double? min = null; int i;
+        for (i = 0; i < gradient.GradientStops.Count; i++)
+        {
+            max = !max.HasValue ? gradient.GradientStops[i].Offset : Math.Max(max.Value, gradient.GradientStops[i].Offset.Value);
+            min = !min.HasValue ? gradient.GradientStops[i].Offset : Math.Min(min.Value, gradient.GradientStops[i].Offset.Value);
+        }
+        for (i = 0; i < gradient.GradientStops.Count; i++)
+        {
+            GradientStop stop = gradient.GradientStops[i];
+            double? offset = min < 0 ? (max + stop.Offset) / (2 * max) : stop.Offset / max;
+            string stopStyle = "stop-color:" + stop.Color + ";";
+            <stop offset="@offset" style="@stopStyle"></stop>
+        }
+    };
+
+                    internal static RenderFragment<FragmentParameter> RenderText = parameters => __builder =>
+                    {
+                    ICommonElement element = parameters.Element;
+                    TextAttributes attributes = DiagramRenderer.GetTextAttributes(element as TextElement, null, false);
+                    if(parameters.GroupElement != null)
+                    {
+                        attributes.ParentHeight = BaseUtil.GetDoubleValue(parameters.GroupElement.ActualSize.Height);
+                        attributes.ParentWidth = BaseUtil.GetDoubleValue(parameters.GroupElement.ActualSize.Width);
+                    }
+                    if(!string.IsNullOrEmpty(attributes.Content)) {
+            @RenderTextElement(attributes)
+        }
+    };
+
+    internal static RenderFragment<TextAttributes> RenderTextElement = attributes => __builder =>
+    {
+        if ((attributes.TextWrapping == TextWrap.Wrap || attributes.TextWrapping == TextWrap.WrapWithOverflow) && attributes.Height > attributes.ParentHeight &&
+            (attributes.TextOverflow == TextOverflow.Clip || attributes.TextOverflow == TextOverflow.Ellipsis))
+        {
+            attributes.Y = attributes.Y + (attributes.Height - attributes.ParentHeight) / 2;
+        }
+        string childId = attributes.ID + "_groupElement";
+        string parentId = attributes.ParentID;
+        string id = attributes.ID;
+        string textId = attributes.ID + "_text";
+        string stroke = attributes.Stroke.ToString(CultureInfo.InvariantCulture);
+        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+        string strokeDashArray = attributes.DashArray.ToString(CultureInfo.InvariantCulture);
+        string fill = (attributes.Gradient != string.Empty) ? "url(#" + attributes.Gradient + ")" : attributes.Color;
+        string visibility = attributes.Visible ? "visible" : "hidden";
+        string textDecoration = attributes.TextDecoration;
+        string transform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + "," + (attributes.Y + attributes.Height * attributes.PivotY) + ")" + "translate(" + attributes.X + "," + attributes.Y + ")";
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        string fontStyle = attributes.Italic ? "italic" : "normal";
+        string fontWeight = attributes.Bold ? "bold" : "normal";
+        string fontFamily = attributes.FontFamily.ToString(CultureInfo.InvariantCulture);
+        string fontSize = attributes.FontSize.ToString(CultureInfo.InvariantCulture) + "px";
+        string pivotX = (attributes.X + attributes.Width * attributes.PivotX).ToString(CultureInfo.InvariantCulture);
+        string pivotY = (attributes.Y + attributes.Height * attributes.PivotY).ToString(CultureInfo.InvariantCulture);
+        string description = attributes.Description;
+        ObservableCollection<TextElementBounds> textElementBounds = GetTextElements(attributes);
+
+        if((textElementBounds != null) && (textElementBounds.Count>0) && (textElementBounds[0].Text !=null))
+        {
+            description = textElementBounds[0].Text;
+        }
+
+        <g id="@childId">
+            @{
+                if (attributes.Fill != "transparent" && attributes.Fill != "none")
+                {
+                    @RenderRectElement(attributes)
+                    attributes.Description = description;
+                }
+            }
+            <text id="@textId" fill="@fill" stroke="@stroke" stroke-width="@strokeWidth" stroke-dasharray="@strokeDashArray" visibility="@visibility" text-decoration="@textDecoration" transform="@transform" opacity="@opacity" aria-label="@description" style="font-style: @fontStyle; font-weight: @fontWeight; font-size: @fontSize; font-family: @fontFamily;">
+                @for (int i = 0; i < textElementBounds.Count; i++)
+                {
+                    TextElementBounds element = textElementBounds[i];
+                    string x = element.X.ToString(CultureInfo.InvariantCulture);
+                    string y = element.Y.ToString(CultureInfo.InvariantCulture);
+                    string text = element.Text;
+                    <tspan x="@x" y="@y">@text</tspan>
+                }
+            </text>
+        </g>
+    };
+
+                static RenderFragment<FragmentParameter> RenderHTML = parameters => __builder =>
+                {
+                    ICommonElement element = parameters.Element;
+                    BaseAttributes attributes = DiagramRenderer.GetHtmlAttributes(element as DiagramHtmlElement, null, false);
+        @RenderHtmlElement(attributes);
+    };
+
+    static RenderFragment<BaseAttributes> RenderHtmlElement = attributes => __builder =>
+    {
+        string x = attributes.X.ToString(CultureInfo.InvariantCulture);
+        string y = attributes.Y.ToString(CultureInfo.InvariantCulture);
+        string width = attributes.Width.ToString(CultureInfo.InvariantCulture) + "px";
+        string height = attributes.Height.ToString(CultureInfo.InvariantCulture) + "px";
+        string id = attributes.ID + "_html_element";
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        string visible = attributes.Visible ? "visible" : "hidden";
+        string transform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + "," + (attributes.Y + attributes.Height * attributes.PivotY) + ")";
+        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+        string fill = (attributes.Gradient != string.Empty) ? "url(#" + attributes.Gradient + ")" : attributes.Fill;
+        if(string.IsNullOrEmpty(attributes.Description))
+        {
+            <rect id="@id" x="@x" y="@y" width="@width" height="@height" visibility="@visible" transform="@transform" opacity="@opacity" pointer-events="none" stroke="transparent" stroke-width="1" stroke-dasharray="none" fill="transparent"></rect>
+        }
+        else
+        {
+            <rect id="@id" x="@x" y="@y" width="@width" height="@height" visibility="@visible" transform="@transform" opacity="@opacity" aria-label="@attributes.Description" pointer-events="none" stroke="transparent" stroke-width="1" stroke-dasharray="none" fill="transparent"></rect>
+        }
+    };
+
+                static RenderFragment<FragmentParameter> RenderImage = parameters => __builder =>
+                {
+                    ICommonElement element = parameters.Element;
+                    ImageAttributes attributes = DiagramRenderer.GetImageAttributes(element as ImageElement, null, false);
+        @RenderImageElement(attributes);
+    };
+
+    static RenderFragment<ImageAttributes> RenderImageElement = attributes => __builder =>
+    {
+        string source = attributes.Source.ToString(CultureInfo.InvariantCulture);
+        string x = attributes.X.ToString(CultureInfo.InvariantCulture);
+        string y = attributes.Y.ToString(CultureInfo.InvariantCulture);
+        string width = attributes.Width.ToString(CultureInfo.InvariantCulture);
+        string height = attributes.Height.ToString(CultureInfo.InvariantCulture);
+        string scale = attributes.Scale.ToString() != "None" ? attributes.Scale.ToString() : string.Empty;
+        if (attributes.Alignment.ToString() == "None" && scale == "Stretch")
+        {
+            scale = string.Empty;
+        }
+        string imgAlign = attributes.Alignment.ToString();
+        string aspectRatio = char.ToLower(imgAlign[0]) + imgAlign.Substring(1);
+        if (!string.IsNullOrEmpty(scale))
+        {
+            string scaleValue = char.ToLower(scale[0]) + scale.Substring(1);
+            aspectRatio += " " + scaleValue;
+        }
+        string id = attributes.ID + "_image";
+        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+        string visibility = attributes.Visible ? "visible" : "hidden";
+        string transform = "rotate(" + attributes.Angle + ',' + (attributes.X + attributes.Width * attributes.PivotX) + ',' + (attributes.Y + attributes.Height * attributes.PivotY) + ")";
+        @RenderRectElement(attributes);
+        <image id="@id" x="@x" y="@y" transform="@transform" width="@width" visibility="@visibility" height="@height" preserveAspectRatio="@aspectRatio" opacity="@opacity" href="@source"></image>
+    };
+
+                static RenderFragment<FragmentParameter> RenderNative = parameters => __builder =>
+                {
+                    ICommonElement element = parameters.Element as ICommonElement;
+                    SfDiagramComponent diagram = null;
+                    SfSymbolPaletteComponent palette = null;
+                    Node nativeNode=null;
+                    nativeNode = GetNativeNode(parameters.Element, parameters.Nodes);
+                    if (nativeNode.Parent is SfDiagramComponent parent)
+                    {
+                        diagram = parent;
+                    }
+                    else if (nativeNode.Parent is Palette nodeParent)
+                    {
+                        palette = nodeParent.Parent as SfSymbolPaletteComponent;
+                    }
+                    if (element is DiagramSvgElement nativeElement)
+                    {
+                        BaseAttributes attributes = DiagramRenderer.GetNativeAttributes(nativeElement, null, false);
+                        string x = attributes.X.ToString(CultureInfo.InvariantCulture);
+                        string y = attributes.Y.ToString(CultureInfo.InvariantCulture);
+                        string width = attributes.Width.ToString(CultureInfo.InvariantCulture) + "px";
+                        string height = attributes.Height.ToString(CultureInfo.InvariantCulture) + "px";
+                        string id = attributes.ID + "_content";
+                        string nativeTransform;
+                        if (nativeNode.NativeSize != null)
+                        {
+                            double contentWidth = BaseUtil.GetDoubleValue(nativeNode.NativeSize.Width);
+                            double contentHeight = BaseUtil.GetDoubleValue(nativeNode.NativeSize.Height);
+                            nativeTransform = ("rotate(" + attributes.Angle + ',' + (attributes.X + attributes.Width * attributes.PivotX) + ',' + (attributes.Y + attributes.Height * attributes.PivotY) + ") translate(" + ((attributes.X + attributes.Width * attributes.PivotX) - attributes.Width * attributes.PivotX) + ',' + ((attributes.Y + attributes.Height * attributes.PivotY) - attributes.Height * attributes.PivotY) + ") scale(" + (attributes.Width / contentWidth) + ',' + (attributes.Height / contentHeight) + ')');
+                        }
+                        else
+                        {
+                            nativeTransform = ("rotate(" + attributes.Angle + ',' + (attributes.X + attributes.Width * attributes.PivotX) + ',' + (attributes.Y + attributes.Height * attributes.PivotY) + ") translate(" + ((attributes.X + attributes.Width * attributes.PivotX) - attributes.Width * attributes.PivotX) + ',' + ((attributes.Y + attributes.Height * attributes.PivotY) - attributes.Height * attributes.PivotY) + ')');
+                        }
+                        string nativeId = attributes.ID + "_native_element";
+                        string opacity = attributes.Opacity.ToString(CultureInfo.InvariantCulture);
+                        string visible = attributes.Visible ? "visible" : "hidden";
+                        if (nativeNode.NativeSize == null)
+                        {
+                            visible = "hidden";
+                        }
+                        string transform = "rotate(" + attributes.Angle + "," + (attributes.X + attributes.Width * attributes.PivotX) + "," + (attributes.Y + attributes.Height * attributes.PivotY) + ")";
+                        string strokeWidth = attributes.StrokeWidth.ToString(CultureInfo.InvariantCulture);
+                        string fill = (attributes.Gradient != string.Empty) ? "url(#" + attributes.Gradient + ")" : attributes.Fill;
+                        string description = attributes.Description;
+                        if ((diagram != null && @diagram.DiagramTemplates != null)||(palette != null&& @palette.SymbolPaletteTemplates != null))
+                        {
+                <rect id="@id" x="@x" y="@y" width="@width" height="@height" visibility="@visible" transform="@transform" opacity="@opacity" aria-label="@description" pointer-events="none" stroke="transparent" stroke-width="1" stroke-dasharray="none" fill="transparent"></rect>
+                <g id="@nativeId" style="visibility: @visible;opacity:@opacity;" transform="@nativeTransform" aria-label="@attributes.Description">
+                    @if (diagram != null)
+                    {
+                        @diagram.DiagramTemplates.NodeTemplate(nativeNode);
+                    }
+                    else
+                    {
+                        @palette.SymbolPaletteTemplates.NodeTemplate(nativeNode);
+                    }
+                </g>
+            }
+        }
+    };
+}

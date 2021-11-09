@@ -1,0 +1,15 @@
+@namespace Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Navigations.Internal;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@inherits SfBaseComponent;
+@typeparam TValue;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<div @ref="Element" @attributes="@attributes">
+    <CascadingValue Value="@this">
+        @ChildContent
+        <ListGeneration @ref="ListReference" TValue="TValue"></ListGeneration>
+    </CascadingValue>
+</div>

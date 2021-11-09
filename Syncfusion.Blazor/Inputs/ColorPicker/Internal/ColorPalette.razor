@@ -1,0 +1,51 @@
+﻿@namespace Syncfusion.Blazor.Inputs.Internal
+@if (Parent.PresetColors != null)
+{
+    var paletteContainerCls = GetPaletteClass();
+    <div class="@paletteContainerCls">
+        @for (int i = 0, len = Parent.PresetColors.Keys.Count; i < len; i++)
+        {
+            var colors = Parent.PresetColors.Values.ElementAt(i);
+            var key = Parent.PresetColors.Keys.ElementAt(i);
+            <div class="@PALETTE" tabindex="0">
+                @for (var j = 0; j < colors.Length; j++)
+                {
+                    @if (j == 0 || j % Parent.Columns == 0)
+                    {
+                        var count = j + (int)Parent.Columns > colors.Length ? colors.Length : j + (int)Parent.Columns;
+                        <div class="@ROW_CLS" role="@ROW_ROLE">
+                            @for (var k = j; k < count; k++)
+                            {
+                                var props = GetTileProps(colors[k], key, k);
+                                <span class="@props.TileClass" role="@ROLE" aria-label="@props.Color" aria-selected="false" style="@props.BgColor" @onclick="@(async () => await ClickHandler(props.Color))" @onclick:stopPropagation></span>
+                            }
+                        </div>
+                        j = count - 1;
+                    }
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="@PALETTE" tabindex="0">
+        @for (int i = 0, len = colors.Count; i < len; i++)
+        {
+            @if (i == 0 || i % Parent.Columns == 0)
+            {
+                <div class="@ROW_CLS" role="@ROW_ROLE">
+                    @for (int k = i; k < i + Parent.Columns; k++)
+                    {
+                        var props = GetTileProps(colors[k], DEFAULT, k);
+                        <span class="@props.TileClass" role="@ROLE" aria-label="@props.Color" aria-selected="false" style="@props.BgColor" @onclick="@(async () => await ClickHandler(props.Color))" @onclick:stopPropagation></span>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+@if (Parent.containerClass.Contains(SHOW_VALUE))
+{
+    <ColorPickerTextBox @ref="inputs"></ColorPickerTextBox>
+}

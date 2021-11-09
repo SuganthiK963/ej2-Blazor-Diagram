@@ -1,0 +1,59 @@
+@namespace Syncfusion.Blazor.SplitButtons
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Spinner
+
+@inherits SfBaseComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<SfButton @ref="buttonObj" id="@id" IsPrimary="@IsPrimary" CssClass="@buttonCss" IsToggle="@IsToggle" Disabled="@Disabled" EnableRtl="@EnableRtl" OnClick="e => ClickHandler(e)" @attributes="htmlAttributes" aria-valuemin="@MIN" aria-valuemax="@MAX" aria-label="@(Content + " Progress")" aria-valuenow="@MIN">
+    @if (spinSettings == null || (spinSettings.Position == SpinPosition.Left || spinSettings.Position == SpinPosition.Top))
+    {
+       <span @ref="spinnerElem">
+            <SfSpinner @ref="spinnerObj" Size="@spinWidth" CssClass="@SPINNER">
+            @if (spinSettings != null && spinSettings.SpinTemplate != null)
+            {
+                <SpinnerTemplates>
+                    <Template>
+                        @spinSettings.SpinTemplate
+                    </Template>
+                </SpinnerTemplates>
+            }
+            </SfSpinner>
+        </span>
+    }
+    <span class="@contentCss" @ref="contElem">
+        @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Left || IconPosition == IconPosition.Top))
+        {
+            <span class="@IconCss @iconCss"></span>
+        }
+        @Content
+        <CascadingValue Value="@this">@ChildContent</CascadingValue>
+        @if (!string.IsNullOrEmpty(IconCss) && (IconPosition == IconPosition.Right || IconPosition == IconPosition.Bottom))
+        {
+            <span class="@IconCss @iconCss"></span>
+        }
+    </span>
+    @if (spinSettings != null && (spinSettings.Position == SpinPosition.Right || spinSettings.Position == SpinPosition.Bottom || spinSettings.Position == SpinPosition.Center))
+    {
+        <span @ref="spinnerElem">
+            <SfSpinner @ref="spinnerObj" Size="@spinWidth" CssClass="@SPINNER">
+            @if (spinSettings != null && spinSettings.SpinTemplate != null)
+            {
+                <SpinnerTemplates>
+                    <Template>
+                        @spinSettings.SpinTemplate
+                    </Template>
+                </SpinnerTemplates>
+            }
+            </SfSpinner>
+        </span>
+    }
+    @if (EnableProgress)
+    {
+        <span class="e-progress" @ref="progressElem"></span>
+    }
+</SfButton>
+
+

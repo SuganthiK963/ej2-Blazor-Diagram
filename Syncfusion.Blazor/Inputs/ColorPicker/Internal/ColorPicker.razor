@@ -1,0 +1,42 @@
+﻿@namespace Syncfusion.Blazor.Inputs.Internal
+@if (!Parent.Inline)
+{
+    <div class="@HSV_MODEL" @onmousemove="@(async (e) => await MouseMoveHandler(e.ClientX, e.ClientY))" @onmousemove:preventDefault @onmouseup="MouseUpHandler" @onmouseup:preventDefault @ontouchmove="@(async (e) => await MouseMoveHandler(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY))" @ontouchend="MouseUpHandler"></div>
+}
+<div class="@HSV_CONTAINER" style="@colorPickerBgm" @onmousedown="@(async (e) => await MouseDownHandler(e.ClientX, e.ClientY))" @onmousedown:preventDefault @onmousemove="@(async (e) => await MouseMoveHandler(e.ClientX, e.ClientY))" @onmousemove:preventDefault @onmouseup="MouseUpHandler" @onmouseup:preventDefault @ontouchstart="@(async (e) => await MouseDownHandler(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY))" @ontouchstart:preventDefault @ontouchmove="@(async (e) => await MouseMoveHandler(e.ChangedTouches[0].ClientX, e.ChangedTouches[0].ClientY))" @ontouchend="MouseUpHandler">
+    <div class="@HSV_AREA"></div>
+    <span class="@handlerClass" tabindex="0" style="@handleOffset" @onkeydown="PickerKeyDown"></span>
+    @if (openTooltip)
+    {
+        <div class="@TIP_CLASS" style="@tooltipOffset" role="tooltip">
+            <div class="@TIP_CONTENT">
+                <div class="@TIP_TRANSPARENT" style="@curPreview"></div>
+            </div>
+        </div>
+    }
+</div>
+<div class="@SLIDER_PREVIEW">
+    <div class="@SLIDER_Container">
+        <SfSlider TValue="double" Value="@Parent.hsv[0]" Min="0" Max="359" CssClass="@HUE_SLIDER" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)">
+            <SliderEvents TValue="double" OnChange="@HueChange"></SliderEvents>
+        </SfSlider>
+        @if (Parent.EnableOpacity)
+        {
+            <SfSlider Value="@opacityValue" Min="0" Max="100" CssClass="@OPACITY_SLIDER" EnableRtl="@Parent.EnableRtl" Enabled="@(!Parent.Disabled)">
+                <ChildContent>
+                    <SliderEvents TValue="double" OnChange="@OpacityChange"></SliderEvents>
+                    <div class="@OPACITY_EMPTY" style="@opacityBgm"></div>
+                </ChildContent>
+            </SfSlider>
+        }@*
+        *@
+    </div>@*
+    *@<div class="@PREVIEW">
+        <span class="@CURRENT" style="@curPreview"></span>
+        <span class="@PREVIOUS" style="@Parent.preview" @onclick="PreviewHandler"></span>
+    </div>
+</div>
+@if (!Parent.containerClass.Contains(HIDE_VALUE))
+{
+    <ColorPickerTextBox @ref="inputs" ValueChanged="@InputValueChange"></ColorPickerTextBox>
+}

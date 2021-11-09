@@ -1,0 +1,76 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor;
+@using Syncfusion.Blazor.Inputs.Slider.Internal;
+@using Syncfusion.Blazor.Popups;
+@inject ISyncfusionStringLocalizer Localizer
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfBaseComponent;
+@typeparam TValue
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div @attributes="@attributes">
+    <input @attributes="@InputAttribute">
+    @if (this.ShowButtons)
+    {
+        <div @onclick="DecreaseValue" @attributes="SetButtonAttr(FIRSTBUTTON, decrease)"><span class="@SHOWBUTTONICON"></span></div>
+        <div @onclick="IncreaseValue" @attributes="SetButtonAttr(SECONDBUTTON, increase)"><span class="@SHOWBUTTONICON"></span></div>
+    }
+    <div @attributes="componentAttribute" @ref="Slider">
+
+        <div class="@SLIDERTRACK">
+            @if (SfSliderColorRange != null)
+            {
+                string className = Orientation == SliderOrientation.Horizontal ? "e-slider-horizantal-color" : "e-slider-vertical-color";
+                @for (int i = 0; i < SfSliderColorRange.Count; i++)
+                {
+                    <div class="@className" style=" display:none;background-color: @SfSliderColorRange[i].Color; border: 1px solid @SfSliderColorRange[i].Color;"></div>
+                }
+            }
+        </div>
+        <div @attributes="SetHandleAttribute(SLIDERFIRSTHANDLE)" @ref="FirstHandle" style="transition:none; visibility: hidden"></div>
+        @if (this.Type == SliderType.Range)
+        {
+            <div @attributes="SetHandleAttribute(SLIDERSECONDHANDLE)" @ref="SecondHandle" style="transition:none; visibility: hidden"></div>
+        }
+
+        <CascadingValue Value="@this">
+            @ChildContent
+            @if (ReRender && IsRePosition)
+            {
+                @if (SfSliderTicks != null)
+                {
+                    <SliderTicksRender></SliderTicksRender>
+                }
+            }
+            else if (IsRePosition)
+            {
+                this.ReRender = !this.ReRender;
+                this.StateHasChanged();
+            }
+        </CascadingValue>
+        @if (Type != SliderType.Default)
+        {
+            <div @attributes="SetRangeBarAttr()" style="transition:none"></div>
+        }
+    </div>
+</div>
+@if (SfSliderTooltip != null && SfSliderTooltip.IsVisible)
+{
+    <SfTooltip @ref="TooltipRef" ID="@(ID+"tooltip")"
+               Position="tooltipPos"
+               OffsetX="@tooltipOffSetX"
+               OffsetY="@tooltipOffSetY"
+               OpensOn="Custom"
+               OnRender="@OnRender"
+               OnOpen="OnOpen"
+               ShowTipPointer="ShowTipPointer"
+               CssClass="@tooltipClass"
+               Height=@(Theme == "material" ? "30" : "auto")
+               Animation="new AnimationModel() {
+                              Open = new TooltipAnimationSettings() { Effect = Effect.None, Delay = 0,Duration=0 },
+                              Close = new TooltipAnimationSettings() { Effect = Effect.FadeOut, Delay = 0,Duration=500 }
+                          }">
+    </SfTooltip>
+}

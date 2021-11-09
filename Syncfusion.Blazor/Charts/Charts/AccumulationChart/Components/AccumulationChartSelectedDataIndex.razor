@@ -1,0 +1,8 @@
+﻿@inherits ChartCommonSelectedData
+@using Syncfusion.Blazor.Charts.Internal
+@implements IEquatable<AccumulationChartSelectedDataIndex>;
+@namespace Syncfusion.Blazor.Charts
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

@@ -1,0 +1,15 @@
+﻿@namespace Syncfusion.Blazor.Charts.Sparkline.Internal
+@inherits SfBaseComponent;
+@typeparam TValue
+
+@if (Parent.TooltipSettings != null && Parent.TooltipSettings.TrackLineSettings != null && Parent.TooltipSettings.TrackLineSettings.Visible && !string.IsNullOrEmpty(trackPath))
+{
+    <div id="@(Parent.ID + "_sparkline_tracker_div")" style="@("position:absolute;")">
+        <svg id="@(Parent.ID + "_sparkline_tracker_svg")" height="@Parent.AvailableSize.Height" width="@Parent.AvailableSize.Width">
+            <g id="@(Parent.ID + "_sparkline_tracker_g")">
+                <path id="@(Parent.ID + "_tracker")" fill="transparent" opacity="1" stroke-width="@Parent.TooltipSettings.TrackLineSettings.Width"
+                      stroke="@trackColor" d="@trackPath"></path>
+            </g>
+        </svg>
+    </div>
+}

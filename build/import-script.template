@@ -1,0 +1,11 @@
+'use strict';
+(async () => {
+    if (!!window.MSInputMethodContext && !!document.documentMode) {
+        await import(/* webpackChunkName: '_content/Syncfusion.Blazor{{PACKAGE}}/scripts/sf-import-ie' */ "./sf-import-ie.js");
+    }
+    else {
+        await import(/* webpackChunkName: '_content/Syncfusion.Blazor{{PACKAGE}}/scripts/sf-import' */ "./sf-import.js");
+    }
+
+    DotNet.invokeMethodAsync('Syncfusion.Blazor{{PACKAGE}}', 'SetIsDevice', sfBlazor.isDevice());
+})();

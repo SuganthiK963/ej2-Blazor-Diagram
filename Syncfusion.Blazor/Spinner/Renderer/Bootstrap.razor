@@ -1,0 +1,14 @@
+﻿@inherits SpinnerBase;
+@namespace Syncfusion.Blazor.Spinner.Internal
+
+<svg class="@SpinnerSvgClass" id=@SvgId viewBox=@ViewBox style="@SvgStyle">
+    @for (var item = 0; item <= 7; item++)
+    {
+        var pClass = @circlePathClass + "_" + item;
+        var currrentRadius = Convert.ToString((circleRadius[item]), System.Globalization.CultureInfo.InvariantCulture);
+        var currentCircleCx = Convert.ToString((circleCx[item]), System.Globalization.CultureInfo.InvariantCulture);
+        var currentCircleCy = Convert.ToString((circleCy[item]), System.Globalization.CultureInfo.InvariantCulture);
+        <circle class="@pClass" r="@currrentRadius" transform="@circleTransform" cx="@currentCircleCx" cy="@currentCircleCy">
+        </circle>
+    }
+</svg>

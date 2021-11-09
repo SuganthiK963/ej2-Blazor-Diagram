@@ -1,0 +1,25 @@
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+@if ((Parent.SelectionSettings.Nodes != null && Parent.SelectionSettings.Nodes.Count > 0) || (Parent.SelectionSettings.Connectors != null && Parent.SelectionSettings.Connectors.Count > 0))
+{
+    <div id=@Parent.DiagramUserHandleDiv style="position: absolute; top: 0px; left: 0px; pointer-events: all; transform: translate(0px, 0px) scale(1);">
+        @foreach (UserHandle item in Parent.SelectionSettings.UserHandles)
+        {
+            if ((Parent.SelectionSettings.Constraints.HasFlag(SelectorConstraints.UserHandle)) && item.Visible && item.Template && item.Bounds != null && Parent.DiagramTemplates != null && Parent.DiagramTemplates.UserHandleTemplate != null)
+            {
+                string templateId = ((UserHandle)item).ID + "_content_html_template";
+                string height = ((UserHandle)item).Bounds.Height + "px";
+                string width = ((UserHandle)item).Bounds.Width + "px";
+                string left = item.Bounds.Left + "px";
+                string top = item.Bounds.Top + "px";
+                <div id="@item.ID" class="foreign-object">
+                    <div id="@templateId" style="position: absolute; transform: rotate(0deg); visibility: visible; opacity: 1; width: @width; height: @height; left: @left; top: @top;">
+                        <div style="height: 100%; width: 100%;">
+                            @Parent.DiagramTemplates.UserHandleTemplate(item)
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

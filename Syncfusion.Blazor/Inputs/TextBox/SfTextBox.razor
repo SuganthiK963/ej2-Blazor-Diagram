@@ -1,0 +1,114 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Inputs;
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfInputTextBase<string>;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+@if (this.BaseFloatLabelType == FloatLabelType.Auto || this.BaseFloatLabelType == FloatLabelType.Always)
+{
+	@if (this.ListOfButtons != null && this.ListOfButtons.Count > 0)
+	{
+		<div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+			@foreach (var icon in this.ListOfButtons)
+			{
+				@if (icon.Position == PREPEND)
+				{
+				 <span @attributes="icon.Events" class="@(GROUP_ICON + SPACE + icon.Icon)"></span>
+				}
+			}
+		 <span class="e-input-in-wrap">
+				@if (this.MultilineInput)
+				{
+			  <textarea @ref="@InputElement" id="@ID" value="@(FormatValueAsString(InputTextValue))" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler"></textarea>
+				}
+				else
+				{
+			  <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(FormatValueAsString(InputTextValue))" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+				}
+		  <span class="e-float-line"></span>
+		  <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+				@if (this.ShowClearButton && !this.MultilineInput)
+				{
+			  <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+				}
+				@if (this.ListOfButtons != null && this.ListOfButtons.Count > 0)
+				{
+					foreach (var icon in this.ListOfButtons)
+					{
+						@if (icon.Position == APPEND)
+						{
+					  <span @attributes="icon.Events" class="@(GROUP_ICON + SPACE + icon.Icon)"></span>
+						}
+					}
+				}
+		 </span>
+		</div>
+	}
+	else
+	{
+		<div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+			@if (this.MultilineInput)
+			{
+			 <textarea @ref="@InputElement" id="@ID" value="@(FormatValueAsString(InputTextValue))" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler"></textarea>
+			}
+			else
+			{
+			 <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(FormatValueAsString(InputTextValue))" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+			}
+		 <span class="e-float-line"></span>
+		 <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+			@if (this.ShowClearButton && !this.MultilineInput)
+			{
+			 <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+			}
+			@if (this.ListOfButtons != null && this.ListOfButtons.Count > 0)
+			{
+				foreach (var icon in this.ListOfButtons)
+				{
+					@if (icon.Position == APPEND)
+					{
+					 <span @attributes="icon.Events" class="@(GROUP_ICON + SPACE + icon.Icon)"></span>
+					}
+				}
+			}
+		</div>
+	}
+}
+else
+{
+	<span @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+		@if (this.ListOfButtons != null && this.ListOfButtons.Count > 0)
+		{
+			foreach (var icon in this.ListOfButtons)
+			{
+				@if (icon.Position == PREPEND)
+				{
+					<span @attributes="icon.Events" class="@(GROUP_ICON + SPACE + icon.Icon)"></span>
+				}
+			}
+		}
+		@if (this.MultilineInput)
+		{
+		 <textarea @ref="@InputElement" id="@ID" value="@(FormatValueAsString(InputTextValue))" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler"></textarea>
+		}
+		else
+		{
+		 <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(FormatValueAsString(InputTextValue))" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+		}
+		@if (this.ShowClearButton && !this.MultilineInput)
+		{
+		 <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+		}
+		@if (this.ListOfButtons != null && this.ListOfButtons.Count > 0)
+			{
+				foreach (var icon in this.ListOfButtons)
+				{
+					@if (icon.Position == APPEND)
+					{
+					 <span @attributes="icon.Events" class="@(GROUP_ICON + SPACE + icon.Icon)"></span>
+					}
+				}
+			}
+	</span>
+}

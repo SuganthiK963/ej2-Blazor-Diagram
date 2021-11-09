@@ -1,0 +1,20 @@
+﻿@using Syncfusion.Blazor.Navigations.Internal
+
+@namespace Syncfusion.Blazor.Navigations
+
+@inherits SfBaseComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<nav class="@BreadcrumbClass" @attributes="htmlAttributes" style="@styleAttributes" aria-label="breadcrumb">
+    <ol>
+        <CascadingValue Value="@this">
+            @ChildContent
+            @if (Items != null && Items.Count > 0)
+            {
+            <CreateBreadcrumbItems Items="Items"></CreateBreadcrumbItems>
+            }
+        </CascadingValue>
+    </ol>
+</nav>

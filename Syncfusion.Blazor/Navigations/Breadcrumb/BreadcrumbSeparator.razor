@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Components
+
+@namespace Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+<li class="e-breadcrumb-separator">
+    @if (parent != null && parent.BreadcrumbTemplates != null && parent.BreadcrumbTemplates.SeparatorTemplate != null)
+    {
+        @parent.BreadcrumbTemplates.SeparatorTemplate((parent.Items[PreviousIndex], parent.Items[PreviousIndex + 1]))
+    }
+    else
+    {
+        <span>/</span>
+    }
+</li>
+
+@code {
+    [CascadingParameter]
+    private SfBreadcrumb parent { get; set; }
+
+    [Parameter]
+    public int PreviousIndex { get; set; }
+
+    internal override void ComponentDispose()
+    {
+        parent = null;
+    }
+}

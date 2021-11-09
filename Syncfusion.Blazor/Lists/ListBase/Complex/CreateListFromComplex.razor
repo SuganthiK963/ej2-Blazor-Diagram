@@ -1,0 +1,264 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using System.Collections.Generic;
+@using Syncfusion.Blazor.Buttons.Internal;
+@namespace Syncfusion.Blazor.Lists.Internal
+@typeparam TValue
+@inherits ListBaseFoundation<TValue>
+
+<ul @attributes="GetListAttributes()">
+    @{
+        if (!this.VirtualScrolling)
+        {
+            @*Creates the list based on the given complex type datasource*@
+            @if (IsGroupedMode)
+            {
+                //Creates grouped list based on the grouped template property
+                @for (int i = 0; i < ComposedDataSource.Count(); i++)
+                {
+                    ComposedItemModel<TValue> item = ComposedDataSource.ElementAt(i);
+                    @if (item.IsGroupItem)
+                    {
+                        MappedData = null;
+                        ListIsGroupItem = true;
+                        Data = item.Data;
+                        GroupItemData = item;
+                        ListIsGroupTemplate = IsGroupTemplate;
+                        Index = i;
+                        RandomID = SfBaseUtils.GenerateID();
+                        ListClassNames = ClassNames;
+                        SfListBaseOptionModel = ListBaseOptionModel;
+                        GroupCallList();
+                        @RenderComplexList()
+                    }
+                    else
+                    {
+                        FieldsValueMapping<List<TValue>> mappedData = GetMappedData(item.Data);
+                        MappedData = mappedData;
+                        GroupItemData = null;
+                        ListIsGroupItem = false;
+                        Data = item.Data;
+                        ListIsItemTemplate = IsItemTemplate;
+                        Index = i;
+                        RandomID = SfBaseUtils.GenerateID();
+                        ListClassNames = ClassNames;
+                        SfListBaseOptionModel = ListBaseOptionModel;
+                        GroupCallList();
+                        @RenderComplexList()
+                    }
+                }
+            }
+            else
+            {
+                @for (int i = 0; i < DataDetails.Count(); i++)
+                {
+                    TValue item = DataDetails.ElementAt(i);
+                    FieldsValueMapping<List<TValue>> mappedData = GetMappedData(item);
+                    MappedData = mappedData;
+                    Data = item;
+                    IsItemTemplate = IsItemTemplate;
+                    Index = i;
+                    RandomID = SfBaseUtils.GenerateID();
+                    ListAttributesInternal = GetAttributes();
+                    GroupCallList();
+                    @RenderComplexList()
+                    }
+            }
+        }
+        else   //Enable virtual scrolling
+        {
+            @*Creates the list based on the given complex type datasource*@
+            @if (IsGroupedMode)
+            {
+                //Li element container Height
+                string totalScrollHeight = ComposedDataSource.Count() * LiElementHeight + "px";
+                <li style="height:@totalScrollHeight">
+                    <div class="e-list-virtualcontainer" style="position:relative">
+                        @for (int i = this.StartingPosition; i < this.EndPosition; i++)
+                        {
+                            if (i < ComposedDataSource.Count())
+                            {
+                                ComposedItemModel<TValue> item = ComposedDataSource.ElementAt(i);
+                                FieldsValueMapping<List<TValue>> mappedData = GetMappedData(item.Data);
+                                @if (item.IsGroupItem)
+                                {
+                                    MappedData = null;
+                                    ListIsGroupItem = true;
+                                    Data = item.Data;
+                                    GroupItemData = item;
+                                    ListIsGroupTemplate = IsGroupTemplate;
+                                    Index = i;
+                                    RandomID = SfBaseUtils.GenerateID();
+                                    ListClassNames = ClassNames;
+                                    SfListBaseOptionModel = ListBaseOptionModel;
+                                    GroupCallList();
+                                    @RenderComplexList()
+
+                                }
+                                else
+                                {
+                                    MappedData = mappedData;
+                                    ListIsGroupItem = false;
+                                    GroupItemData = null;
+                                    Data = item.Data;
+                                    ListIsItemTemplate = IsItemTemplate;
+                                    Index = i;
+                                    RandomID = SfBaseUtils.GenerateID();
+                                    ListClassNames = ClassNames;
+                                    SfListBaseOptionModel = ListBaseOptionModel;
+                                    GroupCallList();
+                                    @RenderComplexList()
+                                }
+                            }
+                        }
+                    </div>
+                </li>
+            }
+            else
+            {
+                string totalScrollHeight = (DataDetails.Count() * LiElementHeight) + "px";
+                <li style="height:@totalScrollHeight">
+                    <div class="e-list-virtualcontainer" style="position:relative">
+                        @for (int i = this.StartingPosition; i < this.EndPosition; i++)
+                        {
+                            if (i < DataDetails.Count())
+                            {
+                                TValue item = DataDetails.ElementAt(i);
+                                FieldsValueMapping<List<TValue>> mappedData = GetMappedData(item);
+                                MappedData = mappedData;
+                                ListIsGroupItem = false;
+                                Data = item;
+                                ListIsItemTemplate = IsItemTemplate;
+                                Index = i;
+                                RandomID = SfBaseUtils.GenerateID();
+                                ListClassNames = ClassNames;
+                                SfListBaseOptionModel = ListBaseOptionModel;
+                                GroupCallList();
+                                @RenderComplexList()
+                            }
+                        }
+                    </div>
+                </li>
+            }
+        }
+    }
+</ul>
+
+@code{
+
+    private RenderFragment RenderIconElement(FieldsValueMapping<List<TValue>> MappedData, ClassList ClassNames)
+    {
+        RenderFragment iconElement = null;
+        @if (ListBaseOptionModel.ShowIcon && !String.IsNullOrEmpty(MappedData.IconCss))
+        {
+            iconElement =@<div class="@($"{ClassNames.Icon} {MappedData.IconCss}")"></div>;
+        }
+        return iconElement;
+    }
+
+    private RenderFragment RenderChkbox(FieldsValueMapping<List<TValue>> MappedData)
+    {
+        RenderFragment checkbox = SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = MappedData.IsChecked == true, CssClass = (CheckBoxPosition == CheckBoxPosition.Right) ? CHECKBOXLISTCLASS + "e-checkbox-right" : "" });
+        return checkbox;
+    }
+
+    internal RenderFragment RenderComplexList() => treebuilder =>
+    {
+        int sequence = 0;
+        ListAttributesInternal = GetAttributes();
+        if (ListIsGroupItem)
+        {
+        @*Creates grouped list based on the grouped template property*@
+            treebuilder.OpenElement(sequence++, "li");
+
+            treebuilder.AddMultipleAttributes(sequence++, ListAttributesInternal);
+            treebuilder.SetKey(Data);
+            if (ListIsGroupTemplate)
+            {
+                treebuilder.AddContent(sequence++, GroupTemplate(GroupItemData));
+            }
+            else
+            {
+                treebuilder.OpenElement(sequence++, "div");
+                Dictionary<string, object> listvalue = new Dictionary<string, object> {
+                                    { "class", ListClassNames.TextContent },
+                                    { "role", SfListBaseOptionModel.AriaAttributes?.WrapperRole },
+                          };
+                treebuilder.AddMultipleAttributes(sequence++, listvalue);
+                treebuilder.OpenElement(sequence++, "span");
+                Dictionary<string, object> spanvalue = new Dictionary<string, object> {
+                                    { "class", ListClassNames.Text }};
+                treebuilder.AddMultipleAttributes(sequence++, spanvalue);
+                treebuilder.AddContent(sequence++, GroupItemData.Text);
+                treebuilder.CloseElement();
+                treebuilder.CloseElement();
+            }
+
+            treebuilder.CloseElement();
+        }
+        else
+        {
+            //Creates complex list based on the complex model template property
+            string text = MappedData?.Text;
+            treebuilder.OpenElement(sequence++, "li");
+            treebuilder.SetKey(Data);
+            treebuilder.AddMultipleAttributes(sequence++, ListAttributesInternal);
+
+            if (ListIsItemTemplate && !SfListBaseOptionModel.ShowCheckBox)
+            {
+                treebuilder.AddContent(sequence++, Template(Data));
+            }
+            else
+            {
+                treebuilder.OpenElement(sequence++, "div");
+                Dictionary<string, object> divValue = new Dictionary<string, object> {
+                                    { "class", GetWrapperClass() },
+                                    { "role", ListBaseOptionModel.AriaAttributes?.WrapperRole },
+                                    { "title", MappedData.Tooltip },
+                          };
+                treebuilder.AddMultipleAttributes(sequence++, divValue);
+                if (SfListBaseOptionModel.ShowCheckBox && CheckBoxPosition == CheckBoxPosition.Left)
+                {
+                    treebuilder.AddContent(sequence++, RenderChkbox(MappedData));
+                    
+                }
+                treebuilder.AddContent(sequence++, RenderIconElement(MappedData, ListClassNames));
+                treebuilder.AddMarkupContent(sequence++, "\r\n\r\n");
+                treebuilder.OpenElement(sequence++, "span");
+                Dictionary<string, object> spanValue = new Dictionary<string, object> {
+                                    { "class", ListClassNames.Text } };
+                treebuilder.AddMultipleAttributes(sequence++, spanValue);
+                
+                if (IsItemTemplate)
+                {
+                    treebuilder.AddContent(sequence++, Template(Data));
+                }
+                else
+                {
+                    treebuilder.AddContent(sequence++, text);
+                }
+                treebuilder.CloseElement();
+                if (SfListBaseOptionModel.ShowCheckBox && CheckBoxPosition == CheckBoxPosition.Right)
+                {
+                    treebuilder.AddContent(sequence++, RenderChkbox(MappedData));
+
+                }
+                if (MappedData.Child != null && SfListBaseOptionModel.ExpandCollapse && SfListBaseOptionModel.ExpandIconPosition == Position.Right)
+                {
+                    treebuilder.OpenElement(sequence++, "div");
+                    Dictionary<string, object> iconClass = new Dictionary<string, object> {
+                                    { "class", ($"e-icons {SfListBaseOptionModel.ExpandIconClass}") },
+                                   };
+                    treebuilder.AddMultipleAttributes(sequence++, iconClass);
+                    treebuilder.CloseElement();
+                }
+                treebuilder.CloseElement();
+            }
+
+
+            treebuilder.CloseElement();
+
+        }
+      
+    };
+
+}

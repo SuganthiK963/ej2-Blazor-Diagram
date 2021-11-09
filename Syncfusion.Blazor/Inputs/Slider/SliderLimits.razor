@@ -1,0 +1,10 @@
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfBaseComponent;
+@if (this.Enabled)
+{
+    <div class="@LimitsClass"></div>
+    if (this.Parent?.Type == SliderType.Range)
+    {
+        <div class="e-limits e-limit-second"></div>
+    }
+}

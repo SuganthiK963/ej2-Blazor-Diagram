@@ -1,0 +1,29 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor;
+@using Syncfusion.Blazor.Notifications.Internal;
+@using System.Collections.Generic;
+@namespace Syncfusion.Blazor.Notifications
+@inject ISyncfusionStringLocalizer Localizer
+
+@inherits SfBaseComponent;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div @ref="ToastElement" id="@ID" class="@WRAPPER_CLASS @FullWidth @positionClass @rtlClass" style="@toastPosition @positionStyle">
+    <CascadingValue Value="@this">
+        @ChildContent
+        @if (isShowToast && ShowModels.Count > 0)
+        {
+            IEnumerable<int> count = Enumerable.Range(0, toastCount);
+            @foreach (int index in count)
+            {
+                ToastContentModel model = new ToastContentModel() { Index = index, Model = ShowModels[index] };
+                <CascadingValue Value="@model" Name="ToastContent">
+                    <ToastContent></ToastContent>
+                </CascadingValue>
+            }
+        }
+    </CascadingValue>
+</div>

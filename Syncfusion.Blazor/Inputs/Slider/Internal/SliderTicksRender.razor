@@ -1,0 +1,165 @@
+﻿@using System;
+@using Syncfusion.Blazor.Inputs
+@namespace Syncfusion.Blazor.Inputs.Slider.Internal
+@inherits SfBaseComponent
+
+@if (Parent.Ticks.Placement != Placement.None)
+{
+    //Create ticks Ul element
+    <ul @ref="TicksWrapperRef" @attributes="@Attributes">
+        @* Horizantal Ticks *@
+        <CascadingValue Value="this">
+            @{
+                @ChildContent
+                string styleAttr = Parent.Orientation == SliderOrientation.Horizontal ? "width:" : "height:";
+                @if (Parent.Orientation == SliderOrientation.Horizontal)
+                {
+                    @if (Parent.CustomValues == null)
+                    {
+                        string styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                        <TickElement ClassName="@FIRSTTICK" FormattedValue="@FormattedValue[0]" Value="@ticksValue[0]" Styles="@styles"></TickElement>
+                        int large = 1;
+                        for (int i = 1; i <= totalTicks; i++)
+                        {
+                            if (ticksValue[i] <= Parent.Max)
+                            {
+                                if (Array.IndexOf(largeTicksValue, ticksValue[i]) != -1)
+                                {    
+                                        if ((ticksValue[i] == Parent.Max) || ticksValue.Length - 1 == i)
+                                        {
+                                            styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                                        <TickElement ClassName="@LASTTICK" FormattedValue="@FormattedValue[i]" Value="@ticksValue[i]" Styles="@styles"></TickElement>
+                                        }
+
+                                        else
+                                        {
+                                            styles = styleAttr + FindMaxWidth(((double)listItemElementWidth).ToString());
+                                        <TickElement ClassName="@LARGETICK" FormattedValue="@FormattedValue[i]" Value="@ticksValue[i]" Styles="@styles"></TickElement>
+                                            large++;
+                                        }
+                                }
+
+                                else if (Parent.Ticks.ShowSmallTicks)
+                                {
+
+                                    if (ticksValue[i] == Parent.Max || ticksValue[i] == ticksValue[ticksValue.Length-1])
+                                    {
+                                        styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                                        <TickElement IsSmallTick="true" Value="@Parent.Max" FormattedValue="@FormattedValue[i]" ClassName="e-tick e-last-tick" Styles="@styles"></TickElement>
+                                    } 
+                                    else 
+                                    {
+                                        styles = styleAttr + FindMaxWidth(((double)listItemElementWidth).ToString());
+                                        <TickElement IsSmallTick="true" Value="@ticksValue[i]" FormattedValue="@FormattedValue[i]" ClassName="e-tick" Styles="@styles"></TickElement>
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    else if (Parent.CustomValues != null)
+                    {
+
+                        string styles = styleAttr + FindMaxWidth((((double)100 / totalTicks) / 2).ToString());
+                        <TickElement ClassName="@FIRSTTICK" FormattedValue="@Parent?.CustomValues[0]" Styles="@styles"></TickElement>
+                        int j = 1;
+                        for (int i = 1; i < totalTicks; i++)
+                        {
+                            styles = styleAttr + FindMaxWidth(((double)100 / totalTicks).ToString());
+                            if ((i % (tickCount + 1)) == 0)
+                            {                                
+                                <TickElement ClassName="@LARGETICK" FormattedValue="@Parent?.CustomValues[j]" Styles="@styles"></TickElement>
+                                j++;
+                            }
+                            else
+                            {
+                                <TickElement IsSmallTick="true" ClassName="e-tick" FormattedValue="@Parent?.CustomValues[j]" Styles="@styles"></TickElement>
+                            }
+                        }
+                        styles = styleAttr + FindMaxWidth((((double)100 / totalTicks) / 2).ToString());
+                        <TickElement ClassName="@LASTTICK" FormattedValue="@Parent?.CustomValues[Parent.CustomValues.Length-1]" Styles="@styles"></TickElement>
+                    }
+                }
+                else  //Vertical Ticks
+                {
+                    @if (Parent.CustomValues == null)
+                    {
+                        string styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                        <TickElement ClassName="@FIRSTTICK" FormattedValue="@FormattedValue[FormattedValue.Length - 1]" Styles="@styles"></TickElement>
+                        int large = totalTicks - 1;
+                        int largeTickValuePosition = largeTicksValue.Length - 1;
+                        if (largeTicksValue[largeTicksValue.Length - 1] > Parent.Max)
+                        {
+                            largeTickValuePosition -= 1;
+                        }
+                        for (int i = totalTicks; i >= 0; i--)
+                        {
+                            if (ticksValue[i] <= Parent.Max && ticksValue[i] >= Parent.Min)
+                            {
+                                if (largeTicksValue[largeTickValuePosition] == ticksValue[i])
+                                {
+                                    if (largeTicksValue[largeTickValuePosition] != Parent.Max)
+                                    {
+                                        if (ticksValue[i] == Parent.Min && largeTicksValue[largeTickValuePosition] == Parent.Min)
+                                        {
+                                            styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                                            <TickElement ClassName="@LASTTICK" FormattedValue="@FormattedValue[i]" Styles="@styles"></TickElement>
+                                        }
+                                        else
+                                        {
+                                            styles = styleAttr + FindMaxWidth(((double)listItemElementWidth).ToString());
+                                            <TickElement ClassName="@LARGETICK" FormattedValue="@FormattedValue[i]" Styles="@styles"></TickElement>
+                                            large--;
+                                        }
+                                    }
+                                    largeTickValuePosition--;
+                                }
+                                else
+                                {
+                                    var count = i;
+                                    if (ticksValue[i] == Parent.Min)
+                                    {
+                                        styles = styleAttr + FindMaxWidth(((double)listItemElementWidth / 2).ToString());
+                                        <TickElement IsSmallTick="true" FormattedValue="@Parent.Max.ToString()" ClassName="e-tick e-last-tick" Styles="@styles"></TickElement>
+                                    }
+                                    else
+                                    {
+                                        styles = styleAttr + FindMaxWidth(((double)listItemElementWidth).ToString());
+                                        <TickElement IsSmallTick="true" FormattedValue="@ticksValue[i].ToString()" ClassName="e-tick" Styles="@styles"></TickElement>
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    else if (Parent.CustomValues.Length > 0)
+                    {
+                        int count = 0;
+                        string styles = styleAttr + FindMaxWidth((((double)100 / totalTicks) / 2).ToString());
+                        <TickElement ClassName="@FIRSTTICK" FormattedValue="@Parent.CustomValues[Parent.CustomValues.Length - 1]" Styles="@styles"></TickElement>
+                        int j = totalTicks - 1;
+                        int customValuesPosition = 2;
+                        for (int i = 1; i < totalTicks; i++)
+                        {
+                            count = i;
+                            styles = styleAttr + FindMaxWidth(((double)100 / totalTicks).ToString());
+                            if ((i % (tickCount + 1)) == 0)
+                            {                                
+                                <TickElement ClassName="@LARGETICK" FormattedValue="@Parent.CustomValues[Parent.CustomValues.Length - customValuesPosition]" Styles="@styles"></TickElement>
+                                j--;
+                                customValuesPosition += 1;
+                            }
+                            else
+                            {
+                                <TickElement IsSmallTick="true" ClassName="e-tick" FormattedValue="@Parent.CustomValues[Parent.CustomValues.Length - customValuesPosition]" Styles="@styles"></TickElement>
+                            }
+                        }
+                        styles = styleAttr + FindMaxWidth((((double)100 / totalTicks) / 2).ToString());
+                        <TickElement ClassName="@LASTTICK" FormattedValue="@Parent.CustomValues[0]" Styles="@styles"></TickElement>
+                    }
+                }
+            }
+        </CascadingValue>
+    </ul>
+}
+

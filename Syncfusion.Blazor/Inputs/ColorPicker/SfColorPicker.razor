@@ -1,0 +1,30 @@
+﻿@using Syncfusion.Blazor.Internal
+@using Syncfusion.Blazor.SplitButtons
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfBaseComponent;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+    @ChildContent
+    <div @ref="element" class="@containerClass" @attributes="htmlAttributes">
+        <input class="@COLOR_PICKER" type="@COLOR" value="@inputValue" tabindex="-1" spellcheck="false" />
+        @if (Inline)
+        {
+            <ColorPickerBase @ref="colorPickerBase"></ColorPickerBase>
+        }
+        else
+        {
+            <SfSplitButton @ref="splitBtnObj" class="@SPLIT_PICKER" EnableRtl="@EnableRtl" Disabled="@Disabled" CssClass="@dropdownClass">
+                <ChildContent>
+                    <span class="@SELECTED_CLR">
+                        <span class="@SPLIT_PREVIEW" style="@preview"></span>
+                    </span>
+                    <SplitButtonEvents Clicked="@OnClicked" OnOpen="@OnOpenClose" Opened="@OpenHandler" OnClose="@OnOpenClose"></SplitButtonEvents>
+                </ChildContent>
+                <PopupContent>
+                    <ColorPickerBase @ref="colorPickerBase"></ColorPickerBase>
+                </PopupContent>
+            </SfSplitButton>
+        }
+    </div>
+</CascadingValue>

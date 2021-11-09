@@ -1,0 +1,49 @@
+@namespace Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+<div @ref="HeaderElement" data-index="@Item.InsertAt" class="@ItemCss" id="@(string.IsNullOrEmpty(Item.Id) ? ItemId : Item.Id)" @attributes="@ItemAttributes">
+    <div class=@ACCORDIONHEADER id="@HeaderId" role=@HEADING @attributes="@HeaderAttributes" @onclick="@((e) => ItemClickHandler(e))">
+        @if (!string.IsNullOrEmpty(Item.IconCss))
+        {
+            <div class=@ACCORDIONHEADERICON>
+                <span class="@HeaderIconCss"></span>
+            </div>
+        }
+        <div class=@ACCORDIONHEADERCONTENT>
+            @if (Item.HeaderTemplate != null)
+            {
+                @Item.HeaderTemplate
+            }
+            else
+            {
+                @Item.Header
+            }
+        </div>
+        @if (!string.IsNullOrEmpty(Item.Content) || Item.ContentTemplate != null)
+        {
+            <div class=@TOGGLEICON>
+                <span class="@ToggleCss"></span>
+            </div>
+        }
+    </div>
+    @if (Item.IsContentRendered && (!string.IsNullOrEmpty(Item.Content) || Item.ContentTemplate != null))
+    {
+        <div class="@ContentCss" id="@ContentId" role=@DEFINITION @attributes="@ContentAttributes">
+            <div class=@ACCORDIONCONTENT>
+                @if (Item.ContentTemplate != null)
+                {
+                    @Item.ContentTemplate
+                }
+                else
+                {
+                    @Item.Content
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    internal ElementReference HeaderElement;
+}

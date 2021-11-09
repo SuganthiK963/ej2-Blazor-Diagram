@@ -1,0 +1,14 @@
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+<g id=@Parent.SelectorElement>
+    @if (((Parent.SelectionSettings.Nodes != null && Parent.SelectionSettings.Nodes.Count > 0) || (Parent.SelectionSettings.Connectors != null && Parent.SelectionSettings.Connectors.Count > 0)))
+    {
+        Parent.SelectionSettings.ThumbsConstraints = ThumbsConstraints.Default;
+        DiagramObjectCollection<IDiagramObject> objs = new DiagramObjectCollection<IDiagramObject>(Parent.SelectionSettings.Nodes);
+                SfDiagramComponent.UpdateThumbConstraints(objs, Parent.SelectionSettings);
+        objs = new DiagramObjectCollection<IDiagramObject>(Parent.SelectionSettings.Connectors);
+                SfDiagramComponent.UpdateThumbConstraints(objs, Parent.SelectionSettings, true);
+        @DiagramRenderer.RenderSelector(new SelectionFragmentParameter { Selector = Parent.SelectionSettings, Transform = Parent.Scroller.Transform })
+
+    }
+</g>

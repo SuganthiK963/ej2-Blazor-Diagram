@@ -1,0 +1,165 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Charts.BulletChart.Internal;
+
+@namespace Syncfusion.Blazor.Charts
+@inherits SfBaseComponent;
+@implements IBulletChart;
+@typeparam TValue;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div id="@ID" @ref="@element" tabindex="@TabIndex">
+    <CascadingValue Value="@this">
+        @ChildContent
+        <div id="@(ID + "_Secondary_Element")" style="@(secondaryElementStyle + "position: relative;")">
+            @if (Tooltip != null)
+            {
+                <BulletChartTooltipRender TValue="TValue"></BulletChartTooltipRender>
+            }
+        </div>
+        <svg id="@(ID + "_svg")" height="@svgHeight" width="@svgWidth">
+            @if (AvailableSize != null)
+            {
+                @if (Render?.ChartBorder != null)
+                {
+                    Border border = Render.ChartBorder;
+                    <rect id="@border.ID" x="0" y="0" height="@AvailableSize.Height.ToString(culture)" width="@AvailableSize.Width.ToString(culture)" stroke="@border.Stroke" stroke-width="@border.StrokeWidth.ToString(culture)" opacity="1" fill="@border.BackGround">
+                    </rect>
+                }
+                <g id="@(ID + "_svg_scaleGroup")">
+                    <g id="@(ID + "_svg__rangeGroup")">
+                        @for (int i = 0; i < ScaleRender?.RangeInfo?.Count; i++)
+                        {
+                            ColorRange range = ScaleRender.RangeInfo[i];
+                            <rect id="@range.ID" x="@range.RangeRect.X.ToString(culture)" y="@range.RangeRect.Y.ToString(culture)" height="@range.RangeRect.Height.ToString(culture)" width="@range.RangeRect.Width.ToString(culture)" fill="@range.Stroke" stroke-width="@range.StrokeWidth.ToString(culture)" opacity="@range.Opacity.ToString(culture)">
+                            </rect>
+                        }
+                    </g>
+                    <g id="@(ID + "_svg_majorTickGroup")">
+                        @for (int i = 0; i < Render.MajorTicksCollection?.Count; i++)
+                        {
+                            BaseModel majorTick = Render.MajorTicksCollection[i];
+                            <line id="@(ID + "_svg_MajorTickLine_" + i.ToString())" x1="@majorTick.X1.ToString(culture)" x2="@majorTick.X2.ToString(culture)" y1="@majorTick.Y1.ToString(culture)" y2="@majorTick.Y2.ToString(culture)" stroke-width="@majorTick.StrokeWidth.ToString(culture)" stroke="@majorTick.Stroke"></line>
+                        }
+                    </g>
+                    <g id="@(ID + "_svg_minorTickGroup")">
+                        @for (int i = 0; i < Render.MinorTicksCollection?.Count; i++)
+                        {
+                            BaseModel minorTick = Render.MinorTicksCollection[i];
+                            <line id="@(ID + "_svg_MajorTickLine_" + i.ToString())" x1="@minorTick.X1.ToString(culture)" x2="@minorTick.X2.ToString(culture)" y1="@minorTick.Y1.ToString(culture)" y2="@minorTick.Y2.ToString(culture)" stroke-width="@minorTick.StrokeWidth.ToString(culture)" stroke="@minorTick.Stroke"></line>
+                        }
+                    </g>
+                    <g id="@(ID + "_svg_axisLabelGroup")">
+                        @for (int i = 0; i < Render.LabelCollection?.Count; i++)
+                        {
+                            LabelModel label = Render.LabelCollection[i];
+                            TextStyle style = Render.LabelStyle;
+                            <text>
+                                <text id="@(ID + "_svg_AxisLabel_" + i.ToString())" x="@label.X.ToString(culture)" y="@label.Y.ToString(culture)" fill="@label.Color" font-size="@style.Size.ToString(culture)" font-style="@style.FontStyle"
+                                      font-family="@style.FontFamily" font-weight="@style.FontWeight" opacity="@style.Opacity.ToString(culture)" text-anchor="middle">
+                                    @label.Text
+                                </text>
+                            </text>
+                        }
+                    </g>
+                    @for (int i = 0; i < ScaleRender?.CategoryLabel?.Count; i++)
+                    {
+                        LabelModel categoryLabel = ScaleRender.CategoryLabel[i];
+                        TextStyle style = Render.CategoryStyle;
+                        <text>
+                            <text x="@categoryLabel.X.ToString(culture)" y="@categoryLabel.Y.ToString(culture)" fill="@categoryLabel.Color" font-size="@style.Size.ToString(culture)" font-style="@style.FontStyle"
+                                  font-family="@style.FontFamily" font-weight="@style.FontWeight" opacity="@style.Opacity.ToString(culture)" text-anchor="middle">
+                                @categoryLabel.Text
+                            </text>
+                        </text>
+                    }
+                    @if (ScaleRender?.FeatureBars != null)
+                    {
+                        <g id="@(ID + "_svg_featureGroup")">
+                            @for (int i = 0; i < ScaleRender?.FeatureBars?.Count; i++)
+                            {
+                                BarInfo bar = ScaleRender.FeatureBars[i];
+                                <rect id="@bar.ID" x="@bar.X.ToString(culture)" y="@bar.Y.ToString(culture)" height="@bar.Height.ToString(culture)" width="@bar.Width.ToString(culture)" fill="@bar.Fill" stroke="@bar.Border.Stroke" stroke-width="@bar.Border.StrokeWidth.ToString(culture)" opacity="@bar.Opacity.ToString(culture)" transform="@bar.Transform.ToString(culture)" style="@bar.Style">
+                                </rect>
+                            }
+                        </g>
+                    }
+                    <g id="@(ID + "_svg_comparativeGroup")">
+                        @for (int j = 0; j < ScaleRender?.RectMeasureBars?.Count; j++)
+                        {
+                            BarInfo line = ScaleRender.RectMeasureBars[j];
+                            <line id="@line.ID" x1="@line.X1.ToString(culture)" x2="@line.X2.ToString(culture)" y1="@line.Y1.ToString(culture)" y2="@line.Y2.ToString(culture)" stroke="@line.Stroke" stroke-width="@line.StrokeWidth.ToString(culture)" opacity="@line.Opacity.ToString(culture)" transform="@line.Transform.ToString(culture)" style="@line.Style">
+                            </line>
+                        }
+                        @for (int j = 0; j < ScaleRender?.CircleMeasureBars?.Count; j++)
+                        {
+                            BarInfo circular = ScaleRender.CircleMeasureBars[j];
+                            <circle id="@circular.ID" cx="@circular.X1.ToString(culture)" cy="@circular.Y1.ToString(culture)" fill="@circular.Stroke" r="@circular.StrokeWidth.ToString(culture)" stroke="@circular.Stroke" stroke-width="1" opacity="@circular.Opacity.ToString(culture)" transform="@circular.Transform.ToString(culture)" style="@circular.Style">
+                            </circle>
+                        }
+                        @for (int j = 0; j < ScaleRender?.CrossMeasureBars?.Count; j++)
+                        {
+                            BarInfo cross = ScaleRender.CrossMeasureBars[j];
+                            <path id="@cross.ID" fill="transparent" stroke="@cross.Stroke" stroke-width="@cross.StrokeWidth.ToString(culture)" opacity="@cross.Opacity.ToString(culture)" d="@cross.Path.ToString(culture)" transform="@cross.Transform.ToString(culture)" style="@cross.Style">
+                            </path>
+                        }
+                    </g>
+                </g>
+                @if (Render.TitleInfo != null && Render.TitleCollection.Count > 0)
+                {
+                    TextStyle style = Render.TitleStyle;
+                    <text>
+                        <text id="@(ID + "_BulletChartTitle")" x="@Render.TitleInfo.X.ToString(culture)" y="@Render.TitleInfo.Y.ToString(culture)" fill="@style.Color" font-size="@style.Size.ToString(culture)" font-style="@style.FontStyle"
+                              font-family="@style.FontFamily" font-weight="@style.FontWeight" opacity="@style.Opacity.ToString(culture)" text-anchor="@Render.TitleInfo.Anchor" dominant-baseline="auto" tabindex="@Render.TitleInfo.TabIndex" aria-label="@Render.TitleCollection.FirstOrDefault().Text">
+                            @Render.TitleCollection.FirstOrDefault().Text
+                            @if (Render.TitleCollection.Count > 1)
+                            {
+                                @for (int i = 1; i < Render.TitleCollection.Count; i++)
+                                {
+                                    LabelModel title = Render.TitleCollection[i];
+                                    <tspan id="@(ID + "_BulletChartTitle")" x="@title.X.ToString(culture)" y="@title.Y.ToString(culture)">
+                                        @title.Text
+                                    </tspan>
+                                }
+                            }
+                        </text>
+                    </text>
+                }
+                @if (Render.SubTitleInfo != null && Render.SubTitleCollection.Count > 0)
+                {
+                    TextStyle style = Render.SubTitleStyle;
+                    <text>
+                        <text id="@(ID + "_BulletChartSubTitle")" x="@Render.SubTitleInfo.X.ToString(culture)" y="@Render.SubTitleInfo.Y.ToString(culture)" fill="@style.Color" font-size="@style.Size.ToString(culture)" font-style="@style.FontStyle"
+                              font-family="@style.FontFamily" font-weight="@style.FontWeight" opacity="@style.Opacity.ToString(culture)" text-anchor="@Render.SubTitleInfo.Anchor" dominant-baseline="auto" tabindex="@Render.SubTitleInfo.TabIndex" aria-label="@Render.SubTitleCollection.FirstOrDefault().Text">
+                            @Render.SubTitleCollection.FirstOrDefault().Text
+                            @if (Render.SubTitleCollection.Count > 1)
+                            {
+                                @for (int i = 1; i < Render.SubTitleCollection.Count; i++)
+                                {
+                                    LabelModel subTitle = Render.SubTitleCollection[i];
+                                    <tspan id="@(ID + "_BulletChartTitle")" x="@subTitle.X.ToString(culture)" y="@subTitle.Y.ToString(culture)">
+                                        @subTitle.Text
+                                    </tspan>
+                                }
+                            }
+                        </text>
+                    </text>
+                }
+                @for (int i = 0; i < Render?.DataLabelCollection?.Count; i++)
+                {
+                    TextStyle style = Render.DataLabelStyle;
+                    LabelModel dataLabel = Render.DataLabelCollection[i];
+                    <text>
+                        <text id="@(ID + "_DataLabel_" + i)" x="@dataLabel.X.ToString(culture)" y="@dataLabel.Y.ToString(culture)" fill="@dataLabel.Color" font-size="@style.Size.ToString(culture)" font-style="@style.FontStyle"
+                              font-family="@style.FontFamily" font-weight="@style.FontWeight" opacity="@style.Opacity.ToString(culture)" text-anchor="@dataLabel.Anchor">
+                            @dataLabel.Text
+                        </text>
+                    </text>
+                }
+            }
+            <BulletChartLegend></BulletChartLegend>
+        </svg>
+    </CascadingValue>
+</div>

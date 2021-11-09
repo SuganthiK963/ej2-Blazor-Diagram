@@ -1,0 +1,45 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Inputs.Internal;
+@using Syncfusion.Blazor.Inputs;
+@typeparam TValue
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfInputTextBase<TValue>;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+@if (this.FloatLabelType == FloatLabelType.Auto || this.FloatLabelType == FloatLabelType.Always)
+{
+    <div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+         <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(string.IsNullOrEmpty(minMaxValue) ? FormatValueAsString(InputTextValue) : minMaxValue)" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+        <span class="e-float-line"></span>
+        <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+        @if (this.ShowClearButton)
+        {
+            <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation">
+            </span>
+        }
+        @if (this.SpinButton)
+        {
+            <span class="@(GROUP_ICON + SPACE + SPIN_DOWN)" title="@DecrementTitle" aria-label="@DecrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+            <span class="@(GROUP_ICON + SPACE + SPIN_UP)" title="@IncrementTitle" aria-label="@IncrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+        }
+    </div>
+}
+else
+{
+    <span @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr" >
+        <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(string.IsNullOrEmpty(minMaxValue) ? FormatValueAsString(InputTextValue) : minMaxValue)" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+        @if (this.ShowClearButton)
+        {
+            <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+        }
+        @if (this.SpinButton)
+        {
+            <span class="@(GROUP_ICON + SPACE + SPIN_DOWN)" title="@DecrementTitle" aria-label="@DecrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+            <span class="@(GROUP_ICON + SPACE + SPIN_UP)" title="@IncrementTitle" aria-label="@IncrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+        } 
+    </span>
+}
+@ChildContent
+</CascadingValue>

@@ -1,0 +1,68 @@
+@using Syncfusion.Blazor.Navigations.Internal
+@typeparam TValue
+@inherits SfMenuBase<TValue>;
+@namespace Syncfusion.Blazor.Navigations
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div @ref="Element" class="@containerClass" id="@id">
+    @if (HamburgerMode && string.IsNullOrEmpty(Target) && Orientation == Orientation.Horizontal)
+    {
+        <span class="@HEADER" @onclick="(async (e) => await HeaderClickHandler())">
+            <span class="@TITLE">@Title</span>
+            <span class="@ICON" tabindex="@ZERO"></span>
+        </span>
+    }
+    @if (!closeMenu && Fields != null && Items != null)
+    {
+        <CascadingValue Value="this">
+            @if (MenuItems == null)
+            {
+                <CreateMenuItems TValue="TValue" TItem="TValue" Items="@Items" ContainerClass="@containerClass" MenuClass="@(Orientation == Orientation.Vertical ? MENUCLASS + VERTICAL : MENUCLASS)"></CreateMenuItems>
+            }
+            else
+            {
+                <CreateMenuItems TValue="TValue" TItem="MenuItemModel" Items="@MenuItems" ContainerClass="@containerClass" MenuClass="@(Orientation == Orientation.Vertical ? MENUCLASS + VERTICAL : MENUCLASS)"></CreateMenuItems>
+            }
+        </CascadingValue>
+    }
+</div>
+@if (SubMenuOpen)
+{
+    var menuOption = new MenuOptions()
+    {
+        Element = Element,
+        ShowItemOnClick = ShowItemOnClick,
+        EnableScrolling = EnableScrolling,
+        IsRtl = EnableRtl,
+        ScrollHeight = scrollHeight,
+        Orientation = Orientation,
+        NavigationIndex = NavIdx
+    };
+<CascadingValue Value="menuOption">
+    @if (MenuItems == null)
+    {
+        <SfContextMenu @ref="SubMenu" Items="@SubMenuItems" CssClass="@CssClass" EnableRtl="@EnableRtl" ShowItemOnClick="@ShowItemOnClick" EnableScrolling="@EnableScrolling">
+            <MenuEvents TValue="TValue" Created="@(() => { SubMenu.IsMenu = true; SubMenu.Fields = Fields; SubMenu.MenuTemplates = MenuTemplates; SubMenu.Initialize(); SubMenu.IsDevice = false; SubMenu.Open(); })"
+                        OnOpen="@BeforeOpenHandler" OnClose="@BeforeCloseHandler" Opened="@(async (e) => await OpenedHandler(e))"
+                        ItemSelected="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs<TValue>>(Delegates?.ItemSelected, e))"
+                        OnItemRender="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs<TValue>>(Delegates?.OnItemRender, e))"
+                        Closed="@(async (e) => await SfBaseUtils.InvokeEvent<OpenCloseMenuEventArgs<TValue>>(Delegates?.Closed, e))"></MenuEvents>
+        </SfContextMenu>
+    }
+    else
+    {
+        <SfContextMenu @ref="SelfDataSubMenu" Items="@SubMenuItemsModel" CssClass="@CssClass" EnableRtl="@EnableRtl" ShowItemOnClick="@ShowItemOnClick" EnableScrolling="@EnableScrolling">
+            <MenuEvents TValue="MenuItemModel" Created="@(() => { SelfDataSubMenu.IsMenu = true; SelfDataSubMenu.Fields = Fields; SelfDataSubMenu.Initialize(); SelfDataSubMenu.IsDevice = false; SelfDataSubMenu.Open(); })"
+                        OnOpen="@BeforeOpenHandler" OnClose="@BeforeCloseHandler" Opened="@(async (e) => await OpenedHandler(e))"
+                        ItemSelected="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs<MenuItemModel>>(SelfRefDelegates?.ItemSelected, e))"
+                        OnItemRender="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs<MenuItemModel>>(SelfRefDelegates?.OnItemRender, e))"
+                        Closed="@(async (e) => await SfBaseUtils.InvokeEvent<OpenCloseMenuEventArgs<MenuItemModel>>(SelfRefDelegates?.Closed, e))"></MenuEvents>
+        </SfContextMenu>
+    }
+</CascadingValue>
+}
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

@@ -1,0 +1,18 @@
+﻿@namespace Syncfusion.Blazor.Charts.Internal
+@using Syncfusion.Blazor.DataVizCommon
+
+<CascadingValue Value="@this">
+    <g>
+        @foreach (SelectionOptions item in SelectedRectangles)
+        {
+            @if (!item.IsLasso)
+            {
+                <SvgSelectionRect @ref="@componentRef" @bind-DragRect="@item.DragRect" @bind-Close="@item.Close" Id="@item.Id" Fill="@item.Fill" Stroke="@item.Stroke" StrokeWidth="@item.StrokeWidth" />
+            }
+            else
+            {
+                <SvgSelectionPath @ref="@componentRefPath" @bind-Path="@item.Path" @bind-Close="@item.Close" Id="@item.Id" Fill="@item.Fill" Stroke="@item.Stroke" StrokeWidth="@item.StrokeWidth" />
+            }
+        }
+    </g>
+</CascadingValue>

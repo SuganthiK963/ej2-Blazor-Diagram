@@ -1,0 +1,25 @@
+﻿@namespace Syncfusion.Blazor.Lists.Internal
+@typeparam TValue
+@inherits ListItemBase<TValue>
+@*Creates list items for primitive type list*@
+@{
+    string text = Data?.ToString();
+    <li @attributes="@HtmlAttributesInternal">
+        @if (IsItemTemplate)
+        {
+            @ListBase.Template(Data);
+        }
+        else
+        {
+            if (ListBaseOptionModel.IsSingleLevel)
+            {
+               @text
+            }
+            else
+            {
+            <div class="@ClassNames.TextContent" role="@ListBaseOptionModel.AriaAttributes?.WrapperRole"> <span class="@ClassNames.Text" role="@ListBaseOptionModel.AriaAttributes?.ItemText"> @text</span> </div>
+
+            }
+        }
+    </li>
+}

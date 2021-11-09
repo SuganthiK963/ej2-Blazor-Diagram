@@ -1,0 +1,34 @@
+﻿@namespace Syncfusion.Blazor.Navigations.Internal
+@inject ISyncfusionStringLocalizer Localizer
+
+<div class="e-tab-wrap" tabindex="-1">
+    <div class="e-text-wrap">
+        @if (Item.Header != null && !string.IsNullOrEmpty(Item.Header.IconCss) && (Item.Header.IconPosition == "left" || Item.Header.IconPosition == "top"))
+        {
+            <span class="e-icons e-tab-icon e-icon-@Item.Header.IconPosition @Item.Header.IconCss"></span>
+        }
+        @if ((Item.Header != null && !string.IsNullOrEmpty(Item.Header.Text)) || Item.HeaderTemplate != null)
+        {
+            <div class="e-tab-text" role="presentation">
+                @if (Item.HeaderTemplate != null)
+                {
+                    @Item.HeaderTemplate
+                }
+                else
+                {
+                    @Item.Header.Text
+                }
+            </div>
+        }
+        @if (Item.Header != null && !string.IsNullOrEmpty(Item.Header.IconCss) && (Item.Header.IconPosition == "right" || Item.Header.IconPosition == "bottom"))
+        {
+            <span class="e-icons e-tab-icon e-icon-@Item.Header.IconPosition @Item.Header.IconCss"></span>
+        }
+        <span class="e-icons e-close-icon" title="@(Localizer.GetText("Tab_CloseButtonTitle") == null ? "Close" : Localizer.GetText("Tab_CloseButtonTitle"))"></span>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public TabItem Item { get; set; }
+}

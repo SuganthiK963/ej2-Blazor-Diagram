@@ -1,0 +1,18 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Inputs.Internal;
+@namespace Syncfusion.Blazor.Inputs
+@inherits SfBaseComponent;
+@implements IInputBase;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="@this">
+    <CascadingValue Value="this" Name="Parent">
+        <SfInputBase @ref="InputBaseObj" ID="@(this.ID)" RootClass="@RootClass" ContainerClass="@ContainerClass" CssClass="@this.CssClass" Placeholder="@this.Placeholder" FloatLabelType="@this.FloatLabelType" Value="@this.MaskValue" HtmlAttributes="@this.HtmlAttributes" Readonly="@this.Readonly" ShowClearButton="@this.ShowClearButton"
+                     Enabled="@this.Enabled" EnableRtl="@this.EnableRtl" TabIndex="@this.TabIndex" Autocomplete="off" @attributes="@InputAttributes" 
+                     Width="@this.Width" @onchange="@ChangeHandler" @oninput="@InputHandler" @onblur="@FocusOutHandler" @onfocus="@FocusHandler"
+                     BindClearBtnEvents="@InvokeClearBtnEvent" BindClearBtnTouchEvents="@InvokeClearBtnEvent" ClickStopPropagation="@ClearBtnStopPropagation">
+        </SfInputBase>
+    </CascadingValue>
+    @ChildContent
+</CascadingValue>

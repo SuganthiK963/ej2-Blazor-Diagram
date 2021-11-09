@@ -1,0 +1,82 @@
+@typeparam TValue;
+@typeparam TItem;
+@namespace Syncfusion.Blazor.Navigations.Internal
+@inherits SfBaseComponent
+
+@{
+    var blankIconidxes = new List<int>(); var blankIcon = false;
+    CurrentNavProps props = GetCurrentNavProps();
+    var ulStyle = TEXTINDENT + (24 + (props.UlIndex * 6)) + PIXEL;
+}
+@for (var i = 0; i < Items.Count; i++)
+{
+    TItem item = Items[i];
+    var itemModel = Parent.BeforeItemCreation<TItem>(item, i, props.ItemClasses);
+    if (Parent.MenuItems == null && !string.IsNullOrEmpty(itemModel.ParentId))
+        Parent.SelfReferentialData();
+    @if (itemModel.Separator)
+    {
+        <li @attributes="@itemModel.HtmlAttributes"></li>
+    }
+    else
+    {
+        blankIcon = Parent.HandleBlankIcon(blankIconidxes, blankIcon, itemModel, props.ItemClasses, i);
+        <li role="@ITEMROLE" tabindex="@MINUSONE" aria-label="@itemModel.Text" @attributes="@itemModel.HtmlAttributes" @onmouseover="@(() => MenuHoverHandler(item))" @onclick="@(async (e) => await ItemClickHandler(item, e))" @onclick:stopPropagation @onkeydown="@(async (e) => await KeyDownHandler(item, e))" @onkeydown:stopPropagation>
+            @if (Parent.MenuTemplates == null && !string.IsNullOrEmpty(itemModel.Url))
+            {
+                <a class="@URL" href="@itemModel.Url">
+                    <div class="e-anchor-wrap">
+                        @if (!string.IsNullOrEmpty(itemModel.IconCss))
+                        {
+                            <span class="@(ICON + SPACE + itemModel.IconCss)"></span>
+                        }
+                        @itemModel.Text
+                        @if (itemModel.Items != null)
+                        {
+                            <span class="@CARET"></span>
+                        }
+                        @if (i == props.ItemIndex)
+                        {
+                            @if (Parent.MenuItems == null)
+                            {
+                                <CreateMenuItems TValue="TValue" TItem="TValue" Items="@(itemModel.Items as List<TValue>)" ContainerClass="@SUBMENUWRAPPER" MenuClass="@SUBMENU" Style="@ulStyle"></CreateMenuItems>
+                            }
+                            else
+                            {
+                                <CreateMenuItems TValue="TValue" TItem="MenuItemModel" Items="@(itemModel.Items as List<MenuItemModel>)" ContainerClass="@SUBMENUWRAPPER" MenuClass="@SUBMENU" Style="@ulStyle"></CreateMenuItems>
+                            }
+                        }
+                    </div>
+                </a>
+            }
+            else
+            {
+                @if (Parent.MenuTemplates != null && Parent.MenuTemplates.Template != null)
+                    @Parent.MenuTemplates.Template((TValue)((object)item))
+                else
+                {
+                    @if (!string.IsNullOrEmpty(itemModel.IconCss))
+                    {
+                        <span class="@(ICON + SPACE + itemModel.IconCss)"></span>
+                    }
+                    @itemModel.Text
+                }
+                @if (itemModel.Items != null)
+                {
+                    <span class="@CARET"></span>
+                }
+                @if (i == props.ItemIndex)
+                {
+                    @if (Parent.MenuItems == null)
+                    {
+                        <CreateMenuItems TValue="TValue" TItem="TValue" Items="@(itemModel.Items as List<TValue>)" ContainerClass="@SUBMENUWRAPPER" MenuClass="@SUBMENU" Style="@ulStyle"></CreateMenuItems>
+                    }
+                    else
+                    {
+                        <CreateMenuItems TValue="TValue" TItem="MenuItemModel" Items="@(itemModel.Items as List<MenuItemModel>)" ContainerClass="@SUBMENUWRAPPER" MenuClass="@SUBMENU" Style="@ulStyle"></CreateMenuItems>
+                    }
+                }
+            }
+        </li>
+    }
+}

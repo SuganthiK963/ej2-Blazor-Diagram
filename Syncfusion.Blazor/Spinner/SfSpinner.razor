@@ -1,0 +1,54 @@
+@using Syncfusion.Blazor.Spinner.Internal;
+
+@inherits SfBaseComponent
+@namespace Syncfusion.Blazor.Spinner
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div  @ref="spinnerElement" class="@spinnerClass @statusClass @CssClass" @attributes="@attributes">
+    <div class="@innerClass">
+        <CascadingValue Value="@this">
+            @ChildContent
+            @if (Type != SpinnerType.None)
+            {
+                @if (spinnerTemplate != null)
+                {
+                    @spinnerTemplate;
+                }
+                else
+                {
+                    switch (@Type)
+                    {
+                        case SpinnerType.Fabric:
+                            <FabricHighContrast />
+                            break;
+                        case SpinnerType.Tailwind:
+                            <FabricHighContrast />
+                            break;
+                        case SpinnerType.HighContrast:
+                            <FabricHighContrast />
+                            break;
+                        case SpinnerType.Material:
+                            <Material Show="@isShow" TypeUpdate="@typeUpdated" />
+                            break;
+                        case SpinnerType.Bootstrap4:
+                            <Bootstrap4 />
+                            break;
+                        case SpinnerType.Bootstrap5:
+                            <Bootstrap4 />
+                            break;
+                        case SpinnerType.Bootstrap:
+                            <Bootstrap Show="@isShow" TypeUpdate="@typeUpdated" />
+                            break;
+                    }
+                }
+            }
+        </CascadingValue>
+        @if (Label != null) {
+            <div class="@labelClass">
+                @Label
+            </div>
+        }
+    </div>
+</div>

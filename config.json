@@ -1,0 +1,1007 @@
+{
+    "projects": [    
+        "Syncfusion.Blazor/Syncfusion.Blazor.csproj",
+        "Syncfusion.Blazor/Themes/Syncfusion.Blazor.Themes.csproj",
+        "Syncfusion.Blazor/Base/Syncfusion.Blazor.Core.csproj",
+        "Syncfusion.Blazor/Data/Syncfusion.Blazor.Data.csproj",
+        "Syncfusion.Blazor/Buttons/Syncfusion.Blazor.Buttons.csproj",
+        "Syncfusion.Blazor/Cards/Syncfusion.Blazor.Cards.csproj",
+        "Syncfusion.Blazor/Spinner/Syncfusion.Blazor.Spinner.csproj",
+        "Syncfusion.Blazor/BarcodeGenerator/Syncfusion.Blazor.BarcodeGenerator.csproj",
+        "Syncfusion.Blazor/CircularGauge/Syncfusion.Blazor.CircularGauge.csproj",
+        "Syncfusion.Blazor/LinearGauge/Syncfusion.Blazor.LinearGauge.csproj",
+        "Syncfusion.Blazor/Notifications/Syncfusion.Blazor.Notifications.csproj",
+        "Syncfusion.Blazor/Popups/Syncfusion.Blazor.Popups.csproj",
+        "Syncfusion.Blazor/SplitButtons/Syncfusion.Blazor.SplitButtons.csproj",
+        "Syncfusion.Blazor/Layouts/Syncfusion.Blazor.Layouts.csproj",
+        "Syncfusion.Blazor/Inputs/Syncfusion.Blazor.Inputs.csproj",
+        "Syncfusion.Blazor/Lists/Syncfusion.Blazor.Lists.csproj",
+        "Syncfusion.Blazor/Calendars/Syncfusion.Blazor.Calendars.csproj",
+        "Syncfusion.Blazor/Navigations/Syncfusion.Blazor.Navigations.csproj",
+        "Syncfusion.Blazor/Diagrams/Syncfusion.Blazor.Diagrams.csproj",
+        "Syncfusion.Blazor/Diagram/Syncfusion.Blazor.Diagram.csproj",
+        "Syncfusion.Blazor/DropDowns/Syncfusion.Blazor.DropDowns.csproj",
+        "Syncfusion.Blazor/RichTextEditor/Syncfusion.Blazor.RichTextEditor.csproj",
+        "Syncfusion.Blazor/QueryBuilder/Syncfusion.Blazor.QueryBuilder.csproj",
+        "Syncfusion.Blazor/Schedule/Syncfusion.Blazor.Schedule.csproj",
+        "Syncfusion.Blazor/Kanban/Syncfusion.Blazor.Kanban.csproj",
+        "Syncfusion.Blazor/Grids/Syncfusion.Blazor.Grid.csproj",
+        "Syncfusion.Blazor/TreeGrid/Syncfusion.Blazor.TreeGrid.csproj",
+        "Syncfusion.Blazor/FileManager/Syncfusion.Blazor.FileManager.csproj",
+        "Syncfusion.Blazor/Gantt/Syncfusion.Blazor.Gantt.csproj",
+        "Syncfusion.Blazor/TreeMap/Syncfusion.Blazor.TreeMap.csproj",
+        "Syncfusion.Blazor/InPlaceEditor/Syncfusion.Blazor.InPlaceEditor.csproj",
+        "Syncfusion.Blazor/Maps/Syncfusion.Blazor.Maps.csproj",
+        "Syncfusion.Blazor/PdfViewer/Syncfusion.Blazor.PdfViewer.csproj",
+        "Syncfusion.Blazor/ProgressBar/Syncfusion.Blazor.ProgressBar.csproj", 
+        "Syncfusion.Blazor/Charts/DataVizCommon/Syncfusion.Blazor.DataVizCommon.csproj",
+        "Syncfusion.Blazor/Charts/Charts/Syncfusion.Blazor.Charts.csproj",
+        "Syncfusion.Blazor/Charts/BulletChart/Syncfusion.Blazor.BulletChart.csproj",
+        "Syncfusion.Blazor/Charts/SmithChart/Syncfusion.Blazor.SmithChart.csproj",
+        "Syncfusion.Blazor/Charts/Sparkline/Syncfusion.Blazor.Sparkline.csproj",        
+        "Syncfusion.Blazor/Charts/RangeNavigator/Syncfusion.Blazor.RangeNavigator.csproj",
+        "Syncfusion.Blazor/Charts/StockChart/Syncfusion.Blazor.StockChart.csproj",  
+        "Syncfusion.Blazor/DocumentEditor/Syncfusion.Blazor.DocumentEditor.csproj",
+        "Syncfusion.Blazor/PivotView/Syncfusion.Blazor.PivotTable.csproj",
+        "Syncfusion.Blazor/HeatMap/Syncfusion.Blazor.HeatMap.csproj"
+    ],
+    "packages": {
+        "BarcodeGenerator": {
+            "scripts": ["sf-barcode"]
+        },
+        "Base": {
+            "scripts": [
+                "index",
+                "popup",
+                "popupsbase",
+                "compression",
+                "excelexport",
+                "fileutils",
+                "pdfexport",
+                "svgbase",
+                "sf-svg-export",
+                "syncfusion-blazor-extended"
+            ],
+            "packageName": "Core"
+        },
+        "CircularGauge": {
+            "scripts": ["sf-circulargauge"]
+        },
+        "LinearGauge": {
+            "scripts": ["sf-lineargauge"]
+        },
+        "TreeMap": {
+            "scripts": ["sf-treemap"]
+        },
+        "Buttons": {
+            "scripts": [
+                "checkbox",
+                "radiobutton",            
+                "switch"
+            ]
+        },
+        "Calendars": {
+            "scripts": [
+                "calendar",
+                "datepicker",
+                "daterangepicker",
+                "datetimepicker",
+                "timepicker",
+                "sf-calendarbase",
+                "sf-datepicker",
+                "sf-daterangepicker",
+                "sf-timepicker"
+            ]
+        },
+        "Charts/Charts": {
+            "scripts": [
+              
+               "sf-accumulation-chart",
+               "sf-chart",
+               "chartsbase"   
+            ],
+            "packageName": "Charts"
+        },
+        "Charts/SmithChart" : {
+            "scripts": [
+                "sf-smith-chart"
+            ]
+        },
+        "Charts/Sparkline" : {
+            "scripts": [
+                "sf-sparkline"
+            ]
+        },
+        "Charts/StockChart" : {
+            "scripts": [                
+                "sf-stock-chart"
+            ]
+        },
+        "Charts/BulletChart" : {
+            "scripts": [
+                "sf-bullet-chart"
+            ]
+        },
+        "Charts/RangeNavigator" : {
+            "scripts": [
+                "sf-range-navigator"
+            ]
+        },
+        "Data": {
+            "scripts": ["data"]
+        },
+        "Diagrams": {
+            "scripts": ["diagrams"]
+        },
+        "Diagram": {
+            "scripts": ["sf-diagramcomponent"]
+        },
+        "DocumentEditor": {
+            "scripts": [
+                "chart",
+                "accumulationchart",
+                "officechart",
+                "sf-documenteditorcontainer",
+                "sf-documenteditor",
+                "syncfusion-blazor-documenteditor"
+            ],
+            "packageName": "WordProcessor"
+        },
+        "DropDowns": {
+            "scripts": [       
+                "combobox",
+                "dropdownlist",
+                "dropdowns",
+                "dropdownsbase",
+                "listbox",              
+                "sf-dropdownlist",
+                "sf-listbox",
+                "sf-multiselect",
+                "sortable"
+            ]
+        },
+        "FileManager": {
+            "scripts": [
+             "sf-filemanager"
+             ]
+        },
+       "Gantt": {
+            "scripts": [                
+                "sf-gantt"
+            ]
+        },
+        "Grids": {
+            "scripts": [
+                "sf-grid"
+            ],
+            "packageName": "Grid"
+        },
+        "HeatMap": {
+            "scripts": ["sf-heatmap"]
+        },
+        "InPlaceEditor": {
+            "scripts": ["sf-inplaceeditor"]
+        },
+        "Inputs": {
+            "scripts": [   
+                "colorpicker",         
+                "numerictextbox",
+                "sf-numerictextbox",
+                "sf-textbox",
+                "sf-maskedtextbox",
+                "uploader",
+                "sf-slider",
+                "sf-uploader",
+                "sf-colorpicker"
+            ]
+        },
+        "Kanban": {
+            "scripts": ["sf-kanban"]
+        },
+        "Layouts": {
+            "scripts": [
+                "sf-dashboard-layout",
+                "sf-splitter"
+            ]
+        },
+        "Lists": {
+            "scripts": [
+                "sf-listview"
+            ]
+        },
+        "Maps": {
+            "scripts": ["sf-maps"]
+        },
+        "Navigations": {
+            "scripts": [
+                "navigationsbase",
+                "toolbar",
+                "navigations",
+                "menu",
+                "tab",
+	            "sf-sidebar",
+                "sf-accordion",
+                "sf-contextmenu",
+                "sf-menu",
+                "sf-tab",
+                "sf-toolbar",
+                "sf-treeview"
+            ]
+        },
+        "Notifications": {
+            "scripts": [
+                "notifications",
+                "sf-toast"
+            ]
+        },
+        "PdfViewer": {
+            "scripts": [
+                "pdfviewer",
+                "inplaceeditor",
+                "buttonsbase",
+                "button",
+                "inputsbase",
+                "textbox",
+                "dialog",
+                "tooltip",
+                "listsbase",
+                "listview",
+                "drawings",
+                "accordion",
+                "toast",
+                "contextmenu",
+                "syncfusion-blazor-pdfviewer"
+            ]
+        },
+        "PivotView": {
+            "scripts": ["sf-pivotview"],
+            "packageName": "PivotTable"
+        },
+        "Popups": {
+            "scripts": [
+                "sf-dialog",
+                "sf-tooltip"
+            ]
+        },
+        "ProgressBar": {
+            "scripts": ["sf-progressbar"]
+        },
+        "QueryBuilder": {
+            "scripts": ["querybuilder"]
+        },
+        "RichTextEditor": {
+            "scripts": ["sf-richtexteditor"]
+        },
+        "Schedule": {
+            "scripts": ["sf-schedule"]
+        },
+        "Spinner": {
+            "scripts": ["sf-spinner", "spinner"]
+        },
+        "SplitButtons": {
+            "scripts": [
+                "progressbutton",
+                "sf-drop-down-button",
+                "sf-progress-button",
+                "splitbuttonsbase",
+                "splitbutton",
+                "dropdownbutton"
+            ]
+        },
+        "TreeGrid": {
+            "scripts": ["sf-treegrid"]
+        }
+    },
+    "singleBundle": {
+        "exclude": [
+            "sf-import.js",
+            "sf-import-ie.js",
+            "sf-import-script.js",
+            "sf-documenteditor.js",
+            "sf-documenteditorcontainer.js"
+        ],
+        "ej2Modules": [
+            "base.js",
+            "spinner.js",
+            "popup.js",
+            "popupsbase.js",
+            "navigationsbase.js",
+            "splitbuttonsbase.js",
+            "svgbase.js",
+            "sortable.js"
+        ]
+    },
+    "CRG": {
+        "SfTextBox": {
+            "dependencies": [
+                "sf-textbox.js"
+            ],
+            "package": "Inputs" 
+        },
+        "SfNumericTextBox": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-numerictextbox.js"
+            ],
+            "package": "Inputs" 
+        },
+        "SfMaskedTextBox": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-maskedtextbox.js"
+            ],
+            "package": "Inputs" 
+        },
+        "SfUploader": {
+            "dependencies": [
+                "spinner.js",
+                "sf-uploader.js"
+            ],
+            "package": "Inputs" 
+        },
+        "SfCalendar": {
+            "dependencies": [
+                "sf-calendarbase.js"
+            ],
+            "package": "Calendars"
+        },
+        "SfDatePicker": {
+            "dependencies": [
+                "sf-calendarbase.js",
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-datepicker.js"
+            ],
+            "package": "Calendars" 
+        },
+        "SfDateTimePicker": {
+            "dependencies": [
+                "sf-calendarbase.js",
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-datepicker.js"
+            ],
+            "package": "Calendars" 
+        },
+        "SfDateRangePicker": {
+            "dependencies": [
+                "sf-calendarbase.js",
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-daterangepicker.js"
+            ],
+            "package": "Calendars" 
+        },
+		"SfDiagramComponent": {
+			"dependencies": [
+				"sf-accordion.js",
+				"sf-diagramcomponent.js"
+			],
+			"package": "Diagram"
+		},
+        "SfTimePicker": {
+            "dependencies": [
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-timepicker.js"
+            ],
+            "package": "Calendars" 
+        },
+        "SfAutoComplete": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-dropdownlist.js"
+            ],
+            "package": "DropDowns" 
+        },
+        "SfComboBox": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-dropdownlist.js"
+            ],
+            "package": "DropDowns" 
+        },
+        "SfDropDownList": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-dropdownlist.js"
+            ],
+            "package": "DropDowns" 
+        },
+        "SfMultiSelect": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-multiselect.js"
+            ],
+            "package": "DropDowns" 
+        },
+        "SfButton": {
+            "package": "Buttons"
+        },
+        "SfCheckBox": {
+            "package": "Buttons"
+        },
+        "SfRadioButton": {
+            "package": "Buttons"
+        },
+        "SfSwitch": {
+            "package": "Buttons"
+        },
+        "SfDropDownButton": {
+            "dependencies": [
+                "popup.js",
+                "popupsbase.js",
+                "splitbuttonsbase.js",
+                "sf-drop-down-button.js"
+            ],
+            "package": "SplitButtons"
+        },
+        "SfSplitButton": {
+            "dependencies": [
+                "popup.js",
+                "popupsbase.js",
+                "splitbuttonsbase.js",
+                "sf-drop-down-button.js"
+            ],
+            "package": "SplitButtons"
+        },
+        "SfProgressButton": {
+            "dependencies": [
+                "sf-spinner.js"
+            ],
+            "package": "SplitButtons"
+        },
+        "SfButtonGroup": {
+            "package": "SplitButtons"
+        },
+        "SfListBox": {
+            "dependencies": [
+                "sortable.js",
+                "popup.js",
+                "popupsbase.js",           
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "sf-listbox.js" 
+            ],
+            "package": "DropDowns"
+        },
+        "SfColorPicker": {
+            "dependencies": [
+                "splitbuttonsbase.js",
+                "sf-drop-down-button.js",
+                "sf-textbox.js",
+                "sf-numerictextbox.js",
+                "popup.js",
+                "popupsbase.js",
+                "sf-tooltip.js",
+                "sf-slider.js",
+                "sf-colorpicker.js"
+            ],
+            "package": "Inputs"
+        },
+        "SfContextMenu": {
+            "dependencies": [
+                "popup.js",
+                "popupsbase.js",
+                "sf-contextmenu.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfMenu": {
+            "dependencies": [
+                "navigationsbase.js",           
+                "sf-contextmenu.js",
+                "popup.js",
+                "popupsbase.js",
+                "sf-menu.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfQueryBuilder": {
+            "dependencies": [
+                "sf-dropdownlist.js",
+                "splitbuttonsbase.js",
+                "sf-drop-down-button.js",
+                "sf-tooltip.js",
+                "sf-spinner.js",
+                "popupsbase.js",
+                "sf-multiselect.js",
+                "sf-numerictextbox.js",
+                "sf-calendarbase.js",
+                "sf-textbox.js",
+                "popup.js",
+                "sf-datepicker.js"
+            ],
+            "package": "QueryBuilder"
+        },
+        "SfGrid": {
+            "dependencies": [
+                "sf-grid.js",
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-dropdownlist.js",
+                "navigationsbase.js",
+                "sf-contextmenu.js",
+                "sf-toolbar.js",
+                "sf-spinner.js",
+                "sf-calendarbase.js",
+                "sf-datepicker.js",
+                "sf-numerictextbox.js",
+                "sf-dropdownlist.js",
+                "sf-dialog.js"
+            ],
+            "package": "Grids"
+        },
+        "SfAccordion": {
+            "dependencies": [
+                "sf-accordion.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfTab": {
+            "dependencies": [
+                "navigationsbase.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-toolbar.js",
+                "sf-tab.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfToolbar": {
+            "dependencies": [
+                "navigationsbase.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-toolbar.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfSchedule": {
+            "dependencies": [
+                "navigationsbase.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-calendarbase.js",
+                "sf-datepicker.js",
+                "sf-dialog.js",
+                "sf-dropdownlist.js",
+                "sf-multiselect.js",
+                "sf-numerictextbox.js",
+                "sf-sidebar.js",
+                "sf-spinner.js",
+                "sf-timepicker.js",
+                "sf-treeview.js",
+                "sf-textbox.js",
+                "sf-toolbar.js",
+                "sf-tooltip.js",
+                "sf-schedule.js"
+            ],
+            "package": "Schedule"
+        },
+        "SfBarcodeGenerator": {
+            "package": "BarcodeGenerator"
+        },
+        "SfMaps": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "sf-maps.js"
+            ],
+            "package": "Maps"
+        },
+        "SfCircularGauge": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "sf-circulargauge.js"
+            ],
+            "package": "CircularGauge"
+        },
+        "SfLinearGauge": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "sf-lineargauge.js"
+            ],
+            "package": "LinearGauge"
+        },
+        "SfChart": {
+            "dependencies": [
+                "svgbase.js",
+                "sf-svg-export.js",
+                "sf-chart.js"
+            ],
+            "package": "Chart" 
+        },
+        "SfAccumulationChart": {
+            "dependencies": [
+                "svgbase.js",
+                "sf-svg-export.js",
+                "sf-accumulation-chart.js"
+            ],
+            "package": "AccumulationChart" 
+        },
+        "SfStockChart": {
+            "dependencies": [
+                "svgbase.js",
+                "sf-svg-export.js",
+                "navigationsbase.js",
+                "popup.js",
+                "popupsbase.js",
+                "sf-daterangepicker.js",
+                "sf-drop-down-button.js",
+                "sf-textbox.js",
+                "sf-toolbar.js",
+                "splitbuttonsbase.js",
+                "sf-chart.js",
+                "sf-range-navigator.js",
+                "sf-stock-chart.js"
+            ],
+            "package": "StockChart" 
+        },
+        "SfBulletChart": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "sf-bullet-chart.js"
+            ],
+            "package": "BulletChart" 
+        },
+        "SfSparkline": {
+            "dependencies": [
+                "sf-sparkline.js"
+            ],
+            "package": "Sparkline" 
+        },
+        "SfTreeMap": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "sf-treemap.js"
+            ],
+            "package": "TreeMap" 
+        },
+        "SfProgressBar": {
+            "dependencies": [
+                "sf-progressbar.js"
+            ],
+            "package": "ProgressBar" 
+        },
+        "SfSmithChart": {
+            "dependencies": [
+                "svgbase.js",
+                "sf-svg-export.js",
+                "sf-smith-chart.js"
+            ],
+            "package": "SmithChart" 
+        },
+        "SfRangeNavigator": {
+            "dependencies": [
+                "svgbase.js",
+                "sf-svg-export.js",
+                "sf-range-navigator.js"
+            ],
+            "package": "RangeNavigator" 
+        },
+        "SfHeatMap": {
+            "dependencies": [
+                "sf-svg-export.js",
+                "svgbase.js",
+                "sf-heatmap.js"
+            ],
+            "package": "HeatMap"
+        },
+        "SfFileManager": {
+            "dependencies": [
+                "spinner.js",
+                "popup.js",
+                "popupsbase.js",
+                "splitbuttonsbase.js",
+                "navigationsbase.js",
+                "sf-dialog.js",
+                "sf-treeview.js",
+                "sf-toolbar.js",
+                "sf-spinner.js",
+                "sf-uploader.js",
+                "sf-drop-down-button.js",
+                "sf-contextmenu.js",
+                "sf-splitter.js",
+                "sf-textbox.js",
+                "sf-calendarbase.js",
+                "sf-datepicker.js",
+                "sf-numerictextbox.js",
+                "sf-dropdownlist.js",
+                "sf-grid.js",
+                "sf-filemanager.js"
+            ],
+            "package": "FileManager"
+        },
+        "SfSlider": {
+            "dependencies": [
+                "popup.js",
+                "popupsbase.js",
+                "sf-tooltip.js",
+                "sf-slider.js"
+            ],
+            "package": "Inputs"
+        },
+        "SfTooltip": {
+            "dependencies": [
+                "popup.js",
+                "popupsbase.js",
+                "sf-tooltip.js"
+            ],
+            "package": "Popups"
+        },
+        "SfListView": {
+            "dependencies": [
+                "sf-listview.js"
+            ],
+            "package": "Lists"
+        },
+        "SfChip": {
+            "package": "Buttons"
+        },
+        "SfDashboardLayout": {
+            "dependencies": [
+                "sf-dashboard-layout.js"
+            ],
+            "package": "Layouts"
+        },
+        "SfSidebar": {
+            "dependencies": [
+                "sf-sidebar.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfTreeView": {
+            "dependencies": [
+                "sf-textbox.js",
+                "sf-treeview.js"
+            ],
+            "package": "Navigations"
+        },
+        "SfPivotView": {
+            "dependencies": [
+                "navigationsbase.js",
+                "popupsbase.js",
+                "popup.js",
+                "splitbuttonsbase.js",
+                "svgbase.js",
+                "sf-spinner.js",
+                "sf-datepicker.js",
+                "sf-dialog.js",
+                "sf-dropdownlist.js",
+                "sf-numerictextbox.js",
+                "sf-treeview.js",
+                "sf-textbox.js",
+                "sf-toolbar.js",
+                "sf-tooltip.js",
+                "sf-colorpicker.js",
+                "sf-menu.js",
+                "sf-contextmenu",
+                "sf-tab.js",
+                "sf-drop-down-button.js",
+                "sf-svg-export.js",
+                "sf-chart.js",
+                "sf-accumulation-chart.js",
+                "sf-grid.js",
+                "sf-pivotview.js"
+            ],
+            "package": "PivotTable"
+        },
+        "SfTreeGrid": {
+            "dependencies": [
+                "sf-textbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "sf-dropdownlist.js",
+                "navigationsbase.js",
+                "sf-contextmenu.js",
+                "sf-toolbar.js",
+                "sf-spinner.js",
+                "sf-datepicker.js",
+                "sf-numerictextbox.js",
+                "sf-dropdownlist.js",
+                "sf-dialog.js",
+                "sf-grid.js",
+                "sf-treegrid.js"
+            ],
+            "package": "TreeGrid"
+        },
+        "SfCard": {
+            "package": "Cards"
+        },
+        "SfSpinner": {
+            "dependencies": [
+                "sf-spinner.js"
+            ],
+            "package": "Spinner"
+        },
+        "SfSplitter": {
+            "dependencies": [
+                "sf-splitter.js"
+            ],
+            "package": "Layouts"
+        },
+        "SfToast": {
+            "dependencies": [
+                "sf-toast.js"
+            ],
+            "package": "Notifications"
+        },
+        "SfDialog": {
+            "dependencies": [
+                "popupsbase.js",
+    		    "popup.js",
+                "sf-dialog.js"
+            ],
+            "package": "Popups"
+        },
+        "SfRichTextEditor": {
+            "dependencies": [
+                "sf-dialog.js",
+                "spinner.js",
+                "navigationsbase.js",
+                "sf-toolbar.js",
+                "sf-uploader.js",
+                "sf-textbox.js",
+                "sf-numerictextbox.js",
+                "sf-colorpicker.js",
+                "sf-drop-down-button.js",
+                "sf-richtexteditor.js"
+            ],
+            "package": "RichTextEditor"
+        },
+        "SfInPlaceEditor": {
+            "dependencies": [
+                "popupsbase.js",
+                "popup.js",
+                "sf-spinner.js",
+                "sf-tooltip.js",
+                "sf-textbox.js",
+                "sf-inplaceeditor.js"
+            ],
+            "package": "InPlaceEditor"
+        },
+        "SfKanban": {
+            "dependencies": [
+                "popupsbase.js",
+                "popup.js",
+                "sf-spinner.js",
+                "sf-tooltip.js",
+                "sf-dialog.js",
+                "sf-textbox.js",
+                "sf-listview.js",
+                "sf-dropdownlist.js",
+                "sf-numerictextbox.js",
+                "sf-kanban.js"
+            ],
+            "package": "Kanban"
+        },
+        "SfGantt": {
+            "dependencies": [
+                "sf-richtexteditor.js",
+                "sf-datepicker.js",
+                "checkbox.js",
+                "popupsbase.js",
+                "popup.js",
+                "navigationsbase.js",
+                "sf-dropdownlist.js",
+                "sf-multiselect.js",
+                "sf-contextmenu.js",
+                "sf-toolbar.js",
+                "sf-tab.js",
+                "sf-textbox.js",
+                "sf-numerictextbox.js",
+                "sf-maskedtextbox.js",
+                "sf-dialog.js",
+                "sf-tooltip.js",
+                "sf-spinner.js",
+                "sf-splitter.js",
+                "sf-grid.js",
+                "sf-treegrid.js",
+                "sf-gantt.js"
+            ],
+            "package": "Gantt"
+        },
+        "SfPdfViewer": {
+          "dependencies": [
+            "syncfusion-blazor-extended.js",
+            "popupsbase.js",
+            "popup.js",
+            "data.js",
+            "spinner.js",
+            "inputsbase.js",
+            "textbox.js",
+            "accordion.js",
+            "contextmenu.js",
+            "dialog.js",
+            "tooltip.js",
+            "drawings.js",
+            "inplaceeditor.js",
+            "pdfviewer.js",
+            "buttonsbase.js",
+            "button.js",
+            "listsbase.js",
+            "listview.js",
+            "toast.js",
+            "navigationsbase.js",
+            "splitbuttonsbase.js",
+            "sf-toast.js",
+            "sf-listview.js",
+            "sf-drop-down-button.js",
+            "sf-tooltip.js",
+            "sf-dialog.js",
+            "sf-contextmenu",
+            "sf-menu.js",
+            "sf-toolbar.js",
+            "sf-colorpicker.js",
+            "sf-numerictextbox",
+            "sf-textbox",
+            "sf-slider.js",
+            "sf-dropdownlist",
+            "sf-listbox.js"
+          ]
+        },
+        "SfDocumentEditor": {
+            "dependencies": [
+                "syncfusion-blazor-extended.js",
+                "popup.js",
+                "popupsbase.js",
+                "navigationsbase.js",
+                "splitbuttonsbase.js",
+                "sortable.js",
+                "data.js",
+                "svgbase.js",
+                "fileutils.js",
+                "compression.js",
+                "chart.js",
+                "accumulationchart.js",
+                "officechart.js",
+                "sf-textbox.js",
+                "sf-spinner.js",
+                "sf-listview.js",
+                "sf-tab.js",
+                "sf-colorpicker.js",
+                "sf-numerictextbox.js",
+                "sf-drop-down-button.js",
+                "sf-dialog.js",
+                "sf-dropdownlist.js",
+                "sf-datepicker.js",
+                "sf-toolbar.js",
+                "sf-contextmenu.js",
+                "sf-listbox.js",
+                "sf-documenteditor.js",
+                "sf-documenteditorcontainer.js"
+            ],
+            "package": "WordProcessor"
+        },
+        "bundleSettings": {
+            "exclude": [
+                "sf-import.js",
+                "sf-import-ie.js",
+                "sf-import-script.js",
+                "sf-documenteditor.js",
+                "sf-documenteditorcontainer.js"
+            ],
+            "include": [
+                "base.js",
+                "syncfusion-blazor.js"
+            ]
+        }
+    }
+}

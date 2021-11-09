@@ -1,0 +1,10 @@
+@using Syncfusion.Blazor;
+@namespace Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Navigations.Internal
+
+@inherits SfBaseComponent
+
+<CascadingValue Value="@this">
+    @ChildContent
+    <ToolbarContent Index="Index" Item="Item"></ToolbarContent>
+</CascadingValue>

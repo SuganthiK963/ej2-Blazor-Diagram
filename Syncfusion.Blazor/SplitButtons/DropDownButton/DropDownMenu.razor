@@ -1,0 +1,45 @@
+@namespace Syncfusion.Blazor.SplitButtons.Internal
+
+@{
+    @foreach (var item in Parent.Items)
+    {
+        if (!item.Separator && !string.IsNullOrEmpty(item.IconCss))
+        {
+            Parent.hasIcon = true; break;
+        }
+    }
+}
+<ul class="@DROPDOWN" role="menu" tabindex="0" @onclick:stopPropagation>
+    @for (var i = 0; i < Parent.Items.Count; i++)
+    {
+        DropDownMenuItem item = Parent.Items[i];
+        var menuItemAttributes = GetMenuItemAttributes(item, i);
+        @if (item.Separator)
+        {
+            <li @attributes="menuItemAttributes.HtmlAttributes"></li>
+        }
+        else
+        {
+            <li @attributes="menuItemAttributes.HtmlAttributes" @onkeydown="@(async (e) => await KeyDownHandler(e, item))" @onkeydown:stopPropagation @onclick="@(async (e) => await ClickHandler(e, item))" @onclick:stopPropagation>
+                @if (string.IsNullOrEmpty(item.Url))
+                {
+                    @if (!string.IsNullOrEmpty(item.IconCss))
+                    {
+                        <span class="@(ICON + SPACE + item.IconCss)"></span>
+                    }
+                    @item.Text
+                }
+                else
+                {
+                    <a @attributes="menuItemAttributes.UrlAttributes">
+                        @if (!string.IsNullOrEmpty(item.IconCss))
+                        {
+                            <span class="@(ICON + SPACE + item.IconCss)"></span>
+                        }
+                        @item.Text
+                    </a>
+                }
+            </li>
+        }
+    }
+</ul>

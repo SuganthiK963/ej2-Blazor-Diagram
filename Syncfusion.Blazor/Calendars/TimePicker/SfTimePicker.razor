@@ -1,0 +1,56 @@
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.Internal;
+@namespace Syncfusion.Blazor.Calendars
+@typeparam TValue
+@inherits SfInputTextBase<TValue>
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+    @if (this.FloatLabelType == FloatLabelType.Auto || this.FloatLabelType == FloatLabelType.Always)
+    {
+        <div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+            <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(this.CurrentValueAsString)" @onchange="@OnChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" @oninput="@OnInputHandler" />
+            <span class="e-float-line"></span>
+            <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+            @if (this.ShowClearButton)
+            {
+                <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@InvokeClearBtnEvent" @ontouchstart="@InvokeClearBtnEvent" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+            }
+            <span class="@(GROUP_ICON + SPACE + TimeIcon)" @onmousedown="@((args) => MouseIconHandler(args))" @onmousedown:preventDefault=@(!IsDevice) ></span>
+        </div>
+    }
+    else
+    {
+        <span @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+            <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(this.CurrentValueAsString)" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+            @if (this.ShowClearButton)
+            {
+                <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@InvokeClearBtnEvent" @ontouchstart="@InvokeClearBtnEvent" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+            }
+            <span class="@(GROUP_ICON + SPACE + TimeIcon)" @onmousedown="@((args) => MouseIconHandler(args))" @onmousedown:preventDefault=@(!IsDevice) ></span>
+        </span>
+    }
+    @ChildContent
+
+@if (this.ShowPopupList)
+{
+    <div @ref="@PopupHolderEle" class="e-timepicker e-popup-holder" id="@(ID)_popupholder" style="top: -9999px; left: -9999px; position: absolute; visibility: hidden; width: 0px; height: 0px; display: none;">
+        <div @ref="@PopupElement" class="@RootClass @PopupContainer @POPUP" id="@(ID)_popup">
+            <div class="@POPUP_CONTENT" tabindex="0">
+                @if (this.ListData != null && this.ListData.Count > 0)
+                {
+                    <ul class="e-list-parent e-ul">
+                        @foreach (var item in ListData)
+                        {
+                            <li class="@item.ListClass" @key="@item" role="option" data-value="@item.ItemData" @onmouseover="@(()=>OnMouseOver(item))" @onmouseout="@OnMouseOut" @onclick="@((e)=>ListItemClick(item, e))">
+                                @item.ItemData
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+</CascadingValue>

@@ -1,0 +1,8 @@
+﻿@namespace Syncfusion.Blazor.Charts
+@using Syncfusion.Blazor.DataVizCommon
+<g id="@(ComponentId + "StyleElement")">
+    @foreach (PatternOptions item in GivenPattern)
+    {
+        <SvgPattern Height="@item.Height" Width="@item.Width" Id="@item.Id" PatternUnits="@item.PatternUnits" ShapeOptions="@item.ShapeOptions" />
+    }
+</g>

@@ -1,0 +1,81 @@
+@using Syncfusion.Blazor.Navigations.Internal
+@namespace Syncfusion.Blazor.Navigations
+
+@inherits SfBaseComponent;
+
+@using Syncfusion.Blazor.Internal;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div id="@ID" @ref="Element" class="@TabClass" role="tablist" aria-orientation="@Orientation" style="height:@Height; width:@Width" @attributes="containerAttributes">
+    <CascadingValue Value="@this">
+        @ChildContent
+        @if (Items != null && Items.Count > 0)
+        {
+            @if (toolbarItems != null && toolbarItems.Count > 0)
+            {
+                <SfToolbar @ref="Toolbar" CssClass="@ToolbarCssClass" Width="@ToolbarWidth" Height="@ToolbarHeight" OverflowMode="@OverflowMode" ScrollStep="@ScrollStep" EnableRtl="@EnableRtl">
+                    <ToolbarItems>
+                        @foreach (ToolbarItem Item in toolbarItems)
+                        {
+                            <ToolbarItem Id="@(Item.Id)" CssClass="@(Item.CssClass)" Template="@(Item.Template)"></ToolbarItem>
+                        }
+                    </ToolbarItems>
+                    <EventRegister Name="InitialLoad" Handler="ToolbarInitialLoad"></EventRegister>
+                    <EventRegister Name="ToolbarClicked" Handler="ToolbarClickedHandler"></EventRegister>
+                    <EventRegister Name="OnItemsChanged" Handler="ItemChangeHandler"></EventRegister>
+                    <EventRegister Name="OverflowModeChanged" Handler="OverflowModeChangeHandler"></EventRegister>
+                    <div class="e-indicator e-hidden e-ignore"></div>
+                </SfToolbar>
+            }
+            <div class="e-content">
+                @if (IsLoaded && LoadOn == ContentLoad.Dynamic)
+                {
+                    <div class="@(ITEM + SPACE + ACTIVE)" id="@(CONTENT_SUFFIX + ID + UNDERSCO + SelectedItem)" role="tabpanel" aria-labelledby="@(ITEM_SUFFIX + ID + UNDERSCO + SelectedItem)">
+                        @if (SelectedItem < visibleItems.Count && SelectedItem >= 0)
+                        {
+                            @if (visibleItems[SelectedItem].ContentTemplate != null)
+                            {
+                                @visibleItems[SelectedItem].ContentTemplate
+                            }
+                            else
+                            {
+                                @visibleItems[SelectedItem].Content
+                            }
+                        }
+                    </div>
+                }
+                else if (IsLoaded && (LoadOn == ContentLoad.Init || LoadOn == ContentLoad.Demand))
+                {
+                    @for (var i = 0; i < visibleItems.Count; i++)
+                    {
+                        if (visibleItems[i].IsContentRendered)
+                        {
+                            <div @key="@visibleItems[i].UniqueID" class="@(ITEM)" id="@(CONTENT_SUFFIX + ID + UNDERSCO + i)" role="tabpanel" aria-labelledby="@(ITEM_SUFFIX + ID + UNDERSCO + i)">
+                                @if (visibleItems[i].ContentTemplate != null)
+                                {
+                                    @visibleItems[i].ContentTemplate
+                                }
+                                else
+                                {
+                                    @visibleItems[i].Content
+                                }
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        }
+    </CascadingValue>
+</div>
+
+@code {
+    private ElementReference Element;
+    private SfToolbar Toolbar;
+
+    private RenderFragment getTabHeader(TabItem item)
+    {
+        return @<TabHeaderTemplate Item="item"></TabHeaderTemplate>;
+    }
+}

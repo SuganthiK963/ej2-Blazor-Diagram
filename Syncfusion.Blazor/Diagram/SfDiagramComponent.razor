@@ -1,0 +1,161 @@
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Diagram.Internal;
+@using System.Collections.ObjectModel;
+@using Syncfusion.Blazor.Popups
+
+@inherits SfBaseComponent;
+@namespace Syncfusion.Blazor.Diagram
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+@{
+    string SNAPPING_LINES = "_SnappingLines";
+    string SNAP_RENDER_SHAPE = "crispEdges";
+    string HELPER_CSS_CLASS = "e-diagram-helper";
+    string CONNECTOR_HELPER_ID = ID + "_diagram_ConnectorHelper";
+    string POLGON_HELPER_ID_OBJECT = ID + "_diagram_PolygonHelperObject";
+    string POLGON_HELPER = ID + "_diagram_PolygonHelper";
+}
+<SfTooltip @ref="@DiagramTooltip" ID="@TooltipID" OpensOn="Custom" Target="@TooltipTarget" CssClass="e-blazordiagram-tooltip" Position="@TooltipPosition" Animation="@TooltipAnimation" Content="@TooltipContent">
+<CascadingValue Value="@this">
+    <div id="@ID" data-role="diagram" class="e-control e-diagram e-lib e-droppable e-tooltip" style="width: @Width; height: @Height; position: relative; overflow: hidden;">
+        <div id=@DiagramContentId style="width: @this.Width; height: @this.Height; position: absolute; left: 0px; top: 0px; overflow: auto; background: transparent; cursor: @this.DiagramCursor" tabindex="0" class="@this.RotateCssClass">
+            <CascadingValue Value="@this">
+                @ChildContent
+            </CascadingValue>
+            <DiagramContent></DiagramContent>     
+            <div id=@DiagramAdornerLayer style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;">
+                <svg id=@DiagramAdornerSvg>
+                    <g id=@DiagramAdorner>
+                        <DiagramSelectorContent></DiagramSelectorContent>
+                        @{
+                            if (this.SelectionSettings.IsRubberBandSelection)
+                            {
+                                DiagramRect bounds = this.SelectionSettings.RubberBandBounds;
+                                TransformFactor transform = this.Scroller.Transform;
+                                double x = (bounds.X + transform.TX) * transform.Scale;
+                                double y = (bounds.Y + transform.TY) * transform.Scale;
+                                double w = bounds.Width * transform.Scale;
+                                double h = bounds.Height * transform.Scale;
+                                <rect stroke="gray" stroke-width="1" stroke-dasharray="6,3" fill="transparent" id="diagram_diagramAdorner_selected_region" x="@x" y="@y" width="@w" height="@h" class="e-diagram-selected-region"></rect>
+                            }
+                            if (this.CommandHandler.PolygonObject != null)
+                            {
+                                <g id='@POLGON_HELPER' transform="@GetTransformValue()">
+                                    <path class=@HELPER_CSS_CLASS stroke="#7D7D7D" stroke-width="1" stroke-dasharray="5 5" id="@POLGON_HELPER_ID_OBJECT" d="@this.CommandHandler.PolygonObject.Data" visibility="visible" fill="transparent"></path>
+                                </g>
+                            }
+                            if (this.CommandHandler != null && this.CommandHandler.HelperObject != null)
+                            {
+                                DiagramSelectionSettings helperObject = this.CommandHandler.HelperObject;
+
+                                @if (helperObject.Connectors != null && helperObject.Connectors.Count > 0)
+                                {
+                                    <g id='@CONNECTOR_HELPER_ID' transform="@GetTransformValue()">
+                                        @{
+                                            Connector connector = helperObject.Connectors[0];
+
+                                            for (int i = 0; i < connector.Wrapper.Children.Count - 1; i++)
+                                            {
+                                                if (((PathElement)connector.Wrapper.Children[i]).Data != string.Empty)
+                                                {
+                                                    @DiagramRenderer.RenderElement(new FragmentParameter() { Element = connector.Wrapper.Children[i], IsCreateGElement = false })
+                                                    @if (EventHandler.Tool is ConnectionController || EventHandler.Tool is ConnectorEditing)
+                                                    {
+                                                        DiagramPoint curPt = EventHandler.Tool.currentPoint;
+                                                        TransformFactor transform = this.Scroller.Transform;
+                                                        double offsetX = curPt.X - 0.5;
+                                                        double offsetY = curPt.Y - 0.5;
+                                                        double x = (offsetX + transform.TX) * transform.Scale;
+                                                        double y = (offsetY + transform.TY) * transform.Scale;
+                                                        double width = 10 * transform.Scale;
+                                                        double height = 10 * transform.Scale;
+                                                        string rotate = "rotate(" + helperObject.RotationAngle + " " + ((offsetX + (helperObject.Width * helperObject.Pivot.X) + transform.TX) * transform.Scale) + " " + ((offsetY + (helperObject.Height * helperObject.Pivot.Y) + transform.TY) * transform.Scale) + ")";
+
+                                                        <rect class=@HELPER_CSS_CLASS stroke="#7D7D7D" stroke-width="2" stroke-dasharray="2 2" visibility="hidden" transform="@rotate" fill="transparent" id="helper" x="@x" y="@y" width="@width" height="@height"></rect>
+                                                    }
+                                                }
+                                            }
+
+                                            if (connector.Type == ConnectorSegmentType.Bezier && SelectionSettings.Connectors.Count > 0 && DiagramPoint.Equals(connector.SourcePoint, SelectionSettings.Connectors[0].SourcePoint) && DiagramPoint.Equals(connector.TargetPoint, SelectionSettings.Connectors[0].TargetPoint))
+                                            {
+                                                ObservableCollection<BaseAttributes> attributes = new ObservableCollection<BaseAttributes>();
+                                                for (int i = 0; i < connector.Segments.Count; i++)
+                                                {
+                                                    BezierSegment segment = connector.Segments[i] as BezierSegment;
+                                                    BezierSegment selectorSegment = SelectionSettings.Connectors[0].Segments[i] as BezierSegment;
+
+                                                    if (segment != null)
+                                                    {
+                                                        DiagramPoint bezierPoint = !DiagramPoint.IsEmptyPoint(segment.Point1) ? segment.Point1 : segment.BezierPoint1;
+                                                        if (selectorSegment != null)
+                                                        {
+                                                            DiagramPoint selectorBezierPoint = !DiagramPoint.IsEmptyPoint(selectorSegment.Point1) ? selectorSegment.Point1 : selectorSegment.BezierPoint1;
+
+                                                            if (!selectorBezierPoint.X.Equals(bezierPoint.X) || !selectorBezierPoint.Y.Equals(bezierPoint.Y))
+                                                            {
+                                                                DiagramRenderer.RenderBezierLine("bezierLine_" + (i + 1) + "_1", connector.Wrapper, segment.Points[0], bezierPoint, this.Scroller.Transform, attributes);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (segment != null)
+                                                    {
+                                                        DiagramPoint bezierPoint2 = !DiagramPoint.IsEmptyPoint(segment.Point2) ? segment.Point2 : segment.BezierPoint2;
+                                                        if (selectorSegment != null)
+                                                        {
+                                                            DiagramPoint selectorBezierPoint2 = !DiagramPoint.IsEmptyPoint(selectorSegment.Point2) ? selectorSegment.Point2 : selectorSegment.BezierPoint2;
+                                                            if (!selectorBezierPoint2.X.Equals(bezierPoint2.X) || !selectorBezierPoint2.Y.Equals(bezierPoint2.Y))
+                                                            {
+                                                                DiagramRenderer.RenderBezierLine("bezierLine_" + (i + 1) + "_2", connector.Wrapper, segment.Points[1], bezierPoint2, this.Scroller.Transform, attributes);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                @DiagramRenderer.RenderDomElements(attributes)
+                                            }
+                                        }
+                                    </g>
+                                }
+                                else
+                                {
+                                    TransformFactor transform = this.Scroller.Transform;
+                                    double offsetX = helperObject.OffsetX - (helperObject.Width * helperObject.Pivot.X) + 0.5;
+                                    double offsetY = helperObject.OffsetY - (helperObject.Height * helperObject.Pivot.Y) + 0.5;
+                                    double x = (offsetX + transform.TX) * transform.Scale;
+                                    double y = (offsetY + transform.TY) * transform.Scale;
+                                    double width = helperObject.Width * transform.Scale;
+                                    double height = helperObject.Height * transform.Scale;
+                                    string rotate = "rotate(" + helperObject.RotationAngle + " " + ((offsetX + (helperObject.Width * helperObject.Pivot.X) + transform.TX) * transform.Scale) + " " + ((offsetY + (helperObject.Height * helperObject.Pivot.Y) + transform.TY) * transform.Scale) + ")";
+
+                                    <rect class=@HELPER_CSS_CLASS stroke="#7D7D7D" stroke-width="2" stroke-dasharray="2 2" transform="@rotate" fill="transparent" id="helper" x="@x" y="@y" width="@width" height="@height"></rect>
+                                }
+                            }
+                            if (this.CommandHandler?.HighlighterElement != null)
+                            {
+                                @DiagramRenderer.RenderRectElement(CommandHandler.HighlighterElement);
+                            }
+                        }
+                    </g>
+                    @if (this.Snapping != null && this.SnapSettings != null && this.Snapping.Lines.Count > 0)
+                    {
+                        <g id="@SNAPPING_LINES" shape-rendering="@SNAP_RENDER_SHAPE">
+                            @DiagramRenderer.UpdateSnapping(Snapping);
+                        </g>
+                    }
+                </svg>
+                <div id=@this.DiagramUserHandle class="e-userHandle-layer" style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;">
+                    <DiagramUserHandleContent></DiagramUserHandleContent>
+                </div>
+            </div>
+        </div>
+    </div>
+</CascadingValue>
+</SfTooltip>
+
+<style>
+    .e-blazordiagram-tooltip {
+	    pointer-events:none
+    }
+</style>

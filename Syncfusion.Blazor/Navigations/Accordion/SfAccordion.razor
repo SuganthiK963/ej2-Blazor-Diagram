@@ -1,0 +1,19 @@
+﻿@using Syncfusion.Blazor.Navigations.Internal
+@namespace Syncfusion.Blazor.Navigations
+
+@inherits SfBaseComponent;
+
+@using Syncfusion.Blazor.Internal;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div id="@ID" @ref="Element" class="@AccordionClass" aria-disabled="false" @attributes="@rootAttributes" role="presentation">
+    <CascadingValue Value="@this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    internal ElementReference Element;
+}

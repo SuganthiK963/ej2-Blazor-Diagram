@@ -1,0 +1,26 @@
+﻿@using Syncfusion.Blazor.DataVizCommon;
+
+@namespace Syncfusion.Blazor.Charts.RangeNavigator.Internal
+
+<g id="@Id" transform="@Transform" style="@Style">
+
+    @foreach (object shape in ShapeOptions)
+    {
+        string drawType = shape.GetType().ToString();
+        if (drawType.Contains("Rect"))
+        {
+            RectOptions rectOption = (RectOptions)shape;
+            <SvgRect Id="@rectOption.Id" X="@rectOption.X" Y="@rectOption.Y" Height="@rectOption.Height" Width="@rectOption.Width" StrokeWidth="@rectOption.StrokeWidth" Stroke="@rectOption.Stroke" Rx="@rectOption.Rx" Ry="@rectOption.Ry" Opacity="@rectOption.Opacity" Fill="@rectOption.Fill" />
+        }
+        else if (drawType.Contains("Path"))
+        {
+            PathOptions pathOption = (PathOptions)shape;
+            <SvgPath Id="@pathOption.Id" Direction="@pathOption.Direction" Opacity="@pathOption.Opacity" Stroke="@pathOption.Stroke" StrokeWidth="@pathOption.StrokeWidth" Fill="@pathOption.Fill" />
+        }
+        else if (drawType.Contains("Ellipse"))
+        {
+            EllipseOptions ellipse = (EllipseOptions)shape;
+            <SvgEllipse Id="@ellipse.Id" Cx="@ellipse.Cx" Cy="@ellipse.Cy" Opacity="@ellipse.Opacity" Fill="@ellipse.Fill" Stroke="@ellipse.Stroke" StrokeWidth="@ellipse.StrokeWidth" Rx="@ellipse.Rx" Ry="@ellipse.Ry" />
+        }
+    }
+</g>

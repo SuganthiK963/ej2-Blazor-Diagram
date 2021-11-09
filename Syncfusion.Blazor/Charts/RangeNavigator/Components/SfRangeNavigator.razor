@@ -1,0 +1,29 @@
+@using Syncfusion.Blazor.Charts.Internal
+@namespace Syncfusion.Blazor.Charts
+@inherits SfDataBoundComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<CascadingValue Value="@this">
+    @ChildContent
+    @if (IsStockChart && !DisableRangeSelector && Id.IndexOf("_selector") == -1)
+    {
+        <g @ref="Element" id="@Id" transform="translate(0, @Convert.ToString(ChartHeight, culture))">
+            @ChartContent
+        </g>
+    }
+    else
+    {
+        <div @ref="Element" id="@Id" style="display: block;" class="e-control e-rangenavigator e-lib e-touch">
+            <div id="@(Id + "_Secondary_Element")" style="position: relative">
+                @if (PeriodSelectorSettings.Periods.Count > 0 && PeriodSelectorModule != null)
+                {
+                    <PeriodSelectorContent></PeriodSelectorContent>
+                }
+                @TooltipContent
+            </div>
+            @ChartContent
+        </div>
+    }
+</CascadingValue>

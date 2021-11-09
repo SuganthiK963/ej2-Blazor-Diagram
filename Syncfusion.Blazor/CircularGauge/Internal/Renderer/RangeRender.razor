@@ -1,0 +1,58 @@
+﻿@using Syncfusion.Blazor.CircularGauge;
+@using Microsoft.AspNetCore.Components;
+@using System.Globalization; 
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+@if (CircularGauge.Axes[AxisIndex].Ranges != null && CircularGauge.AxisRenderer.AxisCollection[AxisIndex].RangeCollection != null)
+{
+    <g id="@(CircularGauge.ID + "_Axis_Ranges_" + AxisIndex)">
+
+        @for (int t = 0; t < CircularGauge.Axes[AxisIndex].Ranges.Count; t++)
+        {
+            Range range = CircularGauge.AxisRenderer.AxisCollection[AxisIndex].RangeCollection[t];
+            @if (CircularGauge.Axes[AxisIndex].Ranges[t].LinearGradient != null && !string.IsNullOrEmpty(range.LinearColorString))
+            {
+                <defs>
+                    <linearGradient id="@range.LinearColorString" x1="@range.StartValue" x2="@range.EndValue" y1="0%" y2="0%">
+                        @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Ranges[t].LinearGradient.ColorStop.Count; q++)
+                        {
+                            ColorStop colorStop = CircularGauge.Axes[AxisIndex].Ranges[t].LinearGradient.ColorStop[q];
+                            <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                        }
+                    </linearGradient>
+                </defs>
+            }
+            else if (CircularGauge.Axes[AxisIndex].Ranges[t].RadialGradient != null && !string.IsNullOrEmpty(range.RadialColorString))
+            {
+                <defs>
+                    <radialGradient id="@range.RadialColorString" radius="@range.Radius" cx="@range.OuterPositionX" cy="@range.OuterPositionY" fx="@range.InnerPositionX"
+                                    fy="@range.InnerPositionY">
+                        @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Ranges[t].RadialGradient.ColorStop.Count; q++)
+                        {
+                            ColorStop colorStop = CircularGauge.Axes[AxisIndex].Ranges[t].RadialGradient.ColorStop[q];
+                            <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                        }
+                    </radialGradient>
+                </defs>
+            }
+
+            @if (!string.IsNullOrEmpty(range.RangeRoundedPath))
+            {
+                <path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Range_" + t)" d="@range.RangeRoundedPath" fill="@range.RangeFillColor" opacity="@range.Opacity.ToString(CultureInfo.InvariantCulture)"
+                      style="@range.Visibility"></path>
+            }
+            else if (!string.IsNullOrEmpty(range.RangePath))
+            {
+                <path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Range_" + t)" d="@range.RangePath" fill="@range.RangeFillColor" opacity="@range.Opacity.ToString(CultureInfo.InvariantCulture)"
+                      style="@range.Visibility"></path>
+            }
+        }
+    </g>
+}
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+
+    [Parameter]
+    public int AxisIndex { get; set; }
+}

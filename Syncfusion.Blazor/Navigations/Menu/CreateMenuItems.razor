@@ -1,0 +1,35 @@
+@typeparam TValue;
+@typeparam TItem;
+@namespace Syncfusion.Blazor.Navigations.Internal
+@inherits SfBaseComponent
+
+@if (ContainerClass.Contains(POPUP))
+{
+    <div class="@ContainerClass">
+        <ul class="@MenuClass" role="@MENUROLE" tabindex="@ZERO" style="@Style" @onkeydown="@(async (e) => await itemRef?.KeyDownHandler(Items[0], e, true))" @onkeydown:stopPropagation>
+            <CreateMenuItem @ref="itemRef" TValue="TValue" TItem="TItem" Items="@Items"></CreateMenuItem>
+        </ul>
+    </div>
+}
+else
+{
+    <ul class="@MenuClass" role="@MENUROLE" tabindex="@ZERO" @onkeydown="@(async (e) => await menuItemRef?.KeyDownHandler(Items[0], e, true))" @onkeydown:stopPropagation>
+        <CreateMenuItem @ref="menuItemRef" TValue="TValue" TItem="TItem" Items="@Items"></CreateMenuItem>
+    </ul>
+}
+
+@code {
+    [CascadingParameter]
+    private List<TValue> Parent { get; set; }
+    [Parameter]
+    public List<TItem> Items { get; set; }
+    [Parameter]
+    public string MenuClass { get; set; }
+    [Parameter]
+    public string ContainerClass { get; set; }
+    [Parameter]
+    public string Style { get; set; }
+
+    private CreateMenuItem<TValue, TItem> itemRef;
+    private CreateMenuItem<TValue, TItem> menuItemRef;
+}

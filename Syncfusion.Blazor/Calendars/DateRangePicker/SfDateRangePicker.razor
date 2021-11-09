@@ -1,0 +1,143 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
+@using Syncfusion.Blazor.Inputs;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Calendars.Internal;
+@using Syncfusion.Blazor.Buttons;
+@namespace Syncfusion.Blazor.Calendars
+@typeparam TValue
+@inherits CalendarBase<TValue>
+@implements IDateRangePicker;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+    @if (this.FloatLabelType == FloatLabelType.Auto || this.FloatLabelType == FloatLabelType.Always)
+    {
+        <div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr">
+            <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(FormatDateValue)" @onchange="@ChangeHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" @oninput="@OnInputHandler" />
+            <span class="e-float-line"></span>
+            <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+            @if (this.ShowClearButton)
+            {
+                <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@InvokeClearBtnEvent" @ontouchstart="@InvokeClearBtnEvent" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+            }
+            <span class="@(GROUP_ICON + SPACE + DateRangeIcon)" @onmousedown="@(DateRangeIconHandler)" @onmousedown:preventDefault="@PreventIconHandler"></span>
+        </div>
+    }
+    else
+    {
+        <span @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr" >
+            <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(FormatDateValue)" @onchange="@ChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+            @if (this.ShowClearButton)
+            {
+                <span @ref="ClearElement" class="@(ClearIconClass)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@InvokeClearBtnEvent" @ontouchstart="@InvokeClearBtnEvent" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+            }
+            <span class="@(GROUP_ICON + SPACE + DateRangeIcon)" @onmousedown="@(DateRangeIconHandler)" @onmousedown:preventDefault="@PreventIconHandler"></span>
+        </span>
+    }
+    @ChildContent
+</CascadingValue>
+@if (this.ShowPopupCalendar)
+{
+    <CascadingValue Value="@this">
+        <div @ref="@PopupHolderEle" class="@POPUP_HOLDER" style="top:-9999px;left:-9999px;position:absolute;visibility:hidden;width:0px;height:0px;display:none;">
+
+            @if (this.IsDevice)
+            {
+                <div class="@RANGE_MODAL" style="display: block; z-index: @this.ZIndex != null ? (@this.ZIndex + 1) : 1002;"></div>
+                <div class="@MOBILE_POPUP_WRAP" style="z-index: @this.ZIndex != null ? (@this.ZIndex + 2) : 1003;">
+                    <div @ref="@PopupElement" class="@PopupRootClass @DEVICE" id="@(ID)_popup">
+                        @if (this.Presets.Count > 0 && !IsCustomPopup)
+                        {
+                            <div class="@PRESET_PARENT">
+                                <ul class="@LIST_PARENT" id="@this.ID _options" role="listbox">
+                                    @foreach (var item in PresetsItem)
+                                    {
+                                        <li class="@item.ListClass" @key="@item" role="option" id="@item.Id" @onclick="@(()=>OnPresetItemClick(item))" @onmouseover="@((e)=>OnPresetItemMouseOver(item))" @onmouseout="@((e)=>OnPresetItemMouseOut())">@item.Text</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="@RANGE_CONTAINER">
+                                <div class="@RANGE_HEADER">
+                                    <div class="@START_END_CONTAINER">
+                                        <SfButton CssClass="@StartBtnClass" Content="@ModelStartValue" @onclick="@DeviceStartBtnClick" />
+                                        <SfButton Disabled="@(StartValue == null && EndValue == null)" CssClass="@EndBtnClass" Content="@ModelEndValue" @onclick="@DeviceEndBtnClick" />
+                                    </div>
+                                    <div class="@DAY_SPAN">@ModelDaySpanValue</div>
+                                </div>
+                                <div class="@SEPARATOR"></div>
+                                <div class="@CALENDAR_CONTAINER">
+                                    <div class="@CalendarClass">
+                                        <CascadingValue Value="@this" Name="DeviceParentComponent">
+                                            <CalendarBaseRender @ref="@DeviceCalendar" PrevIconClass="@LeftPrevIcon" NextIconClass="@LeftNextIcon" IsFocusTodayCell="false" CellClickHandler="@SelectRange" TValue="TValue" ShowTodayButton="false" CurrentDateValue="@this.StartCurrentDate"></CalendarBaseRender>
+                                        </CascadingValue>
+                                    </div>
+                                </div>
+                                <div class="@FOOTER">
+                                    <SfButton Disabled="@ApplyDisable" CssClass="@APPLY_BTN" Content="@ApplyBtnText" @onclick="@ApplyFunction" />
+                                    <SfButton CssClass="@CANCEL_BTN" Content="@CancelBtnText" @onclick="@CancelFunction" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div @ref="@PopupElement" class="@PopupRootClass" id="@(ID)_popup">
+                    @if (this.IsCustomPopup)
+                    {
+                        <div class="@(this.Presets.Count > 0 ? (@RANGE_CONTAINER + @SPACE + @RANGE_BORDER) : @RANGE_CONTAINER)">
+                            <div class="@RANGE_HEADER">
+                                <div class="@START_END_CONTAINER">
+                                    <a class="@STARTLABEL">@ModelStartValue</a>
+                                    <span class="@CHANGE_ICON"></span>
+                                    <a class="@ENDLABEL">@ModelEndValue</a>
+                                </div>
+                                <div class="@DAY_SPAN">@ModelDaySpanValue</div>
+                            </div>
+                            <div class="@SEPARATOR"></div>
+                            <div class="@CALENDAR_CONTAINER">
+                                <div class="@LEFT_CONTAINER">
+                                    <div class="@CalendarClass @LEFT_CALENDAR">
+                                        <CascadingValue Value="@this" Name="LeftParentComponent">
+                                            <CalendarBaseRender @ref="LeftCalendarBase" PrevIconClass="@LeftPrevIcon" NextIconClass="@LeftNextIcon" IsFocusTodayCell="@LeftCalFocusToday" CellClickHandler="@SelectRange" TValue="TValue" ShowTodayButton="false" CurrentDateValue="@this.StartCurrentDate"></CalendarBaseRender>
+                                        </CascadingValue>
+                                    </div>
+                                </div>
+                                <div class="@RIGHT_CONTAINER">
+                                    <div class="@CalendarClass @RIGHT_CALENDAR">
+                                        <CascadingValue Value="@this" Name="RightParentComponent">
+                                            <CalendarBaseRender @ref="RightCalendarBase" PrevIconClass="@RightPrevIcon" NextIconClass="@RightNextIcon" IsFocusTodayCell="@RightCalFocusToday" CellClickHandler="@SelectRange" TValue="TValue" ShowTodayButton="false" CurrentDateValue="@this.EndCurrentDate"></CalendarBaseRender>
+                                        </CascadingValue>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (this.Presets.Count > 0)
+                    {
+                        <div class="@PRESET_PARENT">
+                            <ul class="@LIST_PARENT" id="@this.ID _options" role="listbox">
+                                @foreach (var item in PresetsItem)
+                                {
+                                    <li class="@item.ListClass" @key="@item" role="option" id="@item.Id" @onclick="@(()=>OnPresetItemClick(item))" @onmouseover="@((e)=>OnPresetItemMouseOver(item))" @onmouseout="@((e)=>OnPresetItemMouseOut())">@item.Text</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    @if (this.IsCustomPopup)
+                    {
+                        <div class="@FOOTER">
+                            <SfButton Disabled="@ApplyDisable" CssClass="@APPLY_BTN" Content="@ApplyBtnText" @onclick="@ApplyFunction" />
+                            <SfButton CssClass="@CANCEL_BTN" Content="@CancelBtnText" @onclick="@CancelFunction" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </CascadingValue>
+}

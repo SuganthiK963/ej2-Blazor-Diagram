@@ -1,0 +1,23 @@
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+
+@namespace Syncfusion.Blazor.Charts
+@inherits SfDataBoundComponent
+@implements IAccumulationChart
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<CascadingValue Value="this">
+    @ChildContent
+    <div id="@ID" dir="@GetDirection()" style="display: block; height: 100%" class="e-control e-accumulationchart e-lib e-touch @CustomClass" @ref="Element">
+        <div id="@(ID + "_Secondary_Element")" style="position: relative; left: 0px; right: 0px">
+            @AnnotationContent
+            @TooltipContent
+            @TrimTooltip
+            @DatalabelTemplate
+        </div>
+        @ChartContent
+        @StyleFragment
+    </div>
+</CascadingValue>

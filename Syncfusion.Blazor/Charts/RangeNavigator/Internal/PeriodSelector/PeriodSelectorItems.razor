@@ -1,0 +1,67 @@
+@using Syncfusion.Blazor.Navigations;
+@using Syncfusion.Blazor.Calendars;
+
+@namespace Syncfusion.Blazor.Charts.RangeNavigator.Internal
+
+<SfToolbar @ref="toolbar" Height="@Height">
+    <ToolbarEvents Clicked="OnToolbarClick" Created="OnToolbarCreated"></ToolbarEvents>
+    <ToolbarItems>
+        @foreach (ToolbarItem toolbarItem in RangeToolbarItems)
+        {
+            @if (toolbarItem.Align == ItemAlign.Left)
+            {
+                @if (toolbarItem.Template != null && string.IsNullOrEmpty(toolbarItem.Text))
+                {
+                    <ToolbarItem Align="@ItemAlign.Left" TooltipText="@toolbarItem.Text">
+                        <Template>
+                            @toolbarItem.Template
+                        </Template>
+                    </ToolbarItem>
+                }
+                else
+                {
+                    <ToolbarItem Align="@ItemAlign.Left" TooltipText="@toolbarItem.Text">
+                        <Template>
+                            <button id="e-tbr-btn_@toolbarItem.Text" style="width: auto;" class="e-tbar-btn e-tbtn-txt e-control e-btn e-lib e-flat @toolbarItem.CssClass">
+                                <span class="e-tbar-btn-text">@toolbarItem.Text</span>
+                            </button>
+                        </Template>
+                    </ToolbarItem>
+                }
+            }
+            else
+            {
+                @if (toolbarItem.Template != null)
+                {
+                    <ToolbarItem Text="@toolbarItem.Text" Align="@ItemAlign.Right">
+                        <Template>
+                            @toolbarItem.Template
+                        </Template>
+                    </ToolbarItem>
+                }
+                else
+                {
+                    <ToolbarItem Align="@ItemAlign.Right">
+                        <Template>
+                            <SfDateRangePicker TValue="DateTime?" @ref="RangePicker" Format="dd/MM/yyyy" Placeholder="Select a Range" Min="@Min" Max="@Max" StartDate="@StartDate" EndDate="@EndDate"
+                                               ShowClearButton="false">
+                                <DateRangePickerEvents TValue="DateTime?" Created="OnCreated" ValueChange="OnChanged"></DateRangePickerEvents>
+                            </SfDateRangePicker>
+                            <div id="customRange" @ref="divElement" @onclick="RangeClick" class="e-btn e-dropdown-btn" style="white-space: nowrap">
+                                <span id="dateIcon" class="e-input-group-icon e-range-icon e-btn-icon e-icons" style="font-size: 14px; min-height: 0px; margin: -3px 0 0 0; outline: none; min-width: 0px">
+                                </span>
+                                @Content
+                            </div>
+                        </Template>
+                    </ToolbarItem>
+                }
+            }
+        }
+    </ToolbarItems>
+</SfToolbar>
+
+<style>
+    .e-date-range-wrapper.e-control-container {
+        visibility: hidden !important;
+    }
+</style>

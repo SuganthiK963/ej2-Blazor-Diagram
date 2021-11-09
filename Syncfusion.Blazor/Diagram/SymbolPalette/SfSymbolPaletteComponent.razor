@@ -1,0 +1,64 @@
+﻿
+@using Syncfusion.Blazor.Diagram;
+@using System.Collections.ObjectModel;
+@using System.Globalization;
+@using Syncfusion.Blazor.Diagram.Internal;
+@using Syncfusion.Blazor.Diagram.SymbolPalette.Internal;
+@namespace Syncfusion.Blazor.Diagram.SymbolPalette
+@inherits SfBaseComponent;
+
+@{
+    string nativeElementRenderingState = "visible";
+    string TEMPDIV = "PreviewSymbol";
+    string previewId = "previewID";
+}
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="@this">
+    @ChildContent
+    
+    <div @ref="@SymbolPaletteContentRef" data-role ="symbolpalette" style="width:@GetSizeValue(this.Width);height:@GetSizeValue(this.Height);overflow: auto;" class="e-control e-symbolpalette e-lib e-draggable">
+    @if (isSymbolInitialized)
+    {
+        <PaletteContent></PaletteContent>
+    }
+
+    </div>
+    @if (this.PreviewSymbol != null)
+    {
+        DiagramSize symbolSize = this.GetPreviewSymbolSize(this.PreviewSymbol as NodeBase);
+        string divWidth = symbolSize.Width + "px";
+        string divHeight = symbolSize.Height + "px";
+        bool isNode = this.PreviewSymbol is Node;
+        Node nodeObj = this.PreviewSymbol as Node;
+        IDiagramObject previewObject = this.PreviewSymbol;
+        string id = isNode ? ((Node)previewObject).ID + @TEMPDIV : ((Connector)previewObject).ID + @TEMPDIV;
+        if (isNode && nodeObj.Shape.Type.ToString() == "HTML" && nodeObj.Wrapper != null && this.SymbolPaletteTemplates != null && this.SymbolPaletteTemplates.NodeTemplate != null)
+        {
+            <div id="@previewId" class="e-symbol-draggable" style="width:@divWidth;height:@divHeight;visibility:hidden;display:none">
+                @this.SymbolPaletteTemplates.NodeTemplate(nodeObj)
+            </div>
+        }
+        else
+        {
+            <div id=@previewId style="width:@divWidth;height:@divHeight;visibility:hidden;display:none">
+                <svg id=@id width="@divWidth" height="@divHeight">
+                    <g style="display: @nativeElementRenderingState;">
+                        @if (isNode)
+                        {
+                            ObservableCollection<Node> childNodes = null;
+                            ObservableCollection<Node> symbols = this.GetPaletteSymbols((this.PreviewSymbol));
+                            childNodes = DiagramRenderer.GetChildNodes(this.PreviewSymbol as Node, symbols);
+                            @DiagramRenderer.RenderElement(new FragmentParameter() { Element = ((Node) this.PreviewSymbol).Wrapper, Nodes = childNodes, IsCreateGElement = true, GroupElement = ((Node) this.PreviewSymbol).Wrapper })
+                        }
+                        else
+                        {
+                            @DiagramRenderer.RenderElement(new FragmentParameter() { Element = ((Connector) this.PreviewSymbol).Wrapper, IsCreateGElement = true })
+                        }
+
+                    </g>
+                </svg>
+            </div>
+        }
+    }
+</CascadingValue>

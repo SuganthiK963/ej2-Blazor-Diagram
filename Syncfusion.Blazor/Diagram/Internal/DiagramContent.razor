@@ -1,0 +1,78 @@
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+@{
+
+    string diagramPattern = Parent.ID + SfDiagramComponent.PATTERN;
+    string diagramDefinition = Parent.ID + SfDiagramComponent.PATTERN + "_def";
+    string gridRect = Parent.ID + "_" + "grid_rect";
+
+    <svg id="@Parent.DiagramBackground" style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;">
+        @if (Parent.DiagramContent != null && Parent.DiagramContent.GradientCollection.Count > 0)
+        {
+            <defs id="diagramgradient_pattern">
+                @DiagramRenderer.RenderGradients(Parent.DiagramContent.GradientCollection)
+            </defs>
+        }
+        @DiagramRenderer.RenderPageBreaks(Parent.PageSettings)
+    </svg>
+    <svg id="@Parent.GridLineSvg" class="e-grid-layer" style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;" width="100%" height="100%">
+        @{
+            if (Parent.Scroller != null)
+            {
+                TransformFactor transform = Parent.Scroller.Transform;
+                double x = -(transform.TX * transform.Scale);
+                double y = -(transform.TY * transform.Scale);
+                <g id="@Parent.DiagramGridLine">
+                    <rect id="@gridRect" x="@x" y="@y" width="100%" height="100%" fill="url(#@diagramPattern)"></rect>
+                </g>
+            }
+        }
+        @{
+            double scaleFactor = SnapSettings.ScaleSnapInterval(Parent.SnapSettings, Parent.Scroller.CurrentZoom);
+            <defs id="@diagramDefinition">
+                <pattern id="@diagramPattern" x="0" y="0" patternUnits="userSpaceOnUse">
+                    @{
+                        SnapSettingsFragmentParameter parameter = new SnapSettingsFragmentParameter() { SnapSettingsValue = Parent.SnapSettings, CurrentZoom = scaleFactor };
+                        if (Parent.SnapSettings.Constraints.HasFlag(SnapConstraints.ShowHorizontalLines))
+                        {
+                            @DiagramRenderer.RenderHorizontalLine(parameter)
+                        }
+                        if (Parent.SnapSettings.Constraints.HasFlag(SnapConstraints.ShowVerticalLines))
+                        {
+                            @DiagramRenderer.RenderVerticalLine(parameter)
+                        }
+                    }
+                </pattern>
+            </defs>
+        }
+    </svg>
+    
+<div id=@Parent.DiagramLayer style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;">
+    <svg id="@Parent.SvgLayer" class="e-diagram-layer" style="pointer-events: all;">
+        @{
+            string nativeElementRenderingState = "visible";
+            if (Parent.NodeCollection.Count > 0 && Parent.FirstRender)
+            {
+                for (int i = 0; i < Parent.NodeCollection.Count; i++)
+                {
+                    if (Parent.NodeCollection[i].Shape.Type == Shapes.SVG)
+                    {
+                        nativeElementRenderingState = "none";
+                    }
+                }
+            }
+            if (Parent.Scroller != null)
+            {
+                <g id="@Parent.NodesGParent" style="display: @nativeElementRenderingState;">
+                    <DiagramLayerContent @ref="DiagramLayerContent"></DiagramLayerContent>
+                </g>
+            }
+        }
+    </svg>
+</div>
+    <div id=@Parent.DiagramHtml class="e-html-layer" style="position: absolute; top: 0px; left: 0px; overflow: hidden; pointer-events: none;">
+        <div id=@Parent.DiagramHtmlDiv style="position: absolute; top: 0px; left: 0px; pointer-events: all;">
+            <DiagramHtmlContainer></DiagramHtmlContainer>
+        </div>
+    </div>
+}

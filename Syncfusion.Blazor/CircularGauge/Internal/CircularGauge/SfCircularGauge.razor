@@ -1,0 +1,41 @@
+﻿@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.CircularGauge.Internal
+
+@namespace Syncfusion.Blazor.CircularGauge
+@inherits SfBaseComponent;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div id="@ID" @ref="@Element" style="@GetStyle()" @onmousemove="MouseMoveHandler">
+
+    <CascadingValue Value="@this">
+        @ChildContent
+        @if (this.AxisRenderer != null)
+        { Axis axisSetting = this.AxisRenderer.AxisSetting;
+        <div id="@(ID + "_Secondary_Element")" style="position:relative">
+            @if (axisSetting.AnnotationVisible)
+            {
+                <AnnotationRender></AnnotationRender>
+            }
+            @if (axisSetting.TooltipVisible)
+            {
+                <TooltipRender></TooltipRender>
+            }
+        </div>
+        <svg id="@(ID + "_svg")" height="@svgHeight" width="@svgWidth">
+            @if (axisSetting != null && axisSetting.AxisVisible)
+            {
+                <AxisRender></AxisRender>
+            }
+            @if (axisSetting.LegendVisible)
+            {
+                <LegendRender></LegendRender>
+            }
+        </svg>
+            }
+    </CascadingValue>
+
+</div>

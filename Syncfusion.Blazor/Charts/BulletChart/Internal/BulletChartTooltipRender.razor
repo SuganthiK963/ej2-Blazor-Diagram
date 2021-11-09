@@ -1,0 +1,23 @@
+﻿@inherits SfBaseComponent
+@typeparam TValue;
+@namespace Syncfusion.Blazor.Charts.BulletChart.Internal
+
+@if (BulletChart.Tooltip != null && BulletChart.Tooltip.Enable && IsTooltipRender)
+{
+    @if (BulletChart.Tooltip.Template != null)
+    {
+        <div id="@("tooltipDiv" + BulletChart.ID)" style="@style">
+            @RenderTooltipTemplate()
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(style))
+    {
+        <div id="tooltip" style="@style">
+            @for (int i = 0; i < tooltipText?.Count; i++)
+            {
+                @tooltipText[i];
+                <br />
+            }
+        </div>
+    }
+}

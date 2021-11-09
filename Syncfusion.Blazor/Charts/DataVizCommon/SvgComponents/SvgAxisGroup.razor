@@ -1,0 +1,16 @@
+﻿@namespace Syncfusion.Blazor.DataVizCommon
+
+<g @attributes="@Attributes">
+    <path id="@horizontalId" fill="none" stroke="@LineColor" stroke-width="@LineWidth" stroke-dasharray="@DashArray" d="@HorizontalDir"></path>
+    <path id="@verticalId" fill="none" stroke="@LineColor" stroke-width="@LineWidth" stroke-dasharray="@DashArray" d="@VerticalDir"></path>
+    <g id="@axisTooltipId">
+        @foreach (Dictionary<string, object> pathAttribute in PathAttributes)
+        {
+            <SvgPath @attributes="pathAttribute"></SvgPath>
+        }
+        @foreach (Dictionary<string, object> textAttribute in TextAttributes)
+        {
+            <SvgText @attributes="textAttribute"></SvgText>
+        }
+    </g>
+</g>

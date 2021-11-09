@@ -1,0 +1,56 @@
+@using Syncfusion.Blazor.Buttons;
+
+@namespace Syncfusion.Blazor.Popups.Internal
+@inherits SfBaseComponent;
+
+@if ((Parent.FooterTemplates != null && string.IsNullOrEmpty(Parent.FooterTemplate)) || (Parent.FooterTemplates == null && !string.IsNullOrEmpty(Parent.FooterTemplate)))
+{
+    <div class="@FOOTER_CONTENT">
+        @if (Parent.FooterTemplates != null)
+        {
+            @Parent.FooterTemplates
+        }
+        else
+        {
+            @((MarkupString)Parent.FooterTemplate)
+        }
+    </div>
+}
+else
+{
+    @if (Parent.Buttons != null && Parent.Buttons.Count > 0)
+    {
+        <div class="@FOOTER_CONTENT">
+            @for (var i = 0; i < Parent.Buttons.Count; i++)
+            {
+                DialogButton model = (DialogButton)Parent.Buttons[i];
+                string btnCssClass = Parent.Buttons[i].IsFlat ? "e-flat " + model.CssClass : model.CssClass;
+                <SfButton CssClass="@btnCssClass" Disabled="@model.Disabled" IsPrimary="@model.IsPrimary" IconCss="@model.IconCss" IconPosition="@model.IconPosition" IsToggle="@model.IsToggle" EnableRtl="@model.EnableRtl" @attributes="@GetAttributes(Parent.Buttons[i].Type)" OnClick="@Parent.Buttons[i].OnClick">
+                    @((MarkupString)model.Content)
+                </SfButton>
+            }
+        </div>
+    }
+}
+
+@code{
+    [CascadingParameter]
+    internal SfDialog Parent { get; set; }
+
+    const string FOOTER_CONTENT = "e-footer-content";
+
+    internal Dictionary<string, object> GetAttributes(ButtonType type)
+    {
+        return new Dictionary<string, object>() { { "type", (type == ButtonType.Submit) ? "submit" : (type == ButtonType.Reset ? "reset" : "button") } };
+    }
+
+    internal void Refresh()
+    {
+        StateHasChanged();
+    }
+
+    internal override void ComponentDispose()
+    {
+        Parent = null;
+    }
+}

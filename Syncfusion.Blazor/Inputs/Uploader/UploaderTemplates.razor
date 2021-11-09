@@ -1,0 +1,29 @@
+@using System.Dynamic;
+@using Microsoft.JSInterop;
+@using Syncfusion.Blazor;
+@using System.ComponentModel;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Inputs;
+@inherits SfBaseComponent;
+@namespace Syncfusion.Blazor.Inputs
+@code  {
+    /// <summary>
+    /// Specifies the content that has to be passed.
+    /// </summary>
+    ///<exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [CascadingParameter]
+    private SfUploader templateParent { get; set; }
+    [Parameter]
+    public RenderFragment<FileInfo> Template { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (Template != null)
+        {
+            this.templateParent.UpdateTemplate(Template);
+        }
+    }
+}

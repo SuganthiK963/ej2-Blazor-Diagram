@@ -1,0 +1,213 @@
+@using Syncfusion.Blazor.Internal
+@using Syncfusion.Blazor.Inputs.Internal;
+@using Syncfusion.Blazor.Data;
+@using Syncfusion.Blazor.DropDowns.Internal;
+@using Syncfusion.Blazor.Spinner;
+@using Syncfusion.Blazor.Buttons;
+@using Syncfusion.Blazor.Buttons.Internal;
+@using Syncfusion.Blazor.Inputs;
+@typeparam TValue
+@typeparam TItem
+@inherits SfDropDownBase<TItem>
+@namespace Syncfusion.Blazor.DropDowns
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<CascadingValue Value="this">
+    <div class="@ContainerClass" @ref="@ContainerElement" @attributes="@ContainerAttr">
+        <div class="@ChildContainerClass" @ref="@ChildContainerElement" tabindex="-1" @onmousedown="@ContainerClick" @onmousedown:preventDefault="@PreventContainer">
+            @if (this.Mode == VisualMode.Box || this.Mode == VisualMode.Default)
+            {
+                <span class="@this.ChipCollection">
+                    @foreach (var item in SelectedData)
+                    {
+                        <span class="@item.ChipClass" data-value="@(item.Value?.ToString())" title="@(item.Text)" @onmousedown="@(() => ChipClick(item))">
+                            <span class="@CHIP_CONTENT">
+                                @if (this.ValueTemplate != null && item.ItemData != null)
+                                {
+                                    @this.ValueTemplate(item.ItemData)
+                                }
+                                else
+                                {
+                                    @item.Text
+                                }
+                            </span>
+                            <span class="@CHIP_CLOSE" @onmousedown="@((e) => OnChipRemove(item, e))"></span>
+                        </span>
+                    }
+                </span>
+            }
+            @if (this.Mode != VisualMode.Box)
+            {
+                @if (this.Mode == VisualMode.Delimiter)
+                {
+                    <span class="@DelimValueClass" id="@("delim_val_" + SelectedData.Count)">@GetDelimValues()</span>
+                }
+                <span class="@DelimViewClass" @ref="@ViewElement"></span>
+            }
+            <span class="@this.SearchBoxElement">
+                <input @ref="@InputElement" @attributes="@inputAttr" placeholder="@(this.FloatLabelType == FloatLabelType.Never ? InputPlaceholder : string.Empty)" aria-placeholder="@(this.FloatLabelType == FloatLabelType.Never ? InputPlaceholder : string.Empty)" id="@ID" size="@InputSize"
+                       @onfocus="@FocusHandler" @oninput="@InputHandler" @onchange="@ChangeHandler" @onkeyup="@OnFilterUp" @onkeydown="@OnKeyHandler" @onkeydown:preventDefault="@PreventKeydown" />
+                @if (this.FloatLabelType == FloatLabelType.Auto || this.FloatLabelType == FloatLabelType.Always)
+                {
+                    <span class="@(FLOAT_LINE)"></span>
+                    <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+                }
+            </span>
+            @if (ShowClearButton && this.SelectedData !=null && this.SelectedData.Count > 0)
+            {
+                <span class="@CLEAR_ICON" @onmousedown="@ClearHandler" @onmousedown:preventDefault="@(!IsDevice)">
+                    @if (!ShowDropDownIcon)
+                    {
+                        <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+                    }
+                </span>
+            }
+            @if (ShowDropDownIcon)
+            {
+                <span class="@(INPUT_GROUP_ICON + SINGLE_SPACE + DROP_DOWN_ICON)">
+                    <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+                </span>
+            }
+        </div>
+    </div>
+    @ChildContent
+    @if (this.ShowPopupList)
+    {
+        <div @ref="@PopupHolderEle" class="e-dropdowns e-popup-holder" id="@(ID)_popupholder" style="top: -9999px; left: -9999px; position: absolute; visibility: hidden; width: 0px; height: 0px; display: none;">
+            <div @ref="@PopupElement" class="@PopupContainer" id="@(ID)_popup">
+                @if (this.AllowFiltering && this.Mode == VisualMode.CheckBox)
+                {
+                    <span class="@FILTER_PARENT">
+                        <SfInputBase @ref="FilterinputObj" RootClass="@FILTER_INPUT" @attributes="@this.FilterAttributes" IsShowSpinnerOnClear="true" Value="@FilterInputValue" PrependButtons="@BackIcon" Placeholder="@this.FilterBarPlaceholder" ShowClearButton="true" Type="text" Autocomplete="off" TouchIconHandler="@BackIconHandler" @onpaste="@PasteHandler"
+                                     @onblur="@((args)=>BlurHandler(args, true))" @oninput="@(()=>this.IsValidKey = true)" @onkeyup="@OnFilterUp" BindClearBtnEvents="@this.FilterClear" BindClearBtnTouchEvents="@this.FilterClear" ClickStopPropagation="@FilterClearBtnStopPropagation" @onkeydown="@OnKeyHandler" >
+                        </SfInputBase>
+                    </span>
+                }
+                @if (this.ShowSelectAll && this.Mode == VisualMode.CheckBox && ListDataSource != null && ListDataSource.Count() > 1)
+                {
+                    var selecteList = ListDataSource.Where(item => !item.IsHeader && !item.ListClass.Contains(DISABLE) && item.ListClass.Contains(SELECTED))?.ToList();
+                    var isSelectAll = (ListDataSource.Count() > MaximumSelectionLength && MaximumSelectionLength == selecteList?.Count ||
+                        ListDataSource.Count() < MaximumSelectionLength && ListData.Count() == selecteList?.Count);
+                    var isIndeterminate = selecteList.Count != 0 && ListData.Count() > selecteList.Count && !isSelectAll;
+                    var selectContent = !isSelectAll ? SelectAllTxt : UnSelectAllTxt;
+                    <div class="@SELECT_ALL_PARENT" @onclick="@((e)=>SelectAllHandler(!isSelectAll, e))">
+                        @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = isSelectAll, Indeterminate = isIndeterminate }))
+                        <span class="@SELECT_TEXT">@selectContent</span>
+                    </div>
+                }
+                @if (this.HeaderTemplate != null)
+                {
+                    <div class="@DDL_HEADER">
+                        @this.HeaderTemplate
+                    </div>
+                }
+                <div @ref="@PopupContentEle" class="@((this.ListDataSource != null && this.ListDataSource.Count() > 0) ? PopupContent : NoDataContent )" tabindex="0">
+                    @if (this.ListDataSource != null && this.ListDataSource.Count() > 0)
+                    {
+                        @if (this.EnableSelectionOrder && this.Mode == VisualMode.CheckBox && !EnableGroupCheckBox && SelectedListData.Count > 0)
+                        {
+                            <ul class="e-list-parent e-ul e-reorder">
+                                @foreach (var item in SelectedListData)
+                                {
+                                    <li @attributes="@item.ListAttribute" @onmouseover="@((e)=>OnMouseOver(item))" @onmouseout="@OnMouseLeave" class="@item.ListClass" @key="@item" role="@(item.IsHeader ? "presentation" : "option")" data-value="@item.Value" @onmousedown:preventDefault="true" @onmouseup="@((e)=>OnMouseClick(item, e))">
+                                        @if (item.IsHeader && this.GroupTemplate != null)
+                                        {
+                                            @GroupTemplate(item.GroupItems)
+                                        }
+                                        else if (this.ItemTemplate != null && !item.IsHeader)
+                                        {
+                                            @if (this.Mode == VisualMode.CheckBox)
+                                            {
+                                                @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = item.ListClass.Contains(SELECTED) }))
+                                            }
+                                            @ItemTemplate(item.CurItemData)
+                                        }
+                                        else
+                                        {
+                                            @if (!item.IsHeader && this.Mode == VisualMode.CheckBox)
+                                            {
+                                                @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = item.ListClass.Contains(SELECTED) }))
+                                            }
+                                            @if (this.Fields?.IconCss != null)
+                                            {
+                                                <span class="@item.IconCss"></span>
+                                            }
+                                            @item.Text
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        <ul class="e-list-parent e-ul">
+                            @foreach (var item in ListItemData)
+                            {
+                                var isIndeterminate = false;
+                                var isSelected = false;
+                                @if (this.Mode == VisualMode.CheckBox)
+                                {
+                                    @if (EnableGroupCheckBox && item.IsHeader && item.CurItemData == null)
+                                    {
+                                        var activeList = ListDataSource.Where(list => list.ListClass.Contains(SELECTED)).ToList();
+                                        var grpList = activeList.Where(activeItem => SfBaseUtils.Equals(DataUtil.GetObject(this.Fields.GroupBy, activeItem.CurItemData), item.Text)).ToList();
+                                        item.ListClass = grpList.Count > 0 ? SfBaseUtils.AddClass(item.ListClass, SELECTED) : SfBaseUtils.RemoveClass(item.ListClass, SELECTED);
+                                        isIndeterminate = grpList.Count != 0 && grpList.Count != item.GroupItems?.Items.Count;
+                                        item.ListClass = isIndeterminate ? SfBaseUtils.AddClass(item.ListClass, INDETERMINATE) : SfBaseUtils.RemoveClass(item.ListClass, INDETERMINATE);
+                                        isSelected = !isIndeterminate && grpList.Count != 0;
+                                    }
+                                    else
+                                    {
+                                        isSelected = item.ListClass.Contains(SELECTED);
+                                    }
+                                }
+                                <li @attributes="@item.ListAttribute" @onmouseover="@((e)=>OnMouseOver(item))" @onmouseout="@OnMouseLeave" class="@item.ListClass" @key="@item" role="@(item.IsHeader ? "presentation" : "option")" data-value="@item.Value" @onmousedown:preventDefault="true" @onmouseup="@((e)=>OnMouseClick(item, e))">
+                                    @if (item.IsHeader && this.GroupTemplate != null)
+                                    {
+                                        @if (this.Mode == VisualMode.CheckBox && this.EnableGroupCheckBox)
+                                        {
+                                            @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = isSelected, Indeterminate = isIndeterminate }))
+                                        }
+                                        @GroupTemplate(item.GroupItems)
+                                    }
+                                    else if (this.ItemTemplate != null && !item.IsHeader)
+                                    {
+                                        @if (this.Mode == VisualMode.CheckBox)
+                                        {
+                                            @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = item.ListClass.Contains(SELECTED) }))
+                                        }
+                                        @ItemTemplate(item.CurItemData)
+                                    }
+                                    else
+                                    {
+                                        @if ((!item.IsHeader || EnableGroupCheckBox) && this.Mode == VisualMode.CheckBox)
+                                        {
+                                            @(SfCheckBox.CreateCheckBox(new CSSCheckBox() { Checked = isSelected, Indeterminate = isIndeterminate }))
+                                        }
+                                        @if (this.Fields?.IconCss != null)
+                                        {
+                                            <span class="@item.IconCss"></span>
+                                        }
+                                        @item.Text
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <NoRecord TItem="TItem" FailureLocaleKey="@ACTION_FAILURE_LOCALE_KEY" LocaleKey="@NO_RECORD_LOCALE_KEY" FailureLocaleValue="@ACTION_FAILURE_LOCALE_VALUE" LocaleValue="@NO_RECORD_LOCALE_VALUE" IsFaiure="@this.IsActionFaiure"></NoRecord>
+                    }
+                </div>
+                @if (this.EnableVirtualization)
+                {
+                    <SfSpinner Size="17" @ref="@VirtualSpinnerObj"></SfSpinner>
+                }
+                @if (this.FooterTemplate != null)
+                {
+                    <div class="@DDL_FOOTER">
+                        @this.FooterTemplate
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</CascadingValue>

@@ -1,0 +1,66 @@
+@using Syncfusion.Blazor.Internal
+@using System.ComponentModel;
+@typeparam TItem
+@inherits SfDropDownBase<TItem>
+@inject ISyncfusionStringLocalizer Localizer
+@implements IDropDowns
+@namespace Syncfusion.Blazor.DropDowns.Internal
+@if (this.parent.NoRecordsTemplate != null)
+{
+    @this.parent.NoRecordsTemplate
+}
+else if (this.parent.ActionFailureTemplate != null)
+{
+    @this.parent.ActionFailureTemplate
+}
+else if (this.IsActionFaiure)
+{
+    @(string.IsNullOrEmpty(Localizer.GetText(FailureLocaleKey)) ? FailureLocaleValue : Localizer.GetText(FailureLocaleKey))
+}
+else
+{
+    @(string.IsNullOrEmpty(Localizer.GetText(LocaleKey)) ? LocaleValue : Localizer.GetText(LocaleKey))
+}
+@code {
+    [CascadingParameter]
+    protected IDropDowns parent { get; set; }
+    /// <summary>
+    /// IsActionFaiure set to true, then the action failure template is show in popup.
+    /// </summary>
+    [Parameter]
+    public bool IsFaiure { get; set; }
+    /// <summary>
+    /// Get the no record locale key for dropdowns component.
+    /// </summary>
+    [Parameter]
+    public string LocaleKey { get; set; }
+    /// <summary>
+    /// Get the action failure locale key for dropdowns component.
+    /// </summary>
+    [Parameter]
+    public string FailureLocaleKey { get; set; }
+    /// <summary>
+    /// Get the no record locale value for dropdowns component.
+    /// </summary>
+    [Parameter]
+    public string LocaleValue { get; set; }
+    /// <summary>
+    /// Get the action failure locale value for dropdowns component.
+    /// </summary>
+    [Parameter]
+    public string FailureLocaleValue { get; set; }
+    /// <summary>
+    /// Invoke state change of the component.
+    /// </summary>
+    /// <exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public async Task CallStateHasChangedAsync() => await InvokeAsync(StateHasChanged);
+    /// <summary>
+    /// Update the dropdownlist fileds
+    /// </summary>
+    ///<exclude/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public virtual void UpdateChildProperties(object fieldValue)
+    {
+    }
+}

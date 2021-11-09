@@ -1,0 +1,203 @@
+﻿@using System.Globalization;
+ 
+@namespace Syncfusion.Blazor.CircularGauge.Internal
+
+<g id="@(CircularGauge.ID + "_Axis_Pointers_" + AxisIndex)">
+    @if (CircularGauge.AxisRenderer.AxisCollection[AxisIndex].PointerCollection != null)
+    {
+    @for (int k = 0; k < CircularGauge.AxisRenderer.AxisCollection[AxisIndex].PointerCollection.Count; k++)
+    {
+        PointerSetting pointer = CircularGauge.AxisRenderer.AxisCollection[AxisIndex].PointerCollection[k];
+        <g id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointers_" + k)">
+            @if (CircularGauge.Axes[AxisIndex].Pointers[k].Type == PointerType.RangeBar)
+            {
+                @if (CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient != null && !string.IsNullOrEmpty(pointer.PointerLinearString))
+                {
+                    <defs>
+                        <linearGradient id="@pointer.PointerLinearString" x1="@pointer.PointerLinearStartValue" x2="@pointer.PointerLinearEndValue" y1="0%" y2="0%">
+                            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop.Count; q++)
+                            {
+                                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop[q];
+                                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                            }
+                        </linearGradient>
+                    </defs>
+                }
+                else if (CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient != null && !string.IsNullOrEmpty(pointer.PointerRadialString))
+                {
+                    <defs>
+                        <radialGradient id="@pointer.PointerRadialString" radius="@pointer.PointerRadialRadius" cx="@pointer.PointerOuterPositionX" cy="@pointer.PointerOuterPositionY"
+                                        fx="@pointer.PointerInnerPositionX" fy="@pointer.PointerInnerPositionY">
+                            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop.Count; q++)
+                            {
+                                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop[q];
+                                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                            }
+                        </radialGradient>
+                    </defs>
+                }
+                @if (!string.IsNullOrEmpty(pointer.PointerRangeRoundPath))
+                {
+                    <path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_RangeBar_" + k)" d="@pointer.PointerRangeRoundPath" stroke="@pointer.RangeBarStroke"
+                          stroke-width="@pointer.RangeBarStrokeWidth.ToString(CultureInfo.InvariantCulture)" fill="@pointer.RangeBarColor" aria-label="@pointer.Description"></path>
+                }
+                else
+                {
+                    <path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_RangeBar_" + k)" d="@pointer.PointerRangePath" stroke="@pointer.RangeBarStroke"
+                          stroke-width="@pointer.RangeBarStrokeWidth.ToString(CultureInfo.InvariantCulture)" fill="@pointer.RangeBarColor" aria-label="@pointer.Description"></path>
+                }
+            }
+            else @if (CircularGauge.Axes[AxisIndex].Pointers[k].Type == PointerType.Marker)
+            {
+        @if (CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient != null && !string.IsNullOrEmpty(pointer.PointerLinearString))
+        {
+            <defs>
+                <linearGradient id="@pointer.PointerLinearString" x1="@pointer.PointerLinearStartValue" x2="@pointer.PointerLinearEndValue" y1="0%" y2="0%">
+                    @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop.Count; q++)
+                    {
+                        ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop[q];
+                        <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                    }
+                </linearGradient>
+            </defs>
+        }
+        else if (CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient != null && !string.IsNullOrEmpty(pointer.PointerRadialString))
+        {
+            <defs>
+                <radialGradient id="@pointer.PointerRadialString" radius="@pointer.PointerRadialRadius" cx="@pointer.PointerOuterPositionX" cy="@pointer.PointerOuterPositionY"
+                                fx="@pointer.PointerInnerPositionX" fy="@pointer.PointerInnerPositionY">
+                    @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop.Count; q++)
+                    {
+                        ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop[q];
+                        <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+                    }
+                </radialGradient>
+            </defs>
+        }
+        @if (CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Circle && pointer.Circle != null)
+        {
+            <ellipse id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_Marker_" + k)" style="rx:@pointer.Circle.RadiusX.ToString(CultureInfo.InvariantCulture);ry:@pointer.Circle.RadiusY.ToString(CultureInfo.InvariantCulture);cx:@pointer.Circle.CenterX.ToString(CultureInfo.InvariantCulture);cy:@pointer.Circle.CenterY.ToString(CultureInfo.InvariantCulture);"
+                     stroke="@pointer.MarkerStroke" stroke-width="@pointer.MarkerStrokeWidth.ToString(CultureInfo.InvariantCulture)" fill="@pointer.PointerColor" transform="@pointer.PointerAngle" aria-label="@pointer.Description"></ellipse>
+        }
+        else @if ((CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Rectangle || CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.InvertedTriangle || CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Diamond || CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Triangle)
+            && !string.IsNullOrEmpty(pointer.MarkerShape))
+                {
+    <path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_Marker_" + k)" d=@pointer.MarkerShape
+          stroke="@pointer.MarkerStroke" stroke-width="@pointer.MarkerStrokeWidth.ToString(CultureInfo.InvariantCulture)"
+          fill="@pointer.PointerColor" transform="@pointer.PointerAngle"
+          aria-label="@pointer.Description"></path>
+                }
+                else @if (CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Text)
+                {
+    <text>
+        <text id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_Marker_" + k)" x="@pointer.Location.X.ToString(CultureInfo.InvariantCulture)" y="@pointer.Location.Y.ToString(CultureInfo.InvariantCulture)" stroke="@pointer.MarkerStroke" stroke-width="@pointer.MarkerStrokeWidth.ToString(CultureInfo.InvariantCulture)"
+              fill="@pointer.PointerColor" transform="@pointer.PointerAngle" style="@pointer.TextStyle" text-anchor="middle" aria-label="@pointer.Description">
+            @CircularGauge.Axes[AxisIndex].Pointers[k].Text
+        </text>
+    </text>
+                }
+                else @if (CircularGauge.Axes[AxisIndex].Pointers[k].MarkerShape == GaugeShape.Image)
+                {
+    <image id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_Marker_" + k)" href="@CircularGauge.Axes[AxisIndex].Pointers[k].ImageUrl" x="@pointer.ImageX.ToString(CultureInfo.InvariantCulture)" y="@pointer.ImageY.ToString(CultureInfo.InvariantCulture)"
+           height="@CircularGauge.Axes[AxisIndex].Pointers[k].MarkerHeight.ToString(CultureInfo.InvariantCulture)" width="@CircularGauge.Axes[AxisIndex].Pointers[k].MarkerWidth.ToString(CultureInfo.InvariantCulture)" transform="@pointer.PointerAngle" aria-label="@pointer.Description" />
+                }
+            }
+            else if (CircularGauge.Axes[AxisIndex].Pointers[k].Type == PointerType.Needle && !string.IsNullOrEmpty(pointer.NeedleDirection))
+            {
+@if (CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient != null && !string.IsNullOrEmpty(pointer.PointerLinearString))
+{
+    <defs>
+        <linearGradient id="@pointer.PointerLinearString" x1="@pointer.PointerLinearStartValue" x2="@pointer.PointerLinearEndValue" y1="0%" y2="0%">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].LinearGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </linearGradient>
+    </defs>
+}
+else if (CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient != null && !string.IsNullOrEmpty(pointer.PointerRadialString) && pointer.NeedleDirection != null)
+{
+    <defs>
+        <radialGradient id="@pointer.PointerRadialString" radius="@pointer.PointerRadialRadius" cx="@pointer.PointerOuterPositionX"
+                        cy="@pointer.PointerOuterPositionY" fx="@pointer.PointerInnerPositionX" fy="@pointer.PointerInnerPositionY">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].RadialGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </radialGradient>
+    </defs>
+}
+<path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_Needle_" + k)" d="@pointer.NeedleDirection" stroke="@pointer.PointerBorderStroke"
+      stroke-width="@pointer.PointerBorderStrokeWidth.ToString(CultureInfo.InvariantCulture)" fill="@pointer.PointerColor" transform="@pointer.PointerAngle"></path>
+@if (CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail != null && CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.LinearGradient != null && !string.IsNullOrEmpty(pointer.NeedleLinearString))
+{
+    <defs>
+        <linearGradient id="@pointer.NeedleLinearString" x1="@pointer.NeedleLinearStartValue" x2="@pointer.NeedleLinearEndValue" y1="0%" y2="0%">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.LinearGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.LinearGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </linearGradient>
+    </defs>
+}
+else if (CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail != null && CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.RadialGradient != null && !string.IsNullOrEmpty(pointer.NeedleRadialString))
+{
+    <defs>
+        <radialGradient id="@pointer.NeedleRadialString" radius="@pointer.NeedleRadialRadius" cx="@pointer.NeedleOuterPositionX" cy="@pointer.NeedleOuterPositionY"
+                        fx="@pointer.NeedleInnerPositionX" fy="@pointer.NeedleInnerPositionY">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.RadialGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].NeedleTail.RadialGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </radialGradient>
+    </defs>
+}
+<path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_NeedleTail_" + k)" d="@pointer.Direction" stroke="@pointer.NeedleStroke" stroke-width="@pointer.NeedleStrokeWidth.ToString(CultureInfo.InvariantCulture)"
+      fill="@pointer.NeedleColor" transform="@pointer.PointerAngle" aria-label="@pointer.Description"></path>
+@if (CircularGauge.Axes[AxisIndex].Pointers[k].Cap != null && CircularGauge.Axes[AxisIndex].Pointers[k].Cap.LinearGradient != null && !string.IsNullOrEmpty(pointer.CapLinearString))
+{
+    <defs>
+        <linearGradient id="@pointer.CapLinearString" x1="@pointer.CapLinearStartValue" x2="@pointer.CapLinearEndValue" y1="0%" y2="0%">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].Cap.LinearGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].Cap.LinearGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </linearGradient>
+    </defs>
+}
+else if (CircularGauge.Axes[AxisIndex].Pointers[k].Cap != null && CircularGauge.Axes[AxisIndex].Pointers[k].Cap.RadialGradient != null && !string.IsNullOrEmpty(pointer.CapRadialString))
+{
+    <defs>
+        <radialGradient id="@pointer.CapRadialString" radius="@pointer.CapRadialRadius" cx="@pointer.CapOuterPositionX" cy="@pointer.CapOuterPositionY"
+                        fx="@pointer.CapInnerPositionX" fy="@pointer.CapInnerPositionY">
+            @for (int q = 0; q < CircularGauge.Axes[AxisIndex].Pointers[k].Cap.RadialGradient.ColorStop.Count; q++)
+            {
+                ColorStop colorStop = CircularGauge.Axes[AxisIndex].Pointers[k].Cap.RadialGradient.ColorStop[q];
+                <stop offset="@colorStop.Offset" stop-color="@colorStop.Color" stop-opacity="@colorStop.Opacity" style="@colorStop.Style"></stop>
+            }
+        </radialGradient>
+    </defs>
+}
+
+<ellipse id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_NeedleCap_" + k)" rx="@pointer.CapPath.RadiusX.ToString(CultureInfo.InvariantCulture)" ry="@pointer.CapPath.RadiusY.ToString(CultureInfo.InvariantCulture)"
+         cx="@pointer.CapPath.CenterX.ToString(CultureInfo.InvariantCulture)" cy="@pointer.CapPath.CenterY.ToString(CultureInfo.InvariantCulture)" stroke="@pointer.CapStroke" stroke-width="@pointer.CapStrokeWidth.ToString(CultureInfo.InvariantCulture)"
+         fill="@pointer.CapColor" transform="@pointer.PointerAngle"></ellipse>
+<path id="@(CircularGauge.ID + "_Axis_" + AxisIndex + "_Pointer_NeedleRect_" + k)" d="@pointer.RectPath" stroke="transparent" stroke-width="0"
+      fill="transparent" transform="@pointer.PointerAngle" aria-label="@pointer.Description"></path>
+            }
+        </g>
+    }
+    }
+</g>
+
+@code {
+    [CascadingParameter] SfCircularGauge CircularGauge { get; set; }
+
+    [Parameter]
+    public int AxisIndex { get; set; }
+}

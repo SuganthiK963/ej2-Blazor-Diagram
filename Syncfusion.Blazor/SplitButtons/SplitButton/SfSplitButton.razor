@@ -1,0 +1,37 @@
+@using Syncfusion.Blazor.Buttons;
+@using Syncfusion.Blazor.Internal;
+@namespace Syncfusion.Blazor.SplitButtons
+@inherits SfBaseComponent;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+<div class="@containerClass" @ref="wrapper">
+    @{
+        var btnClass = SPLITBTN;
+        if (Content == null)
+        {
+             btnClass += " e-icon-btn";
+        }
+    }
+    <SfButton @ref="primaryBtn" @attributes="htmlAttributes" CssClass="@btnClass" IconCss=@IconCss Disabled=@Disabled EnableRtl=@EnableRtl @onkeydown="@KeyDownHandler"
+              IconPosition="@(IconPosition == SplitButtonIconPosition.Top ? Syncfusion.Blazor.Buttons.IconPosition.Top : Syncfusion.Blazor.Buttons.IconPosition.Left)"
+              OnClick="@(async () => await SfBaseUtils.InvokeEvent<ClickEventArgs>(Delegates?.Clicked, new ClickEventArgs() { Element = primaryBtn.btn, Name = CLICKED }))">
+        @Content
+        <CascadingValue Value="@this">@ChildContent</CascadingValue>
+    </SfButton>
+    <CascadingValue Value="@wrapper">
+        <SfDropDownButton @ref="secondryBtn" Items="@Items" CssClass=@dropdownBtnClass Disabled=@Disabled EnableRtl=@EnableRtl @attributes="@(new Dictionary<string, object>() { { TABINDEX, MINUSONE }, {"id", id }})">
+            <ChildContent>
+                <DropDownButtonEvents Opened="@(async (e) => await SfBaseUtils.InvokeEvent<OpenCloseMenuEventArgs>(Delegates?.Opened, e))"
+                          Closed="@(async (e) => await SfBaseUtils.InvokeEvent<OpenCloseMenuEventArgs>(Delegates?.Closed, e))"
+                          OnOpen="@(async (e) => await SfBaseUtils.InvokeEvent<BeforeOpenCloseMenuEventArgs>(Delegates?.OnOpen, e))"
+                          OnClose="@(async (e) => await SfBaseUtils.InvokeEvent<BeforeOpenCloseMenuEventArgs>(Delegates?.OnClose, e))"
+                          OnItemRender="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs>(Delegates?.OnItemRender, e))"
+                          ItemSelected="@(async (e) => await SfBaseUtils.InvokeEvent<MenuEventArgs>(Delegates?.ItemSelected, e))"></DropDownButtonEvents>
+            </ChildContent>
+            <PopupContent>
+                @if (PopupContent != null)
+                    @PopupContent
+            </PopupContent>
+        </SfDropDownButton>
+    </CascadingValue>
+</div>

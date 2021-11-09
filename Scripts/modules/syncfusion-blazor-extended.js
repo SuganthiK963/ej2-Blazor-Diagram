@@ -1,0 +1,1 @@
+import '../syncfusion-blazor-extended.js';

@@ -1,0 +1,100 @@
+@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+@using Syncfusion.Blazor.Internal;
+@using Syncfusion.Blazor.Charts.Chart.Internal;
+@using Syncfusion.Blazor.Charts.Internal;
+
+@namespace Syncfusion.Blazor.Charts
+@inherits SfDataBoundComponent;
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<CascadingValue Value="@this">
+    @ChildContent
+    <div id="@ID" @ref="Element" style="display: block;">
+        @if (ChartSize != null && !ChartHelper.IsNaNOrZero(ChartSize.Height))
+        {
+            <div id=@GetId("_stock_border") style=@GetBorderStyle()></div>
+            <div id="Secondary_Element" style="display: flow-root;">
+                @StockEventTooltipContent
+                <div id="@(ID + "_Chart_Secondary_Element")" style="position: relative;">
+                    @if (ChartSettings != null)
+                    {
+                        @if (Tooltip.Enable)
+                        {
+                            <ChartTooltipComponent @ref="@ChartSettings.TemplateTooltip" ID="@(GetId(SfStockChart.CHARTID) + "_tooltip")" Class="ejSVGTooltip" Style="pointer-events:none; position:absolute;z-index: 1"></ChartTooltipComponent>
+                        }
+                        <CascadingValue Value="@ChartSettings">
+                            <DataLabelTemplateContainer></DataLabelTemplateContainer>
+                            <TrimTooltipBase @ref="@ChartSettings.TrimTooltip"></TrimTooltipBase>
+                            <ScrollbarContent @ref="@ChartSettings.ChartScrollBarContent" StartY="@GetSeriesTooltipTop()"></ScrollbarContent>
+                        </CascadingValue>
+                    }
+                </div>
+                <div id="@(ID + "_RangeSelector_Secondary_Element")" style="background: transparent; position: relative; top: @GetTooltipPosition()">
+                    <div id=@GetId(RANGESELECTORID + "_rightTooltip") class="ejSVGTooltip" style="pointer-events: none; position: absolute; z-index: 1;"></div>
+                    <div id=@GetId(RANGESELECTORID + "_leftTooltip") class="ejSVGTooltip" style="pointer-events: none; position: absolute; z-index: 1;"></div>
+                </div>
+                @if (!string.IsNullOrEmpty(Title))
+                {
+                    @TitleContent
+                }
+                @if (EnablePeriodSelector)
+                {
+                    <div style="height: @GetToolbarHeight(); background: @GetBackgroundColor();">
+                        <SfRangeNavigator ShouldSelectorRender="@ShouldPeriodSelectorRender" UpdatePeriodEvent="@UpdatePeriodEvent" UpdateCustomElement="@UpdateCustomElement" UpdateChartData="@UpdateChartData" UpdateDropdownElement="@UpdateDropdownElement" GetRangeNavigator="@GetRangeNavigator" EnableRtl=@EnableRtl Theme=@this.Theme @ref="PeriodSelectorSettings" Id=@GetId(SELECTORID) IsStockChart="true" Width="@ChartSize.Width.ToString()" Height=@TOOLBARHEIGHT.ToString() DisableRangeSelector="true" ValueType=@GetRangeType(PrimaryXAxis.ValueType)>
+                            <RangeNavigatorEvents Loaded="OnPeriodSelectorLoaded"></RangeNavigatorEvents>
+                            <RangeNavigatorPeriodSelectorSettings>
+                                <RangeNavigatorPeriods>
+                                    @foreach (StockChartPeriod period in tempPeriods)
+                                    {
+                                        <RangeNavigatorPeriod Interval="@period.Interval" IntervalType="@period.IntervalType" Text="@period.Text" Selected="@period.Selected"></RangeNavigatorPeriod>
+                                    }
+                                </RangeNavigatorPeriods>
+                            </RangeNavigatorPeriodSelectorSettings>
+                            <RangeNavigatorSeriesCollection>
+                                @foreach (StockChartSeries series in Series)
+                                {
+                                    <RangeNavigatorSeries DataSource="@series.CurrentViewData" XName="@series.XName" YName="@GetYName(series)" Type="RangeNavigatorType.Line"></RangeNavigatorSeries>
+                                }
+                            </RangeNavigatorSeriesCollection>
+                        </SfRangeNavigator>
+                    </div>
+                }
+            </div>
+            <div id="@(ID + "_StockChart_Secondary_Element")" style="position: relative;">
+                @if (ChartSettings != null)
+                {
+                    <CascadingValue Value="@ChartSettings">
+                        <ChartAnnotationRendererContainer @ref="@ChartSettings.AnnotationContainer"></ChartAnnotationRendererContainer>
+                    </CascadingValue>
+                }
+            </div>
+            <svg id=@GetId("_svg") width=@Convert.ToString(AvailableSize.Width, Culture) height=@GetSvgHeight()>
+                <CustomChart StockChart="this" ChartArea="@ChartArea" ChartSize="@ChartSize" Crosshair="@Crosshair" PrimaryXAxis="@PrimaryXAxis" PrimaryYAxis="@PrimaryYAxis" Series="@Series" Tooltip="@Tooltip" ZoomSettings="@ZoomSettings"></CustomChart>
+                <StockEventsRender @ref="StockEventsRender"></StockEventsRender>
+                @if (EnableSelector)
+                {
+                    <g id=@GetId(RANGESELECTORID)>
+                        <SfRangeNavigator ShouldSelectorRender="@ShouldRangeSelectorRender" ChartHeight="@ChartSize.Height" UpdateChartData="@UpdateChartData" Value=@SelectedValue EnableRtl=@EnableRtl Theme=@this.Theme @ref="RangeSelectorSettings" Height=@SELECTORHEIGHT.ToString() Width=@Convert.ToString(ChartSize.Width, Culture) IsStockChart="true" Id=@GetId(RANGESELECTORID) ValueType="@GetRangeType(PrimaryXAxis.ValueType)">
+                            <RangeNavigatorRangeTooltipSettings Enable="true" DisplayMode="TooltipDisplayMode.Always"></RangeNavigatorRangeTooltipSettings>
+                            <RangeNavigatorEvents Loaded="OnRangeSelectorLoaded" Changed="OnRangeChange"></RangeNavigatorEvents>
+                            <RangeNavigatorSeriesCollection>
+                                @foreach (StockChartSeries series in Series)
+                                {
+                                    <RangeNavigatorSeries DataSource="@series.CurrentViewData" Fill=@series.Fill XName="@series.XName" YName="@GetYName(series)" Type="RangeNavigatorType.Line"></RangeNavigatorSeries>
+                                }
+                            </RangeNavigatorSeriesCollection>
+                        </SfRangeNavigator>
+                    </g>
+                }
+            </svg>
+        }
+    </div>
+    @if (ChartSettings != null)
+    {
+    <StyleElement @ref="@ChartSettings.SelectionStyleInstance"></StyleElement>
+    <StyleElement @ref="@ChartSettings.HighlightStyleInstance"></StyleElement>
+    }
+</CascadingValue>

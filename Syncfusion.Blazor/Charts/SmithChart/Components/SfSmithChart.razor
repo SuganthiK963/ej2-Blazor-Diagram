@@ -1,0 +1,16 @@
+@namespace Syncfusion.Blazor.Charts
+@inherits SfDataBoundComponent
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<CascadingValue Value="this">
+    @ChildContent
+    <div id="@ID" style="display: block;" class="e-control e-smithchart e-lib e-touch" @ref="@Element">
+        <div id="@(ID + "_Secondary_Element")" style="position: relative; left: 0px; right: 0px">
+            @TooltipContent
+            @DatalabelTemplate
+        </div>
+        @ChartContent
+    </div>
+</CascadingValue>

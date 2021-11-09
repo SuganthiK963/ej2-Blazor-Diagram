@@ -1,0 +1,30 @@
+@namespace Syncfusion.Blazor.Diagram.Internal
+
+@{
+    if (this.Parent != null)
+    {
+        @if (Parent.Nodes != null)
+        {
+            @foreach (Node item in Parent.Nodes)
+            {
+                if (item.Shape.Type.ToString() == "HTML" && item.Wrapper != null && Parent.DiagramTemplates != null && Parent.DiagramTemplates.NodeTemplate != null)
+                {
+                    Node node = ((Node)item);
+                    string templateId = node.ID + "_content_html_template";
+                    string height = node.Height + "px";
+                    string width = node.Width + "px";
+                    string left = (node.OffsetX - node.Width/2 )+ "px";
+                    string top = (node.OffsetY - node.Height/2 ) + "px";
+                    string rotate = item.RotationAngle + "deg";
+                    <div id="@item.ID" class="foreign-object">
+                        <div id="@templateId" style="position: absolute; visibility: visible; opacity: 1; width: @width; height: @height; left: @left; top: @top; transform: scale(1, 1) rotate(@rotate);">
+                            <div style="height: 100%; width: 100%;">
+                                @Parent.DiagramTemplates.NodeTemplate(item)
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    }
+}

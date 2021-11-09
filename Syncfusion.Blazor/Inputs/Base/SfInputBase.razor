@@ -1,0 +1,158 @@
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
+@using System.ComponentModel;
+@using Syncfusion.Blazor.Spinner;
+@namespace Syncfusion.Blazor.Inputs.Internal
+@inherits SfBaseComponent;
+@implements IInputBase;
+@using Syncfusion.Blazor.Internal;
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+@if (this.FloatLabelType == FloatLabelType.Auto || this.FloatLabelType == FloatLabelType.Always)
+{
+    @if (this.PrependButtons != null && this.PrependButtons.Count > 0)
+    {
+        <div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr" @onmousedown="@MouseContainerHandler" @onmousedown:preventDefault="@MousePreventContainer" @onblur="@OnContainerBlur" @onfocus="@OnContainerFocus" @onkeypress="@ContainerKeypress">
+            @foreach (var icon in this.PrependButtons)
+            {
+                <span class="@(GROUP_ICON + SPACE + icon)" @onmousedown="@((args) => InvokeMouseIconHandler(args, icon))" @ontouchstart="@((args) => InvokeTouchIconHandler(args, icon))" @onmousedown:preventDefault="@PreventIconHandler" @ontouchstart:preventDefault="@PreventIconHandler"></span>
+            }
+            <span class="e-input-in-wrap">
+                @if (this.Multiline)
+                {
+                    <textarea @ref="@InputElement" id="@ID" value="@(this.Value)" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler"></textarea>
+                }
+                else
+                {
+                    <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(this.Value)" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+                }
+                <span class="e-float-line"></span>
+                <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+                @if (this.ShowClearButton && !this.Multiline)
+                {
+                    var clearIcon = IsShowSpinnerOnClear ? ClearIconClass + SPACE + DISABLE_ICON : ClearIconClass;
+                    <span @ref="ClearElement" class="@(clearIcon)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation"></span>
+                }
+                @if (this.Buttons != null)
+                {
+                    foreach (var icon in this.Buttons)
+                    {
+                        var iconBtn = IsShowSpinnerOnIcon ? icon + SPACE + DISABLE_ICON : icon;
+                        <span class="@(GROUP_ICON + SPACE + iconBtn)" @onmousedown="@((args) => InvokeMouseIconHandler(args, icon))" @ontouchstart="@((args) => InvokeTouchIconHandler(args, icon))" @onmousedown:preventDefault="@PreventIconHandler" @ontouchstart:preventDefault="@PreventIconHandler"></span>
+                    }
+                }   
+                </span>
+            @ChildContent
+        </div>
+    } else 
+    {
+        <div @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr" @onmousedown="@MouseContainerHandler" @onmousedown:preventDefault="@MousePreventContainer" @onblur="@OnContainerBlur" @onfocus="@OnContainerFocus" @onkeypress="@ContainerKeypress">
+            @if (this.Multiline)
+            {
+                <textarea @ref="@InputElement" id="@ID" value="@(this.Value)" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler"></textarea>
+            }
+            else
+            {
+                if (this.ValueTemplate != null && this.IsValueTemplate)
+                {
+                    inputAttr = SfBaseUtils.UpdateDictionary("style", "display: none;", inputAttr);
+                    <span class="@INPUT_VALUE">
+                        @this.ValueTemplate
+                    </span>
+                } else if (this.ValueTemplate != null && !this.IsValueTemplate && inputAttr.ContainsKey("style"))
+                {
+                    inputAttr.Remove("style");
+                }
+                <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(this.Value)" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+            }
+            <span class="e-float-line"></span>
+            <label class="@FloatLabel?.Trim()" id="label_@(ID)" for="@(ID)">@this.Placeholder</label>
+            @if (this.ShowClearButton && !this.Multiline)
+            {
+                var clearIcon = IsShowSpinnerOnClear ? ClearIconClass + SPACE + DISABLE_ICON : ClearIconClass;
+                <span @ref="ClearElement" class="@(clearIcon)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation">
+                    @if (this.IsShowSpinnerOnClear)
+                    {
+                        <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+                    }
+                </span>
+            }
+            @if (this.Buttons != null)
+            {
+                foreach (var icon in this.Buttons)
+                {
+                    var iconBtn = IsShowSpinnerOnIcon ? icon + SPACE + DISABLE_ICON : icon;
+                    <span class="@(GROUP_ICON + SPACE + iconBtn)" @onmousedown="@((args) => InvokeMouseIconHandler(args, icon))" @ontouchstart="@((args) => InvokeTouchIconHandler(args, icon))" @onmousedown:preventDefault="@PreventIconHandler" @ontouchstart:preventDefault="@PreventIconHandler">
+                        @if (this.IsShowSpinnerOnIcon)
+                        {
+                            <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+                        }
+                    </span>
+                }
+            }
+            @if (this.SpinButton)
+            {
+                <span class="@(GROUP_ICON + SPACE + SPIN_DOWN)" title="@DecrementTitle" aria-label="@DecrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @ontouchstart="@TouchDownOnSpinner" @ontouchend="@TouchUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+                <span class="@(GROUP_ICON + SPACE + SPIN_UP)" title="@IncrementTitle" aria-label="@IncrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @ontouchstart="@TouchDownOnSpinner" @ontouchend="@TouchUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+            }
+            @ChildContent
+        </div>
+    }
+}
+else
+{
+<span @ref="@ContainerElement" class="@ContainerClass?.Trim()" @attributes="ContainerAttr" @onmousedown="@MouseContainerHandler" @onmousedown:preventDefault="@MousePreventContainer" @onblur="@OnContainerBlur" @onfocus="@OnContainerFocus" @onkeypress="@ContainerKeypress">
+    @if (this.PrependButtons != null)
+    {
+        foreach (var icon in this.PrependButtons)
+        {
+            <span class="@(GROUP_ICON + SPACE + icon)"@onmousedown="@((args) => InvokeMouseIconHandler(args, icon))" @ontouchstart="@((args) => InvokeTouchIconHandler(args, icon))" @onmousedown:preventDefault="@PreventIconHandler" @ontouchstart:preventDefault="@PreventIconHandler"></span>
+        }
+    }
+    @if (this.Multiline)
+    {
+        <textarea @ref="@InputElement" id="@ID" value="@(this.Value)" @attributes="inputAttr" role="textbox" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler"></textarea>
+    }
+    else
+    {
+        if (this.ValueTemplate != null && this.IsValueTemplate)
+        {
+            inputAttr = SfBaseUtils.UpdateDictionary("style", "display: none;", inputAttr);
+            <span class="@INPUT_VALUE">
+                @this.ValueTemplate
+            </span>
+        } else if (this.ValueTemplate != null && !this.IsValueTemplate && inputAttr.ContainsKey("style"))
+        {
+            inputAttr.Remove("style");
+        }
+        <input @ref="@InputElement" id="@ID" @attributes="inputAttr" value="@(this.Value)" @onchange="@OnChangeHandler" @oninput="@OnInputHandler" @onfocus="@OnFocusHandler" @onpaste="@OnPasteHandler" />
+    }
+    @if (this.ShowClearButton && !this.Multiline)
+    {
+        var clearIcon = IsShowSpinnerOnClear ? ClearIconClass + SPACE + DISABLE_ICON : ClearIconClass;
+        <span @ref="ClearElement" class="@(clearIcon)" aria-label="close" role="button" @onclick="@WireClearBtnEvents" @onmousedown="@BindClearBtnEvents" @ontouchstart="@BindClearBtnTouchEvents" @onmousedown:preventDefault="@ClickStopPropagation" @ontouchstart:preventDefault="@ClickStopPropagation">
+            @if (this.IsShowSpinnerOnClear) {
+                <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+            }
+        </span>
+    }
+    @if (this.Buttons != null)
+    {
+        foreach (var icon in this.Buttons)
+        {
+            var iconBtn = IsShowSpinnerOnIcon ? icon + SPACE + DISABLE_ICON : icon;
+            <span class="@(GROUP_ICON + SPACE + iconBtn)" @onmousedown="@((args) => InvokeMouseIconHandler(args, icon))" @ontouchstart="@((args) => InvokeTouchIconHandler(args, icon))" @onmousedown:preventDefault="@PreventIconHandler" @ontouchstart:preventDefault="@PreventIconHandler">
+                @if (this.IsShowSpinnerOnIcon) {
+                    <SfSpinner Size="14" @ref="@SpinnerObj"></SfSpinner>
+                }
+            </span>
+        }
+    }
+    @if (this.SpinButton)
+    {
+        <span class="@(GROUP_ICON + SPACE + SPIN_DOWN)" title="@DecrementTitle" aria-label="@DecrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @ontouchstart="@TouchDownOnSpinner" @ontouchend="@TouchUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+        <span class="@(GROUP_ICON + SPACE + SPIN_UP)" title="@IncrementTitle" aria-label="@IncrementTitle" @onmousedown="@MouseDownOnSpinner" @onmouseup="@MouseUpOnSpinner" @ontouchstart="@TouchDownOnSpinner" @ontouchend="@TouchUpOnSpinner" @onmousedown:preventDefault="@MouseDowSpinnerPrevent" @onmouseup:preventDefault="@MouseDowSpinnerPrevent"></span>
+    }
+    @ChildContent
+</span>
+}

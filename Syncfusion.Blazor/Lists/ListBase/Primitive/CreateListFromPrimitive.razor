@@ -1,0 +1,15 @@
+﻿@namespace Syncfusion.Blazor.Lists.Internal
+@typeparam TValue
+@inherits ListBaseFoundation<TValue>
+@*Creates the list with primitive datasource values*@
+<ul @attributes="@GetAttributes()">
+    @{
+        @for (int i = 0; i < PrimitiveDataSource.Count(); i++)
+        {
+            TValue item = PrimitiveDataSource.ElementAt(i);
+            <CascadingValue Value="@this" Name="ListBase" @key="item">
+                <PrimitiveListItem  MappedData="@null" IsGroupItem="@false" Data="@item" IsItemTemplate="@IsItemTemplate" TValue="TValue" RandomID="@SfBaseUtils.GenerateID()" ClassNames="@ClassNames" ListBaseOptionModel="@ListBaseOptionModel" />
+            </CascadingValue>
+        }
+    }
+</ul>

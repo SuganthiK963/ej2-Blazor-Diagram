@@ -1,0 +1,101 @@
+@using Syncfusion.Blazor.Navigations.Internal
+@using Syncfusion.Blazor.Internal
+@typeparam TValue
+@inherits SfMenuBase<TValue>;
+@namespace Syncfusion.Blazor.Navigations
+
+<SyncfusionLicense></SyncfusionLicense>
+<ResourceManager></ResourceManager>
+
+<div @ref="Element" class="@containerClass" id="@id">
+    @{
+        List<TValue> items = Items; List<ClassCollection> itemClasses = ClsCollection;
+        @for (var i = 0; i < NavIdx.Count; i++)
+        {
+            string cls; TValue parentItem = default; ItemModel<TValue> parentMenuItem = default;
+            @if (i == 0)
+            {
+                items = Items;
+                cls = IsMenu ? SUBMENU : CONTEXTMENU;
+            }
+            else
+            {
+                parentItem = items.ElementAt(this.NavIdx[i]);
+                parentMenuItem = GetMenuItem(parentItem);
+                items = (List<TValue>)parentMenuItem.Items;
+                itemClasses = itemClasses[this.NavIdx[i]].ClassList;
+                cls = SUBMENU;
+            }
+            if (i == NavIdx.Count - 1 && OpenEventArgs != null && OpenEventArgs.NavigationIndex == i)
+                cls += TRANSPARENT;
+            if (IsDevice && i != NavIdx.Count - 1)
+                continue;
+            var blankIconidxes = new List<int>(); var blankIcon = false;
+            <ul class="@cls" role="menu" tabindex="0" style="@BLOCKSTYLE" @onkeydown="@(async (e) => await KeyDownHandler(items[0], e, true))">
+                @if (IsDevice && cls.Contains(SUBMENU))
+                {
+                    <li class="@HEADER" @onclick="@(async (e) => await ItemClickHandler(parentItem, e, false, false, true))">
+                        <span class="@PREVIOUS"></span>
+                        @if (MenuTemplates != null && MenuTemplates.Template != null)
+                            @(MenuTemplates.Template(parentItem))
+                        else
+                            @parentMenuItem?.Text
+                    </li>
+                }
+                @for (var j = 0; j < items.Count; j++)
+                {
+                    TValue menuItem = items[j];
+                    ItemModel<TValue> item = BeforeItemCreation<TValue>(menuItem, j, itemClasses);
+                    @if (item.Separator)
+                    {
+                        <li @attributes="@item.HtmlAttributes"></li>
+                    }
+                    else
+                    {
+                        blankIcon = HandleBlankIcon(blankIconidxes, blankIcon, item, itemClasses, j);
+                        <li role="menuitem" tabindex="-1" aria-label="@item.Text" @attributes="@item.HtmlAttributes" @onmouseover="@(async () => await MouseOverHandler(menuItem))" @onmouseover:stopPropagation @onkeydown="@(async (e) => await KeyDownHandler(menuItem, e))" @onkeydown:stopPropagation @onclick="@(async (e) => await ItemClickHandler(menuItem, e))">
+                            @if (MenuTemplates == null && !string.IsNullOrEmpty(item.Url))
+                            {
+                                <a class="@URL" href="@item.Url">
+                                    <div class="e-anchor-wrap">
+                                        @if (!string.IsNullOrEmpty(item.IconCss))
+                                        {
+                                            <span class="@(ICON + SPACE + item.IconCss)"></span>
+                                        }
+                                        @item.Text
+                                        @if (item.Items != null)
+                                        {
+                                            <span class="@CARET"></span>
+                                        }
+                                    </div>
+                                </a>
+                            }
+                            else
+                            {
+                                @if (MenuTemplates != null && MenuTemplates.Template != null)
+                                    @MenuTemplates.Template(menuItem)
+                                else
+                                {
+                                    @if (!string.IsNullOrEmpty(item.IconCss))
+                                    {
+                                        <span class="@(ICON + SPACE + item.IconCss)"></span>
+                                    }
+                                    @item.Text
+                                }
+                                @if (item.Items != null)
+                                {
+                                    <span class="@CARET"></span>
+                                }
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+        }
+    }
+</div>
+<div @ref="refElement" style="display: none;"></div>
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>

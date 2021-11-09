@@ -1,0 +1,397 @@
+{
+	"singleBundles": {
+		"diagrams": [
+			"diagram",
+			"overview",
+			"symbolpalette"
+		],
+		"pivotview": [
+			"pivotview",
+			"pivotfieldlist"
+		]
+	},
+	"dialog": [
+		"popupsbase",
+		"popup"
+	],
+	"tooltip": [
+		"popupsbase",
+		"popup"
+	],
+	"sf-dialog": [
+		"sf-dialog"
+	],
+	"sf-tooltip": [
+		"sf-tooltip"
+	],
+	"sf-spinner": [
+		"sf-spinner"
+	],
+	"tab": [
+		"toolbar",
+		"navigationsbase",
+		"button",
+		"popup"
+	],
+	"toolbar": [
+		"navigationsbase",
+		"button",
+		"popup"
+	],
+	"accordion": [],
+	"treeview": [
+		"data",
+		"listsbase",
+		"inputsbase",
+		"buttonsbase",
+		"spinner",
+		"checkbox"
+	],
+	"sidebar": [],
+	"contextmenu": [
+		"navigationsbase",
+		"listsbase",
+		"popup"
+	],
+	"menu": [
+		"navigationsbase",
+		"listsbase",
+		"popup"
+	],
+	"sf-toolbar": [
+		"sf-toolbar"
+	],
+	"sf-tab": [
+		"sf-tab"
+	],
+	"sf-contextmenu": [
+		"sf-contextmenu"
+	],
+	"sf-menu": [
+		"sf-menu"
+	],
+	"sf-sidebar": [
+		"sf-sidebar"
+	],
+	"sf-accordion": [
+		"sf-accordion"
+	],
+	"sf-treeview": [
+		"sf-treeview"
+	],
+	"schedule": [
+		"data",
+		"listsbase",
+		"popup",
+		"dialog",
+		"spinner",
+		"tooltip",
+		"button",
+		"checkbox",
+		"calendar",
+		"datepicker",
+		"datetimepicker",
+		"formvalidator",
+		"inputsbase",
+		"numerictextbox",
+		"dropdownlist",
+		"multiselect",
+		"toolbar",
+		"treeview",
+		"radiobutton"
+	],
+	"recurrenceeditor": [],
+	"sf-schedule": [
+		"sf-schedule"
+	],
+	"diagram": [
+		"data",
+		"tooltip",
+		"navigationsbase",
+		"inputsbase"
+	],
+	"overview": [],
+	"symbolpalette": [],
+	"dropdownlist": [
+		"dropdownsbase",
+		"inputsbase",
+		"popup",
+		"listsbase",
+		"data",
+		"spinner"
+	],
+	"autocomplete": [
+		"dropdownsbase",
+		"combobox",
+		"dropdownlist",
+		"inputsbase",
+		"data",
+		"popup",
+		"listsbase",
+		"spinner"
+	],
+	"combobox": [
+		"dropdownsbase",
+		"dropdownlist",
+		"inputsbase",
+		"data",
+		"popup",
+		"listsbase",
+		"spinner"
+	],
+	"multiselect": [
+		"dropdownsbase",
+		"inputsbase",
+		"data",
+		"popup",
+		"buttonsbase",
+		"listsbase",
+		"spinner"
+	],
+	"listbox": [
+		"dropdownsbase",
+		"inputsbase",
+		"data",
+		"popup",
+		"spinner",
+		"buttonsbase",
+		"button",
+		"listsbase"
+	],
+	"sf-dropdownlist": [
+		"sf-dropdownlist"
+	],
+	"maskedtextbox": [
+		"inputsbase"
+	],
+	"numerictextbox": [
+		"inputsbase"
+	],
+	"textbox": [
+		"inputsbase"
+	],
+	"uploader": [],
+	"colorpicker": [
+		"slider",
+		"numerictextbox",
+		"inputsbase",
+		"popup",
+		"splitbutton",
+		"splitbuttonsbase",
+		"tooltip"
+	],
+	"slider": [
+		"popup",
+		"tooltip"
+	],
+	"sf-textbox": [
+		"sf-textbox"
+	],
+	"sf-numerictextbox": [
+		"sf-numerictextbox"
+	],
+	"pivotview": [
+		"data",
+		"spinner",
+		"grid"
+	],
+	"pivotfieldlist": [],
+	"pdfviewer": [
+		"button",
+		"checkbox",
+		"combobox",
+		"numerictextbox",
+		"slider",
+		"colorpicker",
+		"listview",
+		"accordion",
+		"menu",
+		"contextmenu",
+		"treeview",
+		"toolbar",
+		"toast",
+		"dialog",
+		"tooltip",
+		"spinner",
+		"drawings",
+		"inplaceeditor",
+		"dropdownbutton"
+	],
+	"treegrid": [
+		"data",
+		"spinner",
+		"grid"
+	],
+	"sf-treegrid": [
+		"sf-treegrid"
+	],
+	"gantt": [
+		"data",
+		"grid",
+		"treegrid",
+		"richtexteditor",
+		"datepicker",
+		"datetimepicker",
+		"checkbox",
+		"button",
+		"dropdownlist",
+		"combobox",
+		"multiselect",
+		"formvalidator",
+		"autocomplete",
+		"excelexport",
+		"pdfexport",
+		"contextmenu",
+		"toolbar",
+		"tab",
+		"textbox",
+		"numerictextbox",
+		"maskedtextbox",
+		"dialog",
+		"tooltip",
+		"spinner",
+		"splitter"
+	],
+	"kanban": [
+		"data",
+		"buttonsbase",
+		"button",
+		"formvalidator",
+		"inputsbase",
+		"textbox",
+		"numerictextbox",
+		"spinner",
+		"popupsbase",
+		"popup",
+		"listsbase",
+		"listview",
+		"dropdownsbase",
+		"dropdownlist",
+		"multiselect",
+		"dialog",
+		"tooltip"
+	],
+	"sf-kanban": [
+		"sf-kanban"
+	],
+	"maps": [
+		"svgbase",
+		"data"
+	],
+	"listview": [
+		"listsbase",
+		"buttonsbase",
+		"data"
+	],
+	"sf-listview": [
+		"sf-listview"
+	],
+	"chart": [
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression"
+	],
+	"accumulationchart": [
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression"
+	],
+	"rangenavigator": [
+		"chart",
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression",
+		"toolbar",
+		"button",
+		"daterangepicker"
+	],
+	"stockchart": [
+		"chart",
+		"rangenavigator",
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression",
+		"toolbar",
+		"button",
+		"daterangepicker",
+		"dropdownbutton"
+	],
+	"smithchart": [
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression"
+	],
+	"sparkline": [
+		"svgbase",
+		"data"
+	],
+	"bulletchart": [
+		"svgbase",
+		"data",
+		"pdfexport",
+		"fileutils",
+		"compression"
+	],
+	"sf-chart": [
+		"sf-chart"
+	],
+	"progressbar": [
+		"svgbase",
+		"data"
+	],
+	"ignoreScripts": [],
+	"sf-circulargauge": [
+		"sf-circulargauge"
+	],
+	"sf-treemap": [
+		"sf-treemap"
+	],
+	"sf-lineargauge": [
+		"sf-lineargauge"
+	],
+	"inplaceeditor": [
+		"data",
+		"buttonsbase",
+		"button",
+		"inputsbase",
+		"textbox",
+		"popupsbase",
+		"spinner",
+		"popup",
+		"tooltip",
+		"formvalidator"
+	],
+	"sf-richtexteditor": [
+		"sf-richtexteditor"
+	],
+	"dashboardlayout": [],
+	"sf-splitter": [
+		"sf-splitter"
+	],
+	"filemanager": [
+		"data",
+		"inputsbase",
+		"textbox",
+		"uploader",
+		"popupsbase",
+		"dialog",
+		"checkbox",
+		"listsbase",
+		"dropdownbutton",
+		"treeview",
+		"toolbar",
+		"contextmenu",
+		"splitter",
+		"grid"
+	]
+}

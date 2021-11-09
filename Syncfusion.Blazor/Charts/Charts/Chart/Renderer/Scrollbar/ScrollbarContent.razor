@@ -1,0 +1,9 @@
+﻿@using Syncfusion.Blazor;
+@using Microsoft.AspNetCore.Components;
+
+@namespace Syncfusion.Blazor.Charts.Internal
+@inherits OwningComponentBase;
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
