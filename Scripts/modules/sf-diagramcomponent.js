@@ -512,7 +512,7 @@ var diagram = {
             }
         }
     },
-    updateInnerLayerSize: function (layerList, width, height, scrollValues, transform, patternSize, gridLinePathData, dotsGrid, lineAttributes, pathAttributes, rectAttributes, circleAttributes, id) {
+    updateInnerLayerSize: function (layerList, width, height, scrollValues, transform, patternSize, gridLinePathData, dotsGrid, attributeList, id) {
         var bounds;
         if (id) {
             bounds = this.measureScrollValues(id);
@@ -549,39 +549,39 @@ var diagram = {
                         htmlLayerDiv.setAttribute("style", style);
                         // Update the selector while zooming or panning the diagram.
                         var selectorlayer = document.getElementById(layerList[i].split("_")[0] + "_SelectorElement");
-                        if (selectorlayer.children.length > 0) {
-                            var selectorChildrenCount = 0;
-                            if (lineAttributes != undefined) {
-                                var x1 = (lineAttributes.startPoint.x + lineAttributes.x);
-                                var y1 = (lineAttributes.startPoint.y + lineAttributes.y);
-                                var x2 = (lineAttributes.endPoint.x + lineAttributes.x);
-                                var y2 = (lineAttributes.endPoint.y + lineAttributes.y);
-                                selectorlayer.children[selectorChildrenCount].setAttribute("x1", x1.toString());
-                                selectorlayer.children[selectorChildrenCount].setAttribute("y1", y1.toString());
-                                selectorlayer.children[selectorChildrenCount].setAttribute("x2", x2.toString());
-                                selectorlayer.children[selectorChildrenCount].setAttribute("y2", y2.toString());
-                                selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + lineAttributes.angle + " " + (lineAttributes.x + lineAttributes.width * lineAttributes.pivotX) + " " + (lineAttributes.y + lineAttributes.height * lineAttributes.pivotY) + ")");
-                                selectorChildrenCount += 1;
-                            }
-                            if (pathAttributes != undefined) {
-                                selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + pathAttributes.angle + "," + (pathAttributes.x + pathAttributes.width * pathAttributes.pivotX) + "," + (pathAttributes.y + pathAttributes.height * pathAttributes.pivotY) + ")" + "translate(" + pathAttributes.x + "," + pathAttributes.y + ")");
-                                selectorChildrenCount += 1;
-                            }
-                            if (rectAttributes != undefined) {
-                                selectorlayer.children[selectorChildrenCount].setAttribute("x", rectAttributes.x);
-                                selectorlayer.children[selectorChildrenCount].setAttribute("y", rectAttributes.y);
-                                selectorlayer.children[selectorChildrenCount].setAttribute("width", rectAttributes.width);
-                                selectorlayer.children[selectorChildrenCount].setAttribute("height", rectAttributes.height);
-                                selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + rectAttributes.angle + "," + (rectAttributes.x + rectAttributes.width * rectAttributes.pivotX) + "," + (rectAttributes.y + rectAttributes.height * rectAttributes.pivotY) + ")");
-                                selectorChildrenCount += 1;
-                            }
-                            if (circleAttributes != undefined) {
-                                var circleAttributesCount = 0;
-                                for (var k = selectorChildrenCount; k < selectorlayer.children.length; k++) {
-                                    selectorlayer.children[selectorChildrenCount].setAttribute("cx", circleAttributes[circleAttributesCount].cx);
-                                    selectorlayer.children[selectorChildrenCount].setAttribute("cy", circleAttributes[circleAttributesCount].cy);
-                                    circleAttributesCount += 1;
+                        if (selectorlayer.children.length > 0 && selectorlayer.children.length == attributeList.length) {
+                            for(var selectorChildrenCount =0; selectorChildrenCount<selectorlayer.children.length; selectorChildrenCount++)
+                            {
+                                if (selectorlayer.children[selectorChildrenCount].tagName == "line") {
+                                    var lineAttributes = attributeList[selectorChildrenCount];
+                                    var x1 = (lineAttributes.startPoint.x + lineAttributes.x);
+                                    var y1 = (lineAttributes.startPoint.y + lineAttributes.y);
+                                    var x2 = (lineAttributes.endPoint.x + lineAttributes.x);
+                                    var y2 = (lineAttributes.endPoint.y + lineAttributes.y);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("x1", x1.toString());
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("y1", y1.toString());
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("x2", x2.toString());
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("y2", y2.toString());
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + lineAttributes.angle + " " + (lineAttributes.x + lineAttributes.width * lineAttributes.pivotX) + " " + (lineAttributes.y + lineAttributes.height * lineAttributes.pivotY) + ")");
                                     selectorChildrenCount += 1;
+                                }
+                                else if (selectorlayer.children[selectorChildrenCount].tagName == "path") {
+                                    var pathAttributes = attributeList[selectorChildrenCount];
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + pathAttributes.angle + "," + (pathAttributes.x + pathAttributes.width * pathAttributes.pivotX) + "," + (pathAttributes.y + pathAttributes.height * pathAttributes.pivotY) + ")" + "translate(" + pathAttributes.x + "," + pathAttributes.y + ")");
+                                    selectorChildrenCount += 1;
+                                }
+                                else if (selectorlayer.children[selectorChildrenCount].tagName == "rect") {
+                                    var rectAttributes = attributeList[selectorChildrenCount];
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("x", rectAttributes.x);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("y", rectAttributes.y);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("width", rectAttributes.width);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("height", rectAttributes.height);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("transform", "rotate(" + rectAttributes.angle + "," + (rectAttributes.x + rectAttributes.width * rectAttributes.pivotX) + "," + (rectAttributes.y + rectAttributes.height * rectAttributes.pivotY) + ")");
+                                    selectorChildrenCount += 1;
+                                }
+                                else if (selectorlayer.children[selectorChildrenCount].tagName == "circle") {
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("cx", attributeList[selectorChildrenCount].cx);
+                                    selectorlayer.children[selectorChildrenCount].setAttribute("cy", attributeList[selectorChildrenCount].cy);
                                 }
                             }
                         }
