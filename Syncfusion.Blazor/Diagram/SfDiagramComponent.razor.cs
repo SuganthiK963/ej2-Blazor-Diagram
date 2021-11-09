@@ -2560,7 +2560,7 @@ namespace Syncfusion.Blazor.Diagram
             {
                 DiagramSize patternSize = this.DiagramContent.GetPatternSize();
                 
-                DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(InnerLayerList, null, null, null, this.Scroller.Transform, patternSize, this.SnapSettings.PathData, this.SnapSettings.DotsData, null, null, null, null, DiagramContentId);
+                DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(InnerLayerList, null, null, null, this.Scroller.Transform, patternSize, this.SnapSettings.PathData, this.SnapSettings.DotsData, null, DiagramContentId);
                 if (bounds != null)
                 {
                     this.Scroller.SetViewPortSize(bounds.Width, bounds.Height);

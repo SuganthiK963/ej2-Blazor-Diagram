@@ -226,9 +226,9 @@ namespace Syncfusion.Blazor.Diagram.Internal
             UpdateMeasuredPathPointData(measurePathPointsCollection, Dictionary.MeasureCustomPathPoints);
             return measurePathPointsCollection;
         }
-        internal static async Task<DiagramRect> UpdateInnerLayerSize(string[] layersList, string width, string height, DiagramPoint scrollValues, TransformFactor gTransform = null, DiagramSize patternSize = null, List<string> gridLinePathData = null, List<DiagramPoint> gridLineDotsData = null, LineAttributes lineAttributes = null, PathAttributes pathAttributes = null, RectAttributes rectAttributes = null, ObservableCollection<CircleAttributes> circleAttributes = null, string id = null)
+        internal static async Task<DiagramRect> UpdateInnerLayerSize(string[] layersList, string width, string height, DiagramPoint scrollValues, TransformFactor gTransform = null, DiagramSize patternSize = null, List<string> gridLinePathData = null, List<DiagramPoint> gridLineDotsData = null, List<object> selectorAttributes = null, string id = null)
         {
-            object obj = await JSRuntime.InvokeAsync<object>(UPDATEINNERLAYERSIZE, new object[] { layersList, width, height, scrollValues, gTransform, patternSize, gridLinePathData, gridLineDotsData, lineAttributes, pathAttributes, rectAttributes, circleAttributes, id}).ConfigureAwait(true);
+            object obj = await JSRuntime.InvokeAsync<object>(UPDATEINNERLAYERSIZE, new object[] { layersList, width, height, scrollValues, gTransform, patternSize, gridLinePathData, gridLineDotsData, selectorAttributes, id}).ConfigureAwait(true);
             if (obj != null)
             {
                 DiagramRect scrollBounds = JsonSerializer.Deserialize<DiagramRect>(obj.ToString());

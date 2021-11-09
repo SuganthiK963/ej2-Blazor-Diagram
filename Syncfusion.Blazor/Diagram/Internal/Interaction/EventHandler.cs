@@ -702,6 +702,11 @@ namespace Syncfusion.Blazor.Diagram.Internal
                 };
                 CommandHandler.InvokeDiagramEvents(DiagramEvent.Click, args);
             }
+            if (ConstraintsUtil.CanUpdateScroller(Action))
+            {
+                this.Diagram.Scroller.SetSize();
+                this.Diagram.Scroller.UpdateScrollOffsets(null, null, true);
+            }
         }
 
         internal void MouseLeave(JSMouseEventArgs e)
@@ -725,6 +730,7 @@ namespace Syncfusion.Blazor.Diagram.Internal
                 this.Tool.OnMouseLeave(this.EventArgs);
             }
             Diagram.DiagramAction &= ~DiagramAction.Interactions;
+            //this.Diagram.UpdatePage();
             Blocked = false;
             this.IsMouseDown = false;
             this.inAction = false;

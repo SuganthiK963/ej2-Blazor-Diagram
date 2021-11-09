@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Syncfusion.Blazor.Diagram.Internal
 {
@@ -3586,37 +3587,12 @@ namespace Syncfusion.Blazor.Diagram.Internal
 
             DiagramSize patternSize = GetPatternSize();
 
-            RectAttributes rectAttributes = null; LineAttributes lineAttributes = null;
-            PathAttributes pathAttributes = null; ObservableCollection<CircleAttributes> circleAttributes = null;
-            ObservableCollection<BaseAttributes> attributes = GetSelectorAttributes();
-            if (attributes != null && attributes.Count > 0)
-            {
-                for (int i = 0; i < attributes.Count; i++)
-                {
-                    if(attributes[i] is LineAttributes)
-                    {
-                        lineAttributes = attributes[i] as LineAttributes;
-                    }
-                    else if(attributes[i] is PathAttributes)
-                    {
-                        pathAttributes = attributes[i] as PathAttributes;
-                    }
-                    else if(attributes[i] is RectAttributes)
-                    {
-                        rectAttributes = attributes[i] as RectAttributes;
-                    }
-                    else if(attributes[i] is CircleAttributes)
-                    {
-                        if(circleAttributes == null)
-                        {
-                            circleAttributes = new ObservableCollection<CircleAttributes>();
-                        }
-                        circleAttributes.Add(attributes[i] as CircleAttributes);
-                    }
-                }
-            }
-
-            DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(Parent.InnerLayerList, Parent.InnerLayerWidth, Parent.InnerLayerHeight, new DiagramPoint(offsetX, offsetY), Parent.Scroller.Transform, patternSize, Parent.SnapSettings.PathData, Parent.SnapSettings.DotsData, lineAttributes, pathAttributes, rectAttributes, circleAttributes);
+            RectAttributes rectAttributes = null; ObservableCollection<LineAttributes> lineAttributes = null;
+            ObservableCollection<PathAttributes> pathAttributes = null; ObservableCollection<CircleAttributes> circleAttributes = null;
+            List<object> attributes = GetSelectorAttributes();
+            
+            //DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(Parent.InnerLayerList, Parent.InnerLayerWidth, Parent.InnerLayerHeight, new DiagramPoint(offsetX, offsetY), Parent.Scroller.Transform, patternSize, Parent.SnapSettings.PathData, Parent.SnapSettings.DotsData);
+            DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(Parent.InnerLayerList, Parent.InnerLayerWidth, Parent.InnerLayerHeight, new DiagramPoint(offsetX, offsetY), Parent.Scroller.Transform, patternSize, Parent.SnapSettings.PathData, Parent.SnapSettings.DotsData, attributes, null);
             if (bounds != null)
             {
                 Parent.DiagramCanvasScrollBounds = bounds;
@@ -3630,36 +3606,11 @@ namespace Syncfusion.Blazor.Diagram.Internal
             if (isUpdateLayerSize)
             {
                 DiagramSize patternSize = GetPatternSize();
-                RectAttributes rectAttributes = null; LineAttributes lineAttributes = null;
-                PathAttributes pathAttributes = null; ObservableCollection<CircleAttributes> circleAttributes = null;
-                ObservableCollection<BaseAttributes> attributes = GetSelectorAttributes();
-                if (attributes != null && attributes.Count > 0)
-                {
-                    for (int i = 0; i < attributes.Count; i++)
-                    {
-                        if (attributes[i] is LineAttributes)
-                        {
-                            lineAttributes = attributes[i] as LineAttributes;
-                        }
-                        else if (attributes[i] is PathAttributes)
-                        {
-                            pathAttributes = attributes[i] as PathAttributes;
-                        }
-                        else if (attributes[i] is RectAttributes)
-                        {
-                            rectAttributes = attributes[i] as RectAttributes;
-                        }
-                        else if (attributes[i] is CircleAttributes)
-                        {
-                            if (circleAttributes == null)
-                            {
-                                circleAttributes = new ObservableCollection<CircleAttributes>();
-                            }
-                            circleAttributes.Add(attributes[i] as CircleAttributes);
-                        }
-                    }
-                }
-                DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(Parent.InnerLayerList, Parent.InnerLayerWidth, Parent.InnerLayerHeight, null, Parent.Scroller.Transform, patternSize, Parent.SnapSettings.PathData, Parent.SnapSettings.DotsData, lineAttributes, pathAttributes, rectAttributes, circleAttributes);
+                RectAttributes rectAttributes = null; ObservableCollection<LineAttributes> lineAttributes = null;
+                ObservableCollection<PathAttributes> pathAttributes = null; ObservableCollection<CircleAttributes> circleAttributes = null;
+                List<object> attributes = GetSelectorAttributes();
+                
+                DiagramRect bounds = await DomUtil.UpdateInnerLayerSize(Parent.InnerLayerList, Parent.InnerLayerWidth, Parent.InnerLayerHeight, null, Parent.Scroller.Transform, patternSize, Parent.SnapSettings.PathData, Parent.SnapSettings.DotsData, attributes);
                 if (bounds != null)
                 {
                     Parent.DiagramCanvasScrollBounds = bounds;
@@ -3871,14 +3822,42 @@ namespace Syncfusion.Blazor.Diagram.Internal
             return new DiagramSize() { Width = patternWidth, Height = patternHeight };
         }
 
-        internal ObservableCollection<BaseAttributes> GetSelectorAttributes()
+        internal List<object> GetSelectorAttributes()
         {
             ObservableCollection<BaseAttributes> attributes = null;
             if (Parent.DiagramAction.HasFlag(DiagramAction.Render) && ActionsUtil.HasSelection(Parent))
             {
                 attributes = DiagramRenderer.GetSelectorAttributes(new SelectionFragmentParameter { Selector = Parent.SelectionSettings, Transform = Parent.Scroller.Transform });
             }
-            return attributes;
+            List<object> attributesList = new List<object>();
+            if (attributes != null && attributes.Count > 0)
+            {
+                for (int i = 0; i < attributes.Count; i++)
+                {
+                    if (attributes[i] is LineAttributes)
+                    {
+                        var attributeObj = JsonSerializer.Deserialize<object>(JsonSerializer.Serialize(attributes[i] as LineAttributes));
+                        attributesList.Add(attributeObj);
+                    }
+                    else if (attributes[i] is PathAttributes)
+                    {
+                        var attributeObj = JsonSerializer.Deserialize<object>(JsonSerializer.Serialize(attributes[i] as PathAttributes));
+                        attributesList.Add(attributeObj);
+                    }
+                    else if (attributes[i] is RectAttributes)
+                    {
+                        var attributeObj = JsonSerializer.Deserialize<object>(JsonSerializer.Serialize(attributes[i] as RectAttributes));
+                        attributesList.Add(attributeObj);
+                    }
+                    else if (attributes[i] is CircleAttributes)
+                    {
+                        var attributeObj = JsonSerializer.Deserialize<object>(JsonSerializer.Serialize(attributes[i] as CircleAttributes));
+                        attributesList.Add(attributeObj);
+                    }
+                }
+            }
+
+            return attributesList;
         }
 
         internal void Dispose()

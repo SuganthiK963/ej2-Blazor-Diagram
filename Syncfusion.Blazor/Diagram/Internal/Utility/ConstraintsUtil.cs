@@ -280,5 +280,13 @@
         {
             return port.Constraints.HasFlag(PortConstraints.Draw);
         }
+        internal static bool CanUpdateScroller(Actions action)
+        {
+            if (action == Actions.Pan || action == Actions.PinchZoom || action == Actions.None || action == Actions.Hyperlink || action == Actions.FixedUserHandle || action == Actions.Select)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
